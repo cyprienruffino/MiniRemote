@@ -1,1 +1,5 @@
-Android/gen
+Android/gen/*
+out/*
+.idea/.name
+.idea/workspace.xml
+.idea/copyright/*
