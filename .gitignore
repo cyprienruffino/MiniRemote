@@ -3,3 +3,6 @@ remotecontrol_pc/out
 .idea
 *.iml
 */*.iml
+/out
+/Android/gen
+/Android/bin
