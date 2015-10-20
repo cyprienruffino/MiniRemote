@@ -2,4 +2,5 @@ Android/gen/*
 out/*
 .idea/.name
 .idea/workspace.xml
+/Android/gen
 .idea/copyright/*
