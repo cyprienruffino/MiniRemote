@@ -1,6 +1,6 @@
 .idea
 *.iml
 */*.iml
-out
+out/*
 /Android/gen
 /Android/bin
