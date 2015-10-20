@@ -1,8 +1,6 @@
-remotecontrol_pc/out
-*/.idea
 .idea
 *.iml
 */*.iml
-/out
+out
 /Android/gen
 /Android/bin
