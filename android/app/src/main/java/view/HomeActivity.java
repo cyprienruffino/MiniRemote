@@ -1,4 +1,4 @@
-package orleans.info.fr.remotecontrol;
+package view;
 
 import android.app.Activity;
 import android.os.Bundle;
