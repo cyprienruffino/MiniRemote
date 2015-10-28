@@ -1,6 +1,6 @@
 package model;
 
-import java.nio.file.FileSystem;
+import java.io.File;
 
 /**
  * Created by cyprien on 24/10/15.
@@ -10,6 +10,7 @@ public class FileExplorerModule {
     private static FileExplorerModule instance;
 
     private FileExplorerModule() {
+
     }
 
     public static FileExplorerModule getInstance() {
@@ -17,5 +18,24 @@ public class FileExplorerModule {
         return instance;
     }
 
-    //TODO;
+    private File root;
+    private File[] list;
+
+    /**
+     * Change current directory to a path
+     * @param path Path to move
+     */
+
+    public void changeDirectory( String path ) {
+        root = new File( path );
+        list = root.listFiles();
+    }
+
+    /**
+     * Returns all the files in the current directory
+     * @return Array of files and directories in the current directory
+     */
+    public File[] getCurrentDirectoryFiles(){
+        return list;
+    }
 }
