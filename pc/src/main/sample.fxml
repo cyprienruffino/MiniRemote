@@ -1,0 +1,6 @@
+<?import javafx.scene.layout.GridPane?><?import javafx.scene.text.Text?>
+
+<GridPane fx:controller="main.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center"
+    hgap="10" vgap="10">
+    <Text fx:id="text" text="waiting..." />
+</GridPane>
