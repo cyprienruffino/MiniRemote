@@ -4,11 +4,18 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
         >
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:text="@string/main_keyboard_button"
+        android:id="@+id/main_keyboard_button"
+        android:onClick="navigation"/>
+    <!-- A voir à rajouter plus tard
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/main_listview"
        />
-
+-->
 </LinearLayout>
 
