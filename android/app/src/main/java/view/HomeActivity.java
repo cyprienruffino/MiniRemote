@@ -34,9 +34,14 @@ public class HomeActivity extends Activity {
     }
 
     public void navigation(View view) {
+        Intent v;
         switch (view.getId()){
             case R.id.main_keyboard_button :
-                Intent v= new Intent(HomeActivity.this, KeyboardActivity.class);
+                v= new Intent(HomeActivity.this, KeyboardActivity.class);
+                startActivity(v);
+                break;
+            case  R.id.main_basic_button :
+                v= new Intent(HomeActivity.this, BasicActivity.class);
                 startActivity(v);
                 break;
         }

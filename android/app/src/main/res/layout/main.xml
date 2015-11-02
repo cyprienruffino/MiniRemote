@@ -10,6 +10,12 @@
         android:text="@string/main_keyboard_button"
         android:id="@+id/main_keyboard_button"
         android:onClick="navigation"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:text="Basic Command"
+        android:id="@+id/main_basic_button"
+        android:onClick="navigation"/>
     <!-- A voir à rajouter plus tard
     <ListView
         android:layout_width="match_parent"

@@ -18,6 +18,8 @@
         <activity
             android:name="view.KeyboardActivity"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="view.BasicActivity"/>
     </application>
 
 </manifest>
