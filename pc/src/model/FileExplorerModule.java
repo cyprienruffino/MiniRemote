@@ -1,7 +1,6 @@
 package model;
 
 import java.io.File;
-import java.nio.file.FileSystem;
 
 /**
  * Created by cyprien on 24/10/15.
