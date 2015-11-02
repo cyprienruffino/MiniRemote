@@ -59,6 +59,35 @@ public class CursorModule {
     }
 
     /**
+     * Hold on left mouse button
+     */
+    public void mouseLeftPress() {
+        robot.mousePress(0);
+    }
+
+    /**
+     * Hold on right mouse button
+     */
+    public void mouseRightPress() {
+        robot.mousePress(1);
+    }
+
+    /**
+     * Release the left mouse button
+     */
+    public void mouseLeftRelease() {
+        robot.mouseRelease(0);
+    }
+
+    /**
+     * Release the right mouse button
+     */
+    public void mouseRightRelease() {
+        robot.mouseRelease(1);
+    }
+
+
+    /**
      * Scroll wheel by z pixels
      *
      * @param z Scroll

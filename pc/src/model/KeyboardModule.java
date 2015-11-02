@@ -32,6 +32,24 @@ public class KeyboardModule {
     }
 
     /**
+     * Hold a keyboard key
+     *
+     * @param keycode A standard Java keycode
+     */
+    public void keyPress(int keycode) {
+        robot.keyPress(keycode);
+    }
+
+    /**
+     * Release a holded keyboard key
+     *
+     * @param keycode A standard java keycode
+     */
+    public void keyRelease(int keycode) {
+        robot.keyRelease(keycode);
+    }
+
+    /**
      * Type, key by key, a string
      *
      * @param toType Command to type
