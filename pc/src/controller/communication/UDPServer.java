@@ -3,7 +3,9 @@ package controller.communication;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
 
@@ -14,85 +16,53 @@ import java.nio.ByteBuffer;
  */
 public class UDPServer {
     private final static int PORT=8888;
+    public static final int RECEIVING_TIMEOUT = 10000;
+    public static final int RECEIVING_TIMEOUT_SERVER = 30000;
    private DatagramSocket s=null;
-   private ServerSocket tcpServer=null;
 
-    public UDPServer(ServerSocket tcpServer) {
-        this.tcpServer = tcpServer;
+
+    public UDPServer() {
         try {
             s = new DatagramSocket(PORT);
+            s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
             System.out.println("serveur UDP en attente de communication");
         }catch (IOException e){
             e.printStackTrace();
         }
     }
-    
-    
-    public void start() {
-        byte[] helloBuff = new byte[5];
-        DatagramPacket packet = new DatagramPacket(helloBuff, helloBuff.length);
 
-        boolean wait = true;
-        while (wait) {
-            try {
-                s.receive(packet);
 
-                if ("hello".equals(new String(packet.getData()))) {
-                    wait = false;
-                    System.out.println("packet recut du client");
-                } else {
-                    System.out.println("le packet recu ne correspond pas au attente du serveur");
+    public void attendreRequete(int port) {
+
+
+        // On initialise les trames qui vont servir à recevoir et envoyer les paquets
+        byte[] receiveData = new byte[1024];
+        byte[] sendData = new byte[1024];
+
+        // Tant qu'on est connecté, on attend une requête et on y répond
+        while (s != null && !s.isClosed())
+        {
+            try
+            {
+                DatagramPacket paquetRecu = new DatagramPacket(receiveData, receiveData.length);
+                s.receive(paquetRecu);
+                String requete = new String(paquetRecu.getData());
+                InetAddress IPAddress = paquetRecu.getAddress();
+                int portExp = paquetRecu.getPort();
+                // Si on reçoit un "ping", on répond "pong" à celui qui nous l'a envoyé
+                if (requete.contains("Ping"))
+                {
+                    sendData = "Pong".getBytes();
+                    DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
+                    s.send(paquetRetour);
+                    s.close();
                 }
-               
-                DatagramPacket data = buildDataPacket(packet);
-
-                s.send(data);
-
-                System.out.println("reponse envoyé au client");
-                System.out.println("en attente confirmation client");
-
-                s.setSoTimeout(2000);
-                wait = true;
-                byte[] okBuff = new byte[2];
-                while (wait) {
-                    DatagramPacket getack = new DatagramPacket(okBuff, okBuff.length);
-                    try {
-                        s.receive(getack);
-                    } catch (SocketTimeoutException e) {
-                        // resend
-                        System.out.println("pas de réponse du client nouvelle tentative");
-                        s.send(data);
-                        continue;
-                    }
-                    // check received data...
-                    if ("ok".equals(new String(getack.getData()))) {
-                        wait = false;
-                        System.out.println("packet recut du client");
-                    } else {
-                        if ("hello".equals(new String(packet.getData()))) {
-                            System.out.println("le client n'a pas recu le packet precedent");
-                            s.send(data);
-                        } else {
-                            System.out.println("le packet recu ne correspond pas au attente du serveur");
-                        }
-                    }
-                }
-
-            } catch (IOException e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
-    }
-
-
-    //construit un datapacket contenant l'ip et le port d'écoute du server TCP
-    private DatagramPacket buildDataPacket(DatagramPacket packet){
-        byte[] serverIp = tcpServer.getInetAddress().getAddress();
-        ByteBuffer c = ByteBuffer.allocate(4 + serverIp.length);
-        c.put(serverIp);
-        c.putInt(tcpServer.getLocalPort());
-        byte[] rep = c.array();
-        return new DatagramPacket(rep, rep.length, packet.getAddress(), packet.getPort());
     }
 
 
