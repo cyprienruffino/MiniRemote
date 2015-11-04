@@ -1,10 +1,13 @@
 package view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import controller.communication.Discovery;
 import orleans.info.fr.remotecontrol.R;
@@ -33,9 +36,10 @@ public class CoActivity extends Activity {
         TextView txtV = (TextView) findViewById(R.id.connexion_txtView);
         txtV.setText(dis.getIpServer());
     }
+
 }
 
-class Test implements Runnable{
+ class Test implements Runnable{
     private Discovery d;
 
     public Test( Discovery d){
