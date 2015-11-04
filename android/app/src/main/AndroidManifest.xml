@@ -20,6 +20,7 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="view.BasicActivity"/>
+        <activity android:name="view.CoActivity" />
     </application>
 
 </manifest>
