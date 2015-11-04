@@ -19,8 +19,11 @@
             android:name="view.KeyboardActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name="view.BasicActivity"/>
-        <activity android:name="view.CoActivity" />
+            android:name="view.BasicActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+                android:name="view.CoActivity"
+                  />
     </application>
 
 </manifest>

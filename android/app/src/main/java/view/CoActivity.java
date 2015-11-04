@@ -1,11 +1,9 @@
 package view;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import controller.communication.Discovery;
@@ -20,7 +18,7 @@ public class CoActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.println(Log.DEBUG, "DEBUG", "HI");
         System.out.println("test");
-        setContentView(R.layout.conection);
+        setContentView(R.layout.connexion);
     }
 
     public void connexion(View view) {
@@ -32,7 +30,7 @@ public class CoActivity extends Activity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        TextView txtV = (TextView) findViewById(R.id.txtView);
+        TextView txtV = (TextView) findViewById(R.id.connexion_txtView);
         txtV.setText(dis.getIpServer());
     }
 }
