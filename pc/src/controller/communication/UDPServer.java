@@ -20,7 +20,7 @@ public class UDPServer {
     public UDPServer() {
         try {
             s = new DatagramSocket(PORT);
-            s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
+           // s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
             System.out.println("serveur UDP lancé");
         }catch (IOException e){
             e.printStackTrace();
