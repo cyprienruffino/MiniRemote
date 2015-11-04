@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
 import android.content.Context;
@@ -21,9 +22,25 @@ public class Discovery {
     private DatagramSocket socket;
     private Context mContext;
 
+    public String getIpServer() {
+        return ipServer;
+    }
+
+    public void setIpServer(String ipServer) {
+        this.ipServer = ipServer;
+    }
+
+    private String ipServer;
+
 
     public Discovery(Context c) {
+        System.out.println("in discovry");
         mContext = c;
+        try {
+            socket = new DatagramSocket(mPort);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stop() {
@@ -41,7 +58,9 @@ public class Discovery {
     public String getServerIp() {
         try
         {
+            System.out.println("je suis avant le ping");
             DatagramPacket packet = sendBroadcast("Ping");
+
             return packet.getAddress().getHostAddress();
         }
         catch (InterruptedIOException ie)
@@ -56,6 +75,7 @@ public class Discovery {
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Log.d("ERROR", "Verify your Wifi connection");
             try
             {
@@ -73,13 +93,15 @@ public class Discovery {
         socket = null;
         try
         {
-            socket = new DatagramSocket(mPort);
+            socket = new DatagramSocket(mPort,InetAddress.getLocalHost());
             socket.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
         }
         catch (SocketException se)
         {
             Log.d("ERROR", "Verify your Wifi connection");
             se.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
 
         byte[] receiveData = new byte[1024];
@@ -144,12 +166,12 @@ public class Discovery {
     }
 
     private DatagramPacket sendBroadcast(String data) throws Exception {
-        socket = new DatagramSocket(mPort);
+
         socket.setBroadcast(true);
         InetAddress broadcastAdress = getBroadcastAddress();
         DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), broadcastAdress, mPort);
         socket.send(packet);
-
+        System.out.println("ping send");
         byte[] buf = new byte[1024];
         packet = new DatagramPacket(buf, buf.length);
         socket.setSoTimeout(RECEIVING_TIMEOUT);
