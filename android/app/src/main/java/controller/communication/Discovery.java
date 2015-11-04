@@ -17,6 +17,7 @@ public class Discovery {
     public static final int RECEIVING_TIMEOUT = 10000;
     public static final int RECEIVING_TIMEOUT_SERVER = 30000;
     private static final int mPort= 8888;
+    private static final int EPSON_VP_PORT = 3629;
     private DatagramSocket socket;
     private Context mContext;
 

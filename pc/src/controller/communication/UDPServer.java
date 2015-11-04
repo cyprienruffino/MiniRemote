@@ -4,14 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.nio.ByteBuffer;
 
 /**
  * Created by whiteshad on 27/10/15.
- * Server UDP servant a la reconnaissance du réseau par le client, permet au client d'optenir l'adresse IP du Serveur TCP
+ * Serveur UDP servant a la reconnaissance du réseau par le client, permet au client d'optenir l'adresse IP du Serveur TCP
  * le client doit connaitre le port utilisé
  */
 public class UDPServer {
@@ -25,37 +21,39 @@ public class UDPServer {
         try {
             s = new DatagramSocket(PORT);
             s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
-            System.out.println("serveur UDP en attente de communication");
+            System.out.println("serveur UDP lancé");
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
 
-    public void attendreRequete(int port) {
+    public void attendreRequete() {
 
 
         // On initialise les trames qui vont servir à recevoir et envoyer les paquets
         byte[] receiveData = new byte[1024];
         byte[] sendData = new byte[1024];
-
+        System.out.println("En attente de Ping du client!");
         // Tant qu'on est connecté, on attend une requête et on y répond
-        while (s != null && !s.isClosed())
-        {
+        while (s != null && !s.isClosed()) {
             try
             {
                 DatagramPacket paquetRecu = new DatagramPacket(receiveData, receiveData.length);
                 s.receive(paquetRecu);
+                System.out.println("packet reçu");
                 String requete = new String(paquetRecu.getData());
                 InetAddress IPAddress = paquetRecu.getAddress();
                 int portExp = paquetRecu.getPort();
                 // Si on reçoit un "ping", on répond "pong" à celui qui nous l'a envoyé
-                if (requete.contains("Ping"))
-                {
+                if (requete.contains("Ping")) {
+                    System.out.println("Ping reçu du client");
                     sendData = "Pong".getBytes();
                     DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
                     s.send(paquetRetour);
+                    System.out.println("reponse envoyé au client");
                     s.close();
+                    System.out.println("Serveur UDP fermé");
                 }
             }
             catch (Exception e)
