@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              style="@style/VerticalLinearLayout"
         >
     <Button
         android:layout_width="match_parent"
@@ -13,15 +11,16 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="100dip"
-        android:text="Basic Command"
+        android:text="@string/main_basic_button"
         android:id="@+id/main_basic_button"
         android:onClick="navigation"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="100dip"
-        android:text="test connexion"
+        android:text="@string/main_connexion_button"
         android:id="@+id/main_connexion_button"
         android:onClick="navigation"/>
+
     <!-- A voir à rajouter plus tard
     <ListView
         android:layout_width="match_parent"

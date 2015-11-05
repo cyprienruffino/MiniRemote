@@ -3,15 +3,22 @@ package controller.communication;
 import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Enumeration;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import view.CoActivity;
+import view.HomeActivity;
 
 public class Discovery {
     public static final int RECEIVING_TIMEOUT = 10000;
@@ -20,10 +27,27 @@ public class Discovery {
     private static final int EPSON_VP_PORT = 3629;
     private DatagramSocket socket;
     private Context mContext;
+    private String ipServer;
+
+    public String getIpServer() {
+        return ipServer;
+    }
+
+    public void setIpServer(String ipServer) {
+        this.ipServer = ipServer;
+    }
+
+
 
 
     public Discovery(Context c) {
+        System.out.println("in discovry");
         mContext = c;
+        try {
+            socket = new DatagramSocket(mPort);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stop() {
@@ -42,11 +66,13 @@ public class Discovery {
         try
         {
             DatagramPacket packet = sendBroadcast("Ping");
+
             return packet.getAddress().getHostAddress();
         }
         catch (InterruptedIOException ie)
         {
             Log.d("ERROR", "No server found");
+
             try
             {
                 socket.close();
@@ -56,6 +82,7 @@ public class Discovery {
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             Log.d("ERROR", "Verify your Wifi connection");
             try
             {
@@ -73,13 +100,15 @@ public class Discovery {
         socket = null;
         try
         {
-            socket = new DatagramSocket(mPort);
+            socket = new DatagramSocket(mPort,InetAddress.getLocalHost());
             socket.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
         }
         catch (SocketException se)
         {
             Log.d("ERROR", "Verify your Wifi connection");
             se.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         }
 
         byte[] receiveData = new byte[1024];
@@ -112,16 +141,14 @@ public class Discovery {
     }
 
     public String getMyAdresseIP() {
-        try
-        {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();)
-            {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
                 NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();)
-                {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress())
+                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
                         return inetAddress.getHostAddress();
+                    }
                 }
             }
         }
@@ -144,23 +171,21 @@ public class Discovery {
     }
 
     private DatagramPacket sendBroadcast(String data) throws Exception {
-        socket = new DatagramSocket(mPort);
+
         socket.setBroadcast(true);
         InetAddress broadcastAdress = getBroadcastAddress();
         DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), broadcastAdress, mPort);
         socket.send(packet);
 
-        byte[] buf = new byte[1024];
-        packet = new DatagramPacket(buf, buf.length);
         socket.setSoTimeout(RECEIVING_TIMEOUT);
-
+        byte[] buf = new byte[1024];
+        DatagramPacket rec=new DatagramPacket(buf, buf.length);;
         String myAdress =getMyAdresseIP();
-
-        socket.receive(packet);
-        while (packet.getAddress().getHostAddress().contains(myAdress))
-            socket.receive(packet);
-
+        socket.receive(rec);
+        while (rec.getAddress().getHostAddress().contains(myAdress))
+            socket.receive(rec);
         stop();
-        return packet;
+        return rec;
     }
 }
+//packet.getAddress().getHostAddress().contains(myAdress)

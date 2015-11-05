@@ -1,5 +1,7 @@
 package controller.communication;
 
+import com.sun.org.apache.xpath.internal.SourceTree;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -20,7 +22,8 @@ public class UDPServer {
     public UDPServer() {
         try {
             s = new DatagramSocket(PORT);
-            s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
+
+           // s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
             System.out.println("serveur UDP lancé");
         }catch (IOException e){
             e.printStackTrace();
@@ -41,6 +44,7 @@ public class UDPServer {
             {
                 DatagramPacket paquetRecu = new DatagramPacket(receiveData, receiveData.length);
                 s.receive(paquetRecu);
+
                 System.out.println("packet reçu");
                 String requete = new String(paquetRecu.getData());
                 InetAddress IPAddress = paquetRecu.getAddress();
@@ -50,6 +54,7 @@ public class UDPServer {
                     System.out.println("Ping reçu du client");
                     sendData = "Pong".getBytes();
                     DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
+                    System.out.println(paquetRetour.getSocketAddress());
                     s.send(paquetRetour);
                     System.out.println("reponse envoyé au client");
                     s.close();

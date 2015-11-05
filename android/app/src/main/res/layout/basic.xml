@@ -1,29 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    style="@style/VerticalLinearLayout">
+<LinearLayout
+    style="@style/VerticalLinearLayout"
+    android:layout_weight="1"
+    android:layout_margin="20dip">
     <View
-        android:background="@android:color/background_dark"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        style="@style/MatchParent"
         android:layout_weight="1"
         />
     <LinearLayout
-        android:background="@android:color/holo_blue_dark"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        style="@style/HorizontalLinearLayout"
+        android:layout_weight="4">
+        <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"/>
+        <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
+
+</LinearLayout>
     <LinearLayout
-        android:background="@android:color/holo_purple"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
+        style="@style/HorizontalLinearLayout"
+        android:layout_weight="6">
+        <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"/>
+        <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
