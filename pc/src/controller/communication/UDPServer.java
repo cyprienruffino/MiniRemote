@@ -58,6 +58,7 @@ public class UDPServer {
                     System.out.println("reponse envoyé au client");
                     s.close();
                     System.out.println("Serveur UDP fermé");
+
                 }
             }
             catch (Exception e)

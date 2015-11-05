@@ -15,6 +15,12 @@ public class CursorModule {
         robot = new Robot();
     }
 
+    /**
+     * Singleton getter
+     *
+     * @return Instance of the module
+     * @throws AWTException
+     */
     public static CursorModule getInstance() throws AWTException {
         if (instance == null) instance = new CursorModule();
         return instance;

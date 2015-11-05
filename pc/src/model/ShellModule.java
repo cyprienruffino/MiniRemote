@@ -13,6 +13,12 @@ public class ShellModule {
     private ShellModule() throws AWTException {
     }
 
+    /**
+     * Singleton getter
+     *
+     * @return Instance of the module
+     * @throws AWTException
+     */
     public static ShellModule getInstance() throws AWTException {
         if (instance == null) instance = new ShellModule();
         return instance;
