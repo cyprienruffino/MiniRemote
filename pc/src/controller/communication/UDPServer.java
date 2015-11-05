@@ -54,7 +54,6 @@ public class UDPServer {
                     System.out.println("Ping reçu du client");
                     sendData = "Pong".getBytes();
                     DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
-                    System.out.println(paquetRetour.getSocketAddress());
                     s.send(paquetRetour);
                     System.out.println("reponse envoyé au client");
                     s.close();

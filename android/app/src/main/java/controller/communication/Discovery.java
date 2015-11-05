@@ -7,18 +7,14 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-import android.app.ActivityManager;
+
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
-import android.widget.Toast;
 
-import view.CoActivity;
-import view.HomeActivity;
 
 public class Discovery {
     public static final int RECEIVING_TIMEOUT = 10000;
@@ -36,9 +32,6 @@ public class Discovery {
     public void setIpServer(String ipServer) {
         this.ipServer = ipServer;
     }
-
-
-
 
     public Discovery(Context c) {
         System.out.println("in discovry");
@@ -96,50 +89,6 @@ public class Discovery {
         return null;
     }
 
-    public void waitingForDiscover() {
-        socket = null;
-        try
-        {
-            socket = new DatagramSocket(mPort,InetAddress.getLocalHost());
-            socket.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
-        }
-        catch (SocketException se)
-        {
-            Log.d("ERROR", "Verify your Wifi connection");
-            se.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-
-        byte[] receiveData = new byte[1024];
-        byte[] sendData = new byte[1024];
-
-        int i = 0;
-        while (socket != null && !socket.isClosed())
-        {
-            try
-            {
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                socket.receive(receivePacket);
-                String sentence = new String(receivePacket.getData());
-                InetAddress IPAddress = receivePacket.getAddress();
-                int port = receivePacket.getPort();
-                if (sentence.contains("Ping"))
-                {
-                    sendData = "Pong".getBytes();
-                    DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-                    socket.send(sendPacket);
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            i++;
-        }
-        stop();
-    }
-
     public String getMyAdresseIP() {
         try {
             for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
@@ -188,4 +137,3 @@ public class Discovery {
         return rec;
     }
 }
-//packet.getAddress().getHostAddress().contains(myAdress)
