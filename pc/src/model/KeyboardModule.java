@@ -14,6 +14,12 @@ public class KeyboardModule {
         robot = new Robot();
     }
 
+    /**
+     * Singleton getter
+     *
+     * @return Instance of the module
+     * @throws AWTException
+     */
     public static KeyboardModule getInstance() throws AWTException {
         if (instance == null) instance = new KeyboardModule();
         return instance;

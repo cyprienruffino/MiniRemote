@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.AWTException;
 import java.io.File;
 
 /**
@@ -13,6 +14,11 @@ public class FileExplorerModule {
 
     }
 
+    /**
+     * Singleton getter
+     *
+     * @return Instance of the module
+     */
     public static FileExplorerModule getInstance() {
         if (instance == null) instance = new FileExplorerModule();
         return instance;
