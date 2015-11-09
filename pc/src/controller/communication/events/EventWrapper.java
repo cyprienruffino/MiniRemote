@@ -1,4 +1,4 @@
-package controller.communication;
+package controller.communication.events;
 
 
 /**
