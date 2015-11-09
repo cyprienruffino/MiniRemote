@@ -1,5 +1,4 @@
 <?import javafx.scene.layout.GridPane?><?import javafx.scene.text.Text?>
-
 <?import javafx.scene.control.Button?>
 <GridPane fx:controller="controller.view.Controller"
           xmlns:fx="http://javafx.com/fxml"
@@ -21,4 +20,5 @@
             GridPane.columnSpan="10"
             GridPane.rowIndex="1"
             />
+
 </GridPane>
