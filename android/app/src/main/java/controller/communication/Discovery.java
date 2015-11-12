@@ -10,20 +10,47 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
+import android.widget.Toast;
 
 
-public class Discovery {
+public class Discovery implements Runnable{
     public static final int RECEIVING_TIMEOUT = 10000;
-    public static final int RECEIVING_TIMEOUT_SERVER = 30000;
-    private static final int mPort= 8888;
+    public static final int PC_REMOTE_MODE=0;
+    public static final int VP_REMOTE_MODE=1;
+    private static final int PC_PORT = 8888;
     private static final int EPSON_VP_PORT = 3629;
     private DatagramSocket socket;
     private Context mContext;
+    private Activity activity;
     private String ipServer;
+    private int port;
+
+
+
+    public Discovery(Activity act,int mode) {
+        System.out.println("in discovry");
+        mContext = act.getBaseContext();
+        activity=act;
+        try {
+            switch (mode){
+                case PC_REMOTE_MODE:
+                    port=PC_PORT;
+                    break;
+                case VP_REMOTE_MODE:
+                    port=EPSON_VP_PORT;
+                    break;
+            }
+            socket = new DatagramSocket(port);
+        } catch (SocketException e) {
+            e.printStackTrace();
+            makeToast("ERREUR: Lancement socket client UDP");
+        }
+    }
 
     public String getIpServer() {
         return ipServer;
@@ -31,16 +58,6 @@ public class Discovery {
 
     public void setIpServer(String ipServer) {
         this.ipServer = ipServer;
-    }
-
-    public Discovery(Context c) {
-        System.out.println("in discovry");
-        mContext = c;
-        try {
-            socket = new DatagramSocket(mPort);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
     }
 
     public void stop() {
@@ -52,6 +69,7 @@ public class Discovery {
         catch (Exception e)
         {
             e.printStackTrace();
+            makeToast("ERREUR: fermeture du client UDP");
         }
     }
 
@@ -65,7 +83,7 @@ public class Discovery {
         catch (InterruptedIOException ie)
         {
             Log.d("ERROR", "No server found");
-
+            makeToast("ERREUR: Aucun serveur trouvé");
             try
             {
                 socket.close();
@@ -77,6 +95,7 @@ public class Discovery {
         {
             e.printStackTrace();
             Log.d("ERROR", "Verify your Wifi connection");
+            makeToast("ERREUR: Vérifiez votre connexion Wifi");
             try
             {
                 socket.close();
@@ -123,7 +142,7 @@ public class Discovery {
 
         socket.setBroadcast(true);
         InetAddress broadcastAdress = getBroadcastAddress();
-        DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), broadcastAdress, mPort);
+        DatagramPacket packet = new DatagramPacket(data.getBytes(), data.length(), broadcastAdress, port);
         socket.send(packet);
 
         socket.setSoTimeout(RECEIVING_TIMEOUT);
@@ -135,5 +154,20 @@ public class Discovery {
             socket.receive(rec);
         stop();
         return rec;
+    }
+
+    @Override
+    public void run() {
+        setIpServer(getServerIp());
+    }
+
+    private void makeToast(String s){
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast t=Toast.makeText(mContext,s,Toast.LENGTH_SHORT);
+                t.show();
+            }
+        });
     }
 }

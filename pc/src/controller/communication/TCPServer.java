@@ -1,10 +1,8 @@
 package controller.communication;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -35,11 +33,10 @@ public class TCPServer {
             System.out.println("client connecté");
             out=new ObjectOutputStream(socket.getOutputStream());
             in=new ObjectInputStream(socket.getInputStream());
-            System.out.println("Message reçu: "+(String) in.readObject());
-            out.close();
-            in.close();
-            socket.close();
-            server.close();
+            while (socket!=null && !socket.isClosed()) {
+             in.readObject();
+            }
+            stop();
             System.out.println("serveur fermé");
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,5 +45,23 @@ public class TCPServer {
         }
     }
 
-    
+    public void send(Object o){
+        try {
+            out.writeObject(o);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stop(){
+        try {
+            in.close();
+            out.close();
+            socket.close();
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
