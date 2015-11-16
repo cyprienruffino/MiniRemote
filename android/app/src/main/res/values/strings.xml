@@ -7,4 +7,7 @@
     <string name="connection_button">Connect</string>
     <string name="main_connexion_button">Connexion Serveur</string>
     <string name="main_basic_button">Basic Command</string>
+    <string name="main_projo_text">Projecteur</string>
+    <string name="projo_onoff">On/Off</string>
+    <string name="projo_status">Status</string>
 </resources>

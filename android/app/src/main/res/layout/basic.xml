@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/VerticalLinearLayout">
+    style="@style/VerticalLinearLayout"
+    android:id="@+id/basic_root"
+        android:onClick="clavier"
+        >
+    <LinearLayout
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+    <EditText
+            android:layout_width="0dip"
+            android:layout_height="0dip"
+            android:id="@+id/basic_edittext"
+            />
 <LinearLayout
     style="@style/VerticalLinearLayout"
     android:layout_weight="1"
@@ -24,13 +37,17 @@
 </LinearLayout>
     <LinearLayout
         style="@style/HorizontalLinearLayout"
-        android:layout_weight="6">
+        android:layout_weight="12">
         <Button
             style="@style/MatchParent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="Souris"
+            android:onClick="souris"/>
         <Button
             style="@style/MatchParent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:text="Clavier"
+            android:onClick="clavier"/>
 
     </LinearLayout>
 

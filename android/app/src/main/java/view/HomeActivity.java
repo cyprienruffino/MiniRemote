@@ -48,6 +48,9 @@ public class HomeActivity extends Activity {
             case R.id.main_connexion_button:
                 v= new Intent(HomeActivity.this,CoActivity.class);
                 startActivity(v);
+            case R.id.main_projo_button :
+                v=new Intent(HomeActivity.this, ProjoActivity.class);
+                startActivity(v);
         }
     }
 }
