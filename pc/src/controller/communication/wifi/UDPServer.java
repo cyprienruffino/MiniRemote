@@ -1,4 +1,4 @@
-package controller.communication;
+package controller.communication.wifi;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
 

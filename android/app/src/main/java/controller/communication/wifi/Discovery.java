@@ -1,4 +1,4 @@
-package controller.communication;
+package controller.communication.wifi;
 
 import java.io.InterruptedIOException;
 import java.net.DatagramPacket;
@@ -147,7 +147,7 @@ public class Discovery implements Runnable{
 
         socket.setSoTimeout(RECEIVING_TIMEOUT);
         byte[] buf = new byte[1024];
-        DatagramPacket rec=new DatagramPacket(buf, buf.length);;
+        DatagramPacket rec = new DatagramPacket(buf, buf.length);
         String myAdress =getMyAdresseIP();
         socket.receive(rec);
         while (rec.getAddress().getHostAddress().contains(myAdress))

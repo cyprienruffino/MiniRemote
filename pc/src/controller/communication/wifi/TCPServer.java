@@ -1,4 +1,4 @@
-package controller.communication;
+package controller.communication.wifi;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

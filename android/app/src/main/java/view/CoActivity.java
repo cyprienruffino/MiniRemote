@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import controller.communication.Discovery;
-import controller.communication.TCPClient;
+import controller.communication.wifi.Discovery;
+import controller.communication.wifi.TCPClient;
 import orleans.info.fr.remotecontrol.R;
 
 /**

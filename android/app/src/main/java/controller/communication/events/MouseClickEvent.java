@@ -9,9 +9,20 @@ public class MouseClickEvent {
     public static final String MOUSE_HIT = "REMOTE_EVENT_MOUSE_HIT";
 
     private String action;
+    private int click;
 
-    public MouseClickEvent(String action) throws ActionException {
+    public MouseClickEvent(int click, String action) throws ActionException {
         if (action.equals(MOUSE_HIT) && action.equals(MOUSE_PRESS) && action.equals(MOUSE_RELEASE))
             throw new ActionException();
+        this.action = action;
+        this.click = click;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public int getClick() {
+        return click;
     }
 }

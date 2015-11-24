@@ -1,4 +1,4 @@
-package controller.communication;
+package controller.communication.wifi;
 
 /**
  * Created by whiteshad on 03/11/15.
