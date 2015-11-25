@@ -20,22 +20,20 @@ import android.widget.Toast;
 
 public class Discovery implements Runnable{
     public static final int RECEIVING_TIMEOUT = 10000;
-    public static final int PC_REMOTE_MODE=0;
-    public static final int VP_REMOTE_MODE=1;
     private static final int PC_PORT = 8888;
     private static final int EPSON_VP_PORT = 3629;
+    public static final int PC_REMOTE_MODE=0;
+    public static final int VP_REMOTE_MODE=1;
     private DatagramSocket socket;
     private Context mContext;
-    private Activity activity;
     private String ipServer;
     private int port;
 
 
 
-    public Discovery(Activity act,int mode) {
+    public Discovery(Context context,int mode) {
         System.out.println("in discovry");
-        mContext = act.getBaseContext();
-        activity=act;
+        mContext =context;
         try {
             switch (mode){
                 case PC_REMOTE_MODE:
@@ -48,7 +46,7 @@ public class Discovery implements Runnable{
             socket = new DatagramSocket(port);
         } catch (SocketException e) {
             e.printStackTrace();
-            makeToast("ERREUR: Lancement socket client UDP");
+           // makeToast("ERREUR: Lancement socket client UDP");
         }
     }
 
@@ -56,7 +54,7 @@ public class Discovery implements Runnable{
         return ipServer;
     }
 
-    public void setIpServer(String ipServer) {
+    private void setIpServer(String ipServer) {
         this.ipServer = ipServer;
     }
 
@@ -69,11 +67,11 @@ public class Discovery implements Runnable{
         catch (Exception e)
         {
             e.printStackTrace();
-            makeToast("ERREUR: fermeture du client UDP");
+            //makeToast("ERREUR: fermeture du client UDP");
         }
     }
 
-    public String getServerIp() {
+   private  String getServerIp() {
         try
         {
             DatagramPacket packet = sendBroadcast("Ping");
@@ -83,7 +81,7 @@ public class Discovery implements Runnable{
         catch (InterruptedIOException ie)
         {
             Log.d("ERROR", "No server found");
-            makeToast("ERREUR: Aucun serveur trouvé");
+            //makeToast("ERREUR: Aucun serveur trouvé");
             try
             {
                 socket.close();
@@ -95,7 +93,7 @@ public class Discovery implements Runnable{
         {
             e.printStackTrace();
             Log.d("ERROR", "Verify your Wifi connection");
-            makeToast("ERREUR: Vérifiez votre connexion Wifi");
+            //makeToast("ERREUR: Vérifiez votre connexion Wifi");
             try
             {
                 socket.close();
@@ -161,7 +159,7 @@ public class Discovery implements Runnable{
         setIpServer(getServerIp());
     }
 
-    private void makeToast(String s){
+    /*private void makeToast(String s){
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -169,5 +167,5 @@ public class Discovery implements Runnable{
                 t.show();
             }
         });
-    }
+    }*/
 }

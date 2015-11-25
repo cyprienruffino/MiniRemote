@@ -3,6 +3,7 @@
     <uses-sdk android:minSdkVersion="17"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
@@ -25,6 +26,7 @@
                 android:name="view.CoActivity"
                   />
         <activity android:name="view.ProjoActivity"/>
+        <service android:name="controller.communication.wifi.serviceTest.ConnectionService"/>
     </application>
 
 </manifest>
