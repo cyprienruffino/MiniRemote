@@ -21,6 +21,7 @@
         <View
             style="@style/MatchParent"
             android:layout_weight="1"
+            android:background="@drawable/souris"
             />
         <LinearLayout
             style="@style/HorizontalLinearLayout"
