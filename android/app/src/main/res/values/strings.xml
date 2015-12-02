@@ -10,4 +10,9 @@
     <string name="main_projo_text">Projecteur</string>
     <string name="projo_onoff">On/Off</string>
     <string name="projo_status">Status</string>
+    <string name="servicedialog_title">Choisir Service</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="wifi">Wifi</string>
+    <string name="networkdialog_network">Choisir Réseau</string>
+    <string name="networkdialog_device">Choisir Appareil</string>
 </resources>

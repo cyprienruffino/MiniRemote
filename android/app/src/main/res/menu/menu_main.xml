@@ -4,9 +4,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     >
-<item
-    android:id="@+id/settings"
-    android:title="@string/settings"
-    />
+    <item
+        android:id="@+id/menu_serv"
+        android:title="@string/servicedialog_title"/>
+    <item android:id="@+id/menu_net"
+        android:title="@string/networkdialog_network"/>
+    <item
+        android:id="@+id/menu_dev"
+        android:title="@string/networkdialog_device"
+        />
+    <item
+        android:id="@+id/settings"
+        android:title="@string/settings"
+        />
 
 </menu>

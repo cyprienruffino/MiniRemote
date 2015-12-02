@@ -12,6 +12,7 @@ import orleans.info.fr.remotecontrol.R;
 /**
  * Created by Valentin on 22/10/2015.
  */
+/*TODO A SUPPRIMER*/
 public class KeyboardActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -13,7 +13,6 @@ import java.util.Observer;
 
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.RemoteEventHandler;
-import controller.communication.events.StringEvent;
 
 /**
  * Created by whiteshad on 12/11/15.
