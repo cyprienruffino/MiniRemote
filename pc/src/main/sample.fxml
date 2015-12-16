@@ -1,0 +1,24 @@
+<?import javafx.scene.layout.GridPane?><?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<GridPane fx:controller="controller.view.Controller"
+          xmlns:fx="http://javafx.com/fxml"
+          alignment="center"
+          hgap="10"
+          vgap="10"
+        >
+    <Text
+            fx:id="text"
+            text="waiting..."
+            GridPane.columnIndex="0"
+            GridPane.columnSpan="10"
+            GridPane.rowIndex="0"
+            />
+    <Button
+            text="test"
+            onAction="#test"
+            GridPane.columnIndex="0"
+            GridPane.columnSpan="10"
+            GridPane.rowIndex="1"
+            />
+
+</GridPane>
