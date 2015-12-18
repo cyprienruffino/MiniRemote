@@ -89,7 +89,7 @@ public class ConnectionService extends Service {
                 if(running && client.isConnected()) {
                     try {
                         out = new ObjectOutputStream(client.getOutputStream());
-                        out.writeObject(event);
+                        //out.writeObject(event);
                         out.flush();
                     } catch (IOException e) {
                         e.printStackTrace();

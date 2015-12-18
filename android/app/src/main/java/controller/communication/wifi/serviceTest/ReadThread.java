@@ -46,7 +46,7 @@ public class ReadThread extends Thread {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                controller.execute(event);
+                //controller.execute(event);
                 Toast t=new Toast(context);
                 t.makeText(context,"event Reçu",Toast.LENGTH_SHORT);
                 t.show();

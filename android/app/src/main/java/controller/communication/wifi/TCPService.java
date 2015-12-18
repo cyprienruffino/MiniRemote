@@ -1,6 +1,10 @@
 package controller.communication.wifi;
 
-import java.awt.AWTException;
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,15 +14,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import controller.communication.events.ActionException;
+import controller.Controller;
 import controller.communication.events.EventWrapper;
-import main.Controller;
-
 
 /**
- * Created by cyprien on 04/11/15.
+ * Created by cyprien on 18/12/15.
  */
-public class TCPServer {
+public class TCPService extends Service{
+    /*******************Service part**************************************/
+    public class TCPBinder extends Binder{
+        public TCPService getService(){ return TCPService.this;}}
+    private final IBinder mBinder = new TCPBinder() ;
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        events= Collections.synchronizedList(new ArrayList<>());
+        return mBinder;
+    }
+    /*******************Server part****************************************/
+
     private final static int PORT = 8888;
     private Thread serverInputThread;
     private Thread serverOutputThread;
@@ -26,15 +40,10 @@ public class TCPServer {
     private ServerSocket serverSocket=null;
     private List<EventWrapper> events;
 
-    public TCPServer() {
-        events= Collections.synchronizedList(new ArrayList<>());
-    }
-
     public void startServer() throws IOException {
-        serverSocket=new ServerSocket(PORT);
-        System.out.println("en attente de client");
-        socket=serverSocket.accept();
-        System.out.println("client connecté");
+
+        String IP=new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE).getIpServer();
+        socket=new Socket(IP, PORT);
 
         ServerInput actionInput = new ServerInput(socket, events);
         ServerOutput actionOutput = new ServerOutput(socket, events);
@@ -72,18 +81,16 @@ public class TCPServer {
 
                 while(true){
                     received=(EventWrapper)in.readObject();
-                    response=Controller.handleControl(received);
-                    events.add(response);
-                    events.notifyAll();
+                    Controller.execute(received);
                 }
 
-            } catch (IOException | ClassNotFoundException | AWTException | ActionException e) {
+            } catch (IOException | ClassNotFoundException  e) {
                 e.printStackTrace();
             }
         }
     }
     private class ServerOutput implements Runnable{
-        private List<EventWrapper> events;
+        private final List<EventWrapper> events;
         private Socket socket=null;
 
         public ServerOutput(Socket socket, List<EventWrapper> events) throws IOException {
@@ -109,5 +116,4 @@ public class TCPServer {
             }
         }
     }
-
 }

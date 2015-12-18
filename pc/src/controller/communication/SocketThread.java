@@ -9,7 +9,6 @@ import java.net.Socket;
 
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.RemoteEventHandler;
-import controller.communication.events.StringEvent;
 
 /**
  * Created by whiteshad on 12/11/15.
@@ -46,7 +45,7 @@ public class SocketThread  extends Thread{
             while (true){
                 if(in.available()!=0) {
                     eventHandler.addRemoteEvent((RemoteEvent) in.readObject());
-                    System.out.println(((StringEvent) (eventHandler.getRemoteEvent())).s);
+                    System.out.println(((eventHandler.getRemoteEvent())));
                 }
             }
         } catch (IOException e) {

@@ -26,7 +26,7 @@ import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
  */
 public class Controller {
 
-    public Object handleControl(Object recv) throws AWTException, IOException, ActionException {
+    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
