@@ -1,41 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/HorizontalLinearLayout"
-    android:id="@+id/basic_root">
+    style="@style/VerticalLinearLayout">
+    <android.gesture.GestureOverlayView
+        style="@style/MatchParent"
+        android:background="#000000"
+        android:layout_weight="1"
+        />
     <LinearLayout
-        android:layout_width="0dip"
-        android:layout_height="0dip"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-    </LinearLayout>
-    <EditText
-            android:layout_width="0dip"
-            android:layout_height="0dip"
-            android:id="@+id/basic_edittext"
-            />
-    <LinearLayout
-        style="@style/VerticalLinearLayout"
+        style="@style/HorizontalLinearLayout"
         android:layout_height="wrap_content">
-        <View
-            style="@style/MatchParent"
-            android:background="#000000"
+        <ImageButton
+            style="@style/WrapContent"
             android:layout_weight="1"
-            />
-        <LinearLayout
-            style="@style/HorizontalLinearLayout"
-            android:layout_height="wrap_content">
-            <ImageButton
-                style="@style/WrapContent"
-                android:layout_weight="1"
-                android:src="?attr/gauche"/>
-            <ImageButton
-                style="@style/WrapContent"
-                android:layout_weight="1"
-                android:src="?attr/clavier"/>
-            <ImageButton
-                style="@style/WrapContent"
-                android:layout_weight="1"
-                android:src="?attr/droite"/>
-        </LinearLayout>
+            android:src="?attr/gauche"
+            android:onClick="gauche"/>
+        <ImageButton
+            style="@style/WrapContent"
+            android:id="@+id/basic_keyboard_button"
+            android:layout_weight="1"
+            android:src="?attr/clavier"
+            android:onClick="clavier"/>
+        <ImageButton
+            style="@style/WrapContent"
+            android:layout_weight="1"
+            android:src="?attr/droite"
+            android:onClick="droite"/>
     </LinearLayout>
 </LinearLayout>

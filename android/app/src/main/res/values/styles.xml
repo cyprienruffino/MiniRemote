@@ -3,19 +3,15 @@
 
     <!--Theme-->
     <style name="AppTheme" parent="android:Theme.Holo">
-        <item name="theme_dep_icon">@mipmap/cellphone110</item>
     </style>
     <style name="AppTheme.NoActionBar" parent="android:Theme.Holo.NoActionBar">
-        <item name="theme_dep_icon">@mipmap/cellphone110</item>
         <item name="gauche">@drawable/gauche2</item>
         <item name="droite">@drawable/droite2</item>
         <item name="clavier">@drawable/clavier2</item>
     </style>
     <style name="AppTheme.Light" parent="android:Theme.Holo.Light">
-        <item name="theme_dep_icon">@mipmap/cellphone106</item>
     </style>
     <style name="AppTheme.Light.NoActionBar" parent="android:Theme.Holo.Light.NoActionBar">
-        <item name="theme_dep_icon">@mipmap/cellphone106</item>
         <item name="gauche">@drawable/gauche1</item>
         <item name="droite">@drawable/droite1</item>
         <item name="clavier">@drawable/clavier1</item>
