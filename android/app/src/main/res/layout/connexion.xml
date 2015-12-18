@@ -8,7 +8,19 @@
     <Button
             style="@style/MatchParent"
             android:layout_weight="1"
+        android:onClick="init"
+        android:text="@string/init_button"
+        />
+    <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"
         android:onClick="connexion"
         android:text="@string/connection_button"
+        />
+     <Button
+            style="@style/MatchParent"
+            android:layout_weight="1"
+        android:onClick="test"
+        android:text="@string/test"
         />
 </LinearLayout>

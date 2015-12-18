@@ -1,10 +1,13 @@
 package controller.communication.events;
 
 
+import java.io.Serializable;
+
 /**
  * Created by cyprien on 09/11/15.
  */
-public class EventWrapper {
+public class EventWrapper implements Serializable{
+    private static final long serialVersionUID=1234567890;
     private RemoteEvent event;
     private Class<? extends RemoteEvent> type;
 

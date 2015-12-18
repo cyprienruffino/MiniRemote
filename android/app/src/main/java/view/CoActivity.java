@@ -1,28 +1,61 @@
 package view;
 
 import android.app.Activity;
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.View;
 
+import java.io.IOException;
+
+import controller.communication.events.EventWrapper;
+import controller.communication.events.MoveMouseEvent;
 import controller.communication.wifi.ConnectionManager;
+import controller.communication.wifi.TCPService;
+import controller.communication.wifi.serviceTest.ServiceConnector;
 import orleans.info.fr.remotecontrol.R;
 
 /**
  * Created by whiteshad on 04/11/15.
  */
 public class CoActivity extends Activity {
+    private TCPService tcpService;
+    private ServiceConnection sc=new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            tcpService = ((TCPService.TCPBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+         //   tcpService=null;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connexion);
     }
 
-    public void connexion(View view) {
-
-        ConnectionManager cm =new ConnectionManager(this.getBaseContext());
-        cm.startConnection(ConnectionManager.PC_REMOTE_MODE_WIFI);
-       // cm.sendRemoteEvent(new StringEvent("hello"));
+    public void init(View view) throws IOException, InterruptedException {
+        Intent intent=new Intent(this.getApplicationContext(), TCPService.class);
+        bindService(intent, sc, Context.BIND_AUTO_CREATE);
     }
+
+    public void connexion(View view) throws IOException, InterruptedException {
+        tcpService.startServer();
+    }
+    public void test(View view){
+        MoveMouseEvent event = new MoveMouseEvent(1000, 1000);
+        tcpService.send(new EventWrapper(event));
+    }
+
 
 }
 

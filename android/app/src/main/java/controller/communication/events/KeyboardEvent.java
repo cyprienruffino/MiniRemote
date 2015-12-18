@@ -3,7 +3,7 @@ package controller.communication.events;
 /**
  * Created by cyprien on 09/11/15.
  */
-public class KeyboardEvent {
+public class KeyboardEvent extends RemoteEvent{
     public static final String KEY_PRESS = "REMOTE_EVENT_KEY_PRESS";
     public static final String KEY_RELEASE = "REMOTE_EVENT_KEY_RELEASE";
     public static final String KEY_HIT = "REMOTE_EVENT_KEY_HIT";

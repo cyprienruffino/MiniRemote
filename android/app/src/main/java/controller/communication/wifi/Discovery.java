@@ -32,7 +32,7 @@ public class Discovery implements Runnable{
 
 
     public Discovery(Context context,int mode) {
-        System.out.println("in discovry");
+        System.out.println("in discovery");
         mContext =context;
         try {
             switch (mode){

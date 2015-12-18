@@ -3,7 +3,7 @@ package controller.communication.events;
 /**
  * Created by cyprien on 09/11/15.
  */
-public class MoveMouseEvent {
+public class MoveMouseEvent extends RemoteEvent {
 
     private int xmove;
     private int ymove;

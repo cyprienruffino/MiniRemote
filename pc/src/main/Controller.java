@@ -68,6 +68,8 @@ public class Controller {
             CursorModule.getInstance().mouseScroll(scrollMouseEvent.getScroll());
         }
 
-        throw new ActionException("Incorrect object received");
+        System.out.println(event.getClass());
+        return new EventWrapper(event);
+        //throw new ActionException("Incorrect object received");
     }
 }

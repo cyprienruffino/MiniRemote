@@ -17,4 +17,6 @@
     <string name="networkdialog_device">Choisir Appareil</string>
     <string name="right_clic">Clic droit</string>
     <string name="left_clic">Clic gauche</string>
+    <string name="test">Test</string>
+    <string name="init_button">Initialisation</string>
 </resources>

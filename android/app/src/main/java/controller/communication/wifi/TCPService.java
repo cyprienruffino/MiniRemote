@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -22,13 +23,13 @@ import controller.communication.events.EventWrapper;
  */
 public class TCPService extends Service{
     /*******************Service part**************************************/
-    public class TCPBinder extends Binder{
-        public TCPService getService(){ return TCPService.this;}}
     private final IBinder mBinder = new TCPBinder() ;
+    public class TCPBinder extends Binder{
+        public TCPService getService(){ return TCPService.this;}
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
-        events= Collections.synchronizedList(new ArrayList<>());
         return mBinder;
     }
     /*******************Server part****************************************/
@@ -36,17 +37,22 @@ public class TCPService extends Service{
     private final static int PORT = 8888;
     private Thread serverInputThread;
     private Thread serverOutputThread;
-    private Socket socket=null;
     private ServerSocket serverSocket=null;
     private List<EventWrapper> events;
+    private Object lock=new Object();
 
-    public void startServer() throws IOException {
+    public void startServer() throws IOException, InterruptedException {
 
-        String IP=new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE).getIpServer();
-        socket=new Socket(IP, PORT);
+        events=Collections.synchronizedList(new ArrayList<EventWrapper>());
+        Discovery discovery=new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE);
+        Thread thread=new Thread(discovery);
+        thread.start();
+        thread.join();
+        String IP=discovery.getIpServer();
+        discovery.stop();
 
-        ServerInput actionInput = new ServerInput(socket, events);
-        ServerOutput actionOutput = new ServerOutput(socket, events);
+        ServerInput actionInput = new ServerInput(IP, PORT, events, lock);
+        ServerOutput actionOutput = new ServerOutput(IP, PORT, events, lock);
         serverInputThread=new Thread(actionInput);
         serverOutputThread=new Thread(actionOutput);
         serverInputThread.start();
@@ -54,8 +60,10 @@ public class TCPService extends Service{
     }
 
     public void send(EventWrapper event){
-        events.add(event);
-        events.notifyAll();
+        synchronized (lock) {
+            events.add(event);
+            lock.notify();
+        }
     }
 
 
@@ -68,19 +76,26 @@ public class TCPService extends Service{
         private List<EventWrapper> events;
         private EventWrapper received;
         private EventWrapper response;
+        private String IP;
+        private int PORT;
+        private Object lock;
 
-        public ServerInput(Socket socket, List<EventWrapper> events) throws IOException {
-            this.socket=socket;
+        public ServerInput(String IP, int PORT, List<EventWrapper> events, Object lock) throws IOException {
+            this.IP=IP;
+            this.PORT=PORT;
             this.events=events;
+            this.lock=lock;
         }
 
         @Override
         public void run(){
             try {
+                this.socket=new Socket(IP, PORT);
                 ObjectInputStream in=new ObjectInputStream(socket.getInputStream());
 
                 while(true){
                     received=(EventWrapper)in.readObject();
+                    Log.wtf("OK!", "Ca marche!");
                     Controller.execute(received);
                 }
 
@@ -92,21 +107,30 @@ public class TCPService extends Service{
     private class ServerOutput implements Runnable{
         private final List<EventWrapper> events;
         private Socket socket=null;
+        private String IP;
+        private int PORT;
+        private Object lock;
 
-        public ServerOutput(Socket socket, List<EventWrapper> events) throws IOException {
-            this.socket=socket;
+        public ServerOutput(String IP, int PORT, List<EventWrapper> events,Object lock) throws IOException {
+            this.IP=IP;
+            this.PORT=PORT;
             this.events=events;
+            this.lock=lock;
         }
 
         @Override
         public void run(){
             try {
+                this.socket=new Socket(IP, PORT);
                 ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
-
-                while (true){
-                    events.wait();
-                    while (!events.isEmpty()){
-                        out.writeObject(events.remove(0));
+                out.flush();
+                synchronized (lock){
+                    while (true) {
+                        lock.wait();
+                        while (!events.isEmpty()) {
+                            out.writeObject(events.remove(0));
+                            out.flush();
+                        }
                     }
                 }
             } catch (IOException e) {
