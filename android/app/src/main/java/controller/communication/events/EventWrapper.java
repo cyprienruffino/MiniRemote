@@ -8,7 +8,7 @@ public class EventWrapper {
     private controller.communication.events.RemoteEvent event;
     private Class<? extends controller.communication.events.RemoteEvent> type;
 
-    public EventWrapper(controller.communication.events.RemoteEvent event) {
+    public EventWrapper(RemoteEvent event) {
         this.event = event;
         this.type = event.getClass();
     }

@@ -3,4 +3,6 @@
     <attr name="gauche" format="reference"/>
     <attr name="droite" format="reference"/>
     <attr name="clavier" format="reference"/>
+    <attr name="border" format="color" />
+    <attr name="middle" format="color" />
 </resources>

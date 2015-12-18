@@ -3,7 +3,7 @@
     <string name="app_name">RemoteControl</string>
     <string name="settings">Settings</string>
     <string name="keyboard_send">Envoyer</string>
-    <string name="main_keyboard_button">Keyboard</string>
+    <string name="keyboard">Keyboard</string>
     <string name="connection_button">Connect</string>
     <string name="main_connexion_button">Connexion Serveur</string>
     <string name="main_basic_button">Basic Control</string>
@@ -15,4 +15,6 @@
     <string name="wifi">Wifi</string>
     <string name="networkdialog_network">Choisir Réseau</string>
     <string name="networkdialog_device">Choisir Appareil</string>
+    <string name="right_clic">Clic droit</string>
+    <string name="left_clic">Clic gauche</string>
 </resources>

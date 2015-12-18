@@ -1,29 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
     style="@style/VerticalLinearLayout">
-    <android.gesture.GestureOverlayView
+
+    <LinearLayout
         style="@style/MatchParent"
-        android:background="#000000"
         android:layout_weight="1"
-        />
+        android:layout_margin="8dip"
+        android:padding="2dip"
+        android:background="?attr/border"
+        >
+
+        <View
+            android:id="@+id/basic_move"
+            style="@style/MatchParent"
+            android:background="?attr/middle"/>
+    </LinearLayout>
+
     <LinearLayout
         style="@style/HorizontalLinearLayout"
         android:layout_height="wrap_content">
+
         <ImageButton
             style="@style/WrapContent"
+            android:contentDescription="@string/left_clic"
             android:layout_weight="1"
-            android:src="?attr/gauche"
-            android:onClick="gauche"/>
+            android:onClick="gauche"
+            android:src="?attr/gauche" />
+
         <ImageButton
-            style="@style/WrapContent"
             android:id="@+id/basic_keyboard_button"
-            android:layout_weight="1"
-            android:src="?attr/clavier"
-            android:onClick="clavier"/>
-        <ImageButton
             style="@style/WrapContent"
             android:layout_weight="1"
-            android:src="?attr/droite"
-            android:onClick="droite"/>
+            android:contentDescription="@string/keyboard"
+            android:onClick="clavier"
+            android:src="?attr/clavier" />
+
+        <ImageButton
+            style="@style/WrapContent"
+            android:contentDescription="@string/right_clic"
+            android:layout_weight="1"
+            android:onClick="droite"
+            android:src="?attr/droite" />
     </LinearLayout>
 </LinearLayout>

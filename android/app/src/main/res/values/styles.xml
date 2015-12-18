@@ -8,6 +8,8 @@
         <item name="gauche">@drawable/gauche2</item>
         <item name="droite">@drawable/droite2</item>
         <item name="clavier">@drawable/clavier2</item>
+        <item name="middle">#444444</item>
+        <item name="border">#222222</item>
     </style>
     <style name="AppTheme.Light" parent="android:Theme.Holo.Light">
     </style>
@@ -15,6 +17,8 @@
         <item name="gauche">@drawable/gauche1</item>
         <item name="droite">@drawable/droite1</item>
         <item name="clavier">@drawable/clavier1</item>
+        <item name="middle">#BBBBBB</item>
+        <item name="border">#DDDDDD</item>
     </style>
 
     <!--Style for layout-->
