@@ -13,9 +13,17 @@ import javafx.scene.text.Text;
  * Created by Valentin on 03/11/2015.
  */
 public class Controller {
+    TCPServer server;
+
     @FXML public void connect(ActionEvent e) throws IOException {
         new UDPServer().attendreRequete();
-        new TCPServer().startServer();
+        server=new TCPServer();
+        server.startServer();
+
+    }
+
+    public void disconnect(ActionEvent actionEvent) throws IOException {
+        server.stop();
 
     }
 }

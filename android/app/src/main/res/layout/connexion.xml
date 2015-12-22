@@ -5,12 +5,7 @@
             style="@style/MatchParent"
             android:layout_weight="1"
         android:id="@+id/connexion_txtView"/>
-    <Button
-            style="@style/MatchParent"
-            android:layout_weight="1"
-        android:onClick="init"
-        android:text="@string/init_button"
-        />
+
     <Button
             style="@style/MatchParent"
             android:layout_weight="1"

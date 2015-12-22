@@ -22,7 +22,11 @@ import controller.communication.events.EventWrapper;
  * Created by cyprien on 18/12/15.
  */
 public class TCPService extends Service{
+
+
     /*******************Service part**************************************/
+
+
     private final IBinder mBinder = new TCPBinder() ;
     public class TCPBinder extends Binder{
         public TCPService getService(){ return TCPService.this;}
@@ -32,6 +36,8 @@ public class TCPService extends Service{
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
+
+
     /*******************Server part****************************************/
 
     private final static int PORT = 8888;
@@ -61,6 +67,8 @@ public class TCPService extends Service{
 
     public void send(EventWrapper event){
         synchronized (lock) {
+            if(events==null)
+                events=Collections.synchronizedList(new ArrayList<EventWrapper>());
             events.add(event);
             lock.notify();
         }
@@ -68,6 +76,7 @@ public class TCPService extends Service{
 
 
     public void stop(){
+        serverOutputThread.interrupt();
         serverInputThread.interrupt();
     }
 

@@ -31,14 +31,17 @@ public class Controller {
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
 
-        if (event instanceof CommandEvent) {
+        System.out.println(event.getClass());
+
+        if (event.getClass().equals(CommandEvent.class)) {
             CommandEvent commandEvent = (CommandEvent) event;
             ShellModule.getInstance().execute(commandEvent.getCommand());
-            return new EventWrapper(new ResponseEvent());
+            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
-        if (event instanceof KeyboardEvent) {
+        if (event.getClass().equals(KeyboardEvent.class)) {
             KeyboardEvent keyboardEvent = (KeyboardEvent) event;
+            System.out.println(keyboardEvent.getKeycode());
             switch (keyboardEvent.getAction()) {
                 case KEY_HIT:
                     KeyboardModule.getInstance().hitKey(keyboardEvent.getKeycode());
@@ -49,27 +52,29 @@ public class Controller {
                 case KEY_RELEASE:
                     KeyboardModule.getInstance().keyRelease(keyboardEvent.getKeycode());
             }
-            return new EventWrapper(new ResponseEvent());
+            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
-        if (event instanceof MouseClickEvent) {
+        if (event.getClass().equals(MouseClickEvent.class)) {
             MouseClickEvent mouseClickEvent = (MouseClickEvent) event;
             if (mouseClickEvent.getClick() == 1) CursorModule.getInstance().mouseRightClick();
             else CursorModule.getInstance().mouseLeftClick();
+            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
-        if (event instanceof MoveMouseEvent) {
+        if (event.getClass().equals(MoveMouseEvent.class)) {
             MoveMouseEvent moveMouseEvent = (MoveMouseEvent) event;
             CursorModule.getInstance().moveCursor(moveMouseEvent.getXmove(), moveMouseEvent.getYmove());
+            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
-        if (event instanceof ScrollMouseEvent) {
+        if (event.getClass().equals(ScrollMouseEvent.class)) {
             ScrollMouseEvent scrollMouseEvent = (ScrollMouseEvent) event;
             CursorModule.getInstance().mouseScroll(scrollMouseEvent.getScroll());
+            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
-        System.out.println(event.getClass());
-        return new EventWrapper(event);
+        return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
         //throw new ActionException("Incorrect object received");
     }
 }

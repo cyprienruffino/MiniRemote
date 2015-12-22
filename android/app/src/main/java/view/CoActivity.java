@@ -12,6 +12,7 @@ import android.view.View;
 
 import java.io.IOException;
 
+import controller.Controller;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.MoveMouseEvent;
 import controller.communication.wifi.ConnectionManager;
@@ -33,7 +34,7 @@ public class CoActivity extends Activity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-         //   tcpService=null;
+            tcpService=null;
         }
     };
 
@@ -41,15 +42,22 @@ public class CoActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.connexion);
-    }
 
-    public void init(View view) throws IOException, InterruptedException {
         Intent intent=new Intent(this.getApplicationContext(), TCPService.class);
         bindService(intent, sc, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    protected void onStop(){
+        super.onStop();
+        unbindService(sc);
+    }
+
+
     public void connexion(View view) throws IOException, InterruptedException {
         tcpService.startServer();
+        Controller.setTcpService(tcpService);
+        Controller.isServiceStarted=true;
     }
     public void test(View view){
         MoveMouseEvent event = new MoveMouseEvent(1000, 1000);

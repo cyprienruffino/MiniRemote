@@ -6,12 +6,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import controller.communication.events.ActionException;
 import controller.communication.events.EventWrapper;
+import controller.communication.events.ResponseEvent;
 import main.Controller;
 
 
@@ -27,6 +29,8 @@ public class TCPServer {
     private ServerSocket serverSocket=null;
     private List<EventWrapper> events;
     private Object lock=new Object();
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
 
     public TCPServer() {
         events= Collections.synchronizedList(new ArrayList<>());
@@ -39,11 +43,13 @@ public class TCPServer {
         System.out.println("client connecté");
 
 
-        ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
+        out=new ObjectOutputStream(socket.getOutputStream());
         out.flush();
-        ObjectInputStream in=new ObjectInputStream(socket.getInputStream());
-        ServerInput actionInput = new ServerInput(in, events, lock);
-        ServerOutput actionOutput = new ServerOutput(out, events, lock);
+        System.out.println("OutputStream Instancié");
+        in=new ObjectInputStream(socket.getInputStream());
+        System.out.println("InputStream Instancié");
+        ServerInput actionInput = new ServerInput(in, events, lock, this);
+        ServerOutput actionOutput = new ServerOutput(out, events, lock, this);
 
         serverInputThread=new Thread(actionInput);
         serverOutputThread=new Thread(actionOutput);
@@ -60,8 +66,14 @@ public class TCPServer {
     }
 
 
-    public void stop(){
-
+    public void stop() throws IOException {
+        send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
+        serverOutputThread.interrupt();
+        serverInputThread.interrupt();
+        in.close();
+        out.close();
+        serverSocket.close();
+        socket.close();
     }
 
     private class ServerInput implements Runnable{
@@ -70,8 +82,10 @@ public class TCPServer {
         private EventWrapper received;
         private EventWrapper response;
         private Object lock;
+        private TCPServer server;
 
-        public ServerInput(ObjectInputStream in, List<EventWrapper> events, Object lock) throws IOException {
+        public ServerInput(ObjectInputStream in, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
+            this.server=server;
             this.in=in;
             this.events=events;
             this.lock=lock;
@@ -85,7 +99,11 @@ public class TCPServer {
                 System.out.println("InputStream instancié");
                 synchronized (lock){
                     while(true) {
-                        received = (EventWrapper) in.readObject();
+                        try {
+                            received = (EventWrapper) in.readObject();
+                        }catch (SocketException e) {
+                            server.stop();
+                        }
                         System.out.println("Objet recu");
                         response = Controller.handleControl(received);
                         events.add(response);
@@ -102,8 +120,10 @@ public class TCPServer {
         private List<EventWrapper> events;
         private ObjectOutputStream out;
         private Object lock;
+        private TCPServer server;
 
-        public ServerOutput(ObjectOutputStream out, List<EventWrapper> events, Object lock) throws IOException {
+        public ServerOutput(ObjectOutputStream out, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
+            this.server=server;
             this.out=out;
             this.events=events;
             this.lock=lock;

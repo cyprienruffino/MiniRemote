@@ -12,13 +12,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import controller.Controller;
+import controller.communication.events.ActionException;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.KeyboardEvent;
 import controller.communication.events.MouseClickEvent;
+import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
 /**
  * Created by Valentin on 02/11/2015.
  */
 public class BasicActivity extends Activity {
+    TCPService tcpService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,18 +37,26 @@ public class BasicActivity extends Activity {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
                     case MotionEvent.ACTION_UP:
-                        Log.d("MOVEMENT", "x : "+event.getX()+" y :"+event.getY());
+                        Log.d("MOVEMENT", "x : " + event.getX() + " y :" + event.getY());
                         return true;
-                    default :
+                    default:
                         return false;
                 }
             }
         });
+
+        tcpService=Controller.getTcpService();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("TEST", "onKeyDown");
+        try {
+            int key=event.getUnicodeChar();
+            tcpService.send(new EventWrapper(new KeyboardEvent((char)key, KeyboardEvent.KEY_HIT)));
+        } catch (ActionException e) {
+            e.printStackTrace();
+        }
         return super.onKeyDown(keyCode, event);
     }
 

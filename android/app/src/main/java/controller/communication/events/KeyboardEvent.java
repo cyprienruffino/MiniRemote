@@ -8,17 +8,17 @@ public class KeyboardEvent extends RemoteEvent{
     public static final String KEY_RELEASE = "REMOTE_EVENT_KEY_RELEASE";
     public static final String KEY_HIT = "REMOTE_EVENT_KEY_HIT";
 
-    private int keycode;
+    private char keycode;
     private String action;
 
-    public KeyboardEvent(int keycode, String action) throws ActionException {
+    public KeyboardEvent(char keycode, String action) throws ActionException {
         this.keycode = keycode;
         if (action.equals(KEY_HIT) && action.equals(KEY_PRESS) && action.equals(KEY_RELEASE))
             throw new ActionException();
         this.action = action;
     }
 
-    public int getKeycode() {
+    public char getKeycode() {
         return keycode;
     }
 
