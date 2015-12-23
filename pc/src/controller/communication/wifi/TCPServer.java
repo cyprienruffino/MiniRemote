@@ -31,6 +31,11 @@ public class TCPServer {
     private Object lock = new Object();
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private boolean closed=false;
+
+    public boolean isClosed() {
+        return closed;
+    }
 
     public TCPServer() {
         events = Collections.synchronizedList(new ArrayList<>());
@@ -68,6 +73,7 @@ public class TCPServer {
 
     public void stop() throws IOException {
         //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
+        closed=true;
         if (serverOutputThread != null)
             serverOutputThread.interrupt();
         if (serverInputThread != null)
@@ -106,7 +112,7 @@ public class TCPServer {
         public void run() {
             try {
                 synchronized (lock) {
-                    while (true) {
+                    while (server.isClosed()) {
                         try {
                             received = (EventWrapper) in.readObject();
                         } catch (SocketException e) {
