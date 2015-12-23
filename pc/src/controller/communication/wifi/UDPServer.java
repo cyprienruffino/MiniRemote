@@ -16,24 +16,20 @@ public class UDPServer {
     private final static int PORT=8888;
     public static final int RECEIVING_TIMEOUT = 10000;
     public static final int RECEIVING_TIMEOUT_SERVER = 30000;
-   private DatagramSocket s=null;
+    private DatagramSocket s=null;
 
 
     public UDPServer() {
         try {
             s = new DatagramSocket(PORT);
-
-           // s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
+            // s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
             System.out.println("serveur UDP lancé");
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-
     public void attendreRequete() {
-
-
         // On initialise les trames qui vont servir à recevoir et envoyer les paquets
         byte[] receiveData = new byte[1024];
         byte[] sendData = new byte[1024];
@@ -58,7 +54,6 @@ public class UDPServer {
                     System.out.println("reponse envoyé au client");
                     s.close();
                     System.out.println("Serveur UDP fermé");
-
                 }
             }
             catch (Exception e)
@@ -66,6 +61,10 @@ public class UDPServer {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void close(){
+        s.close();
     }
 
 

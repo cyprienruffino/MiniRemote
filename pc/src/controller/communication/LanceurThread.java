@@ -18,10 +18,4 @@ public class LanceurThread implements Runnable {
     public void run() {
         controller.lancerServers();
     }
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-        controller.disconnect();
-    }
 }

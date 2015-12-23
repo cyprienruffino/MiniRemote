@@ -37,6 +37,11 @@ public class TCPService extends Service{
         return mBinder;
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        stop();
+        return super.onUnbind(intent);
+    }
 
     /*******************Server part****************************************/
 

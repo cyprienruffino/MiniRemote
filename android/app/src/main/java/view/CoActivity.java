@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 
 import java.io.IOException;
@@ -48,11 +49,14 @@ public class CoActivity extends Activity {
     }
 
     @Override
-    protected void onStop(){
-        super.onStop();
-        unbindService(sc);
+    protected void onDestroy() {
+        try {
+            unbindService(sc);
+        } catch (IllegalArgumentException e){
+            Log.d("ONSTOP", "Pas de service");
+        }
+        super.onDestroy();
     }
-
 
     public void connexion(View view) throws IOException, InterruptedException {
         tcpService.startServer();

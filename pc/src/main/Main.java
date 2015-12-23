@@ -14,12 +14,6 @@ public class Main extends Application {
 
     }
 
-    @Override
-    public void stop() throws Exception {
-        super.stop();
-        controller.disconnect();
-    }
-
     public static void main(String[] args) throws AWTException {
       launch(args);
     }

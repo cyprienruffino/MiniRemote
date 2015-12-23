@@ -16,6 +16,7 @@ import controller.communication.events.ResponseEvent;
 import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import model.CursorModule;
 import model.KeyboardModule;
@@ -32,6 +33,7 @@ import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
 public class Controller {
 
     private static Controller controller;
+
     public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
@@ -81,14 +83,14 @@ public class Controller {
         }
 
         if (event.getClass().equals(ResponseEvent.class)) {
-            ResponseEvent responseEvent=(ResponseEvent)event;
+            ResponseEvent responseEvent = (ResponseEvent) event;
             if (responseEvent.getResponse().equals(ResponseEvent.OK))
                 return null;
-            if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)){
+            if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)) {
                 Controller.controller.tcpServer.stop();
                 return null;
             }
-            if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)){
+            if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)) {
                 return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
             }
         }
@@ -105,29 +107,44 @@ public class Controller {
     private EventHandler connecteHandler;
 
     public Controller() throws IOException {
-        Controller.controller=this;
-        t=new Thread(new LanceurThread(this));
+        Controller.controller = this;
+        t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                lancerServers();
+            }
+        }, "LanceurThread"){
+            @Override
+            public void interrupt() {
+                disconnect();
+                super.interrupt();
+            }
+        };
         t.start();
-        mainView=new MainView(e->t.interrupt());
-        enAttenteHandler=mainView.getEnAttenteEvent();
-        connecteHandler=mainView.getConnecteEvent();
+        mainView = new MainView(event -> {t.interrupt(); Platform.exit();});
+        enAttenteHandler = mainView.getEnAttenteEvent();
+        connecteHandler = mainView.getConnecteEvent();
     }
-    public void disconnect() {
-        try {
-            if(tcpServer!=null)
-                tcpServer.stop();
 
+    public void disconnect() {
+        System.out.println("TEST1");
+        try {
+            if (tcpServer != null)
+                tcpServer.stop();
+            if(udpServer!=null)
+                udpServer.close();
             System.out.println("Serveur déconnecté");
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
             //e.printStackTrace();
         }
     }
+
     public void lancerServers() {
         try {
-            udpServer=new UDPServer();
+            udpServer = new UDPServer();
             udpServer.attendreRequete();
-            tcpServer=new TCPServer();
+            tcpServer = new TCPServer();
             tcpServer.startServer();
             connecteHandler.handle(null);
         } catch (IOException e) {

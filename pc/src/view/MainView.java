@@ -22,22 +22,22 @@ public class MainView {
     private EventHandler<WindowEvent> closeEvent;
 
     public MainView(EventHandler<WindowEvent> closeEvent) {
-        this.closeEvent=closeEvent;
+        this.closeEvent = closeEvent;
 
-        enAttente=new GridPane();
-        ProgressIndicator progressIndicator=new ProgressIndicator();
-        Label label=new Label("En attente d'un client");
-        enAttente.addRow(0,progressIndicator);
-        enAttente.addRow(1,label);
+        enAttente = new GridPane();
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        Label label = new Label("En attente d'un client");
+        enAttente.addRow(0, progressIndicator);
+        enAttente.addRow(1, label);
 
-        Image img=new Image("resource/check-mark.png",120,120,true,true);
-        ImageView imageView=new ImageView(img);
-        Label coLabel=new Label("Connecté");
-        connecte=new GridPane();
-        connecte.addRow(0,imageView);
-        connecte.addRow(1,coLabel);
+        Image img = new Image("resource/check-mark.png", 120, 120, true, true);
+        ImageView imageView = new ImageView(img);
+        Label coLabel = new Label("Connecté");
+        connecte = new GridPane();
+        connecte.addRow(0, imageView);
+        connecte.addRow(1, coLabel);
 
-        primaryStage=new Stage();
+        primaryStage = new Stage();
         primaryStage.setTitle("Remote Control");
         primaryStage.getIcons().add(new Image("resource/icone.png"));
         primaryStage.setResizable(false);
@@ -45,16 +45,16 @@ public class MainView {
         setEnAttente();
     }
 
-    public EventHandler getEnAttenteEvent(){
+    public EventHandler getEnAttenteEvent() {
         return event -> setEnAttente();
     }
 
-    public EventHandler getConnecteEvent(){
+    public EventHandler getConnecteEvent() {
         return event -> setConnecte();
     }
 
-    private void setEnAttente(){
-        Platform.runLater(()->
+    private void setEnAttente() {
+        Platform.runLater(() ->
         {
             primaryStage.setScene(new Scene(enAttente));
             primaryStage.show();
@@ -62,8 +62,8 @@ public class MainView {
 
     }
 
-    private void setConnecte(){
-        Platform.runLater(()->
+    private void setConnecte() {
+        Platform.runLater(() ->
         {
             primaryStage.setScene(new Scene(connecte));
             primaryStage.show();

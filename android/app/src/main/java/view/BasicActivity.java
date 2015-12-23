@@ -58,6 +58,8 @@ public class BasicActivity extends Activity {
             tcpService.send(new EventWrapper(new KeyboardEvent((char)key, KeyboardEvent.KEY_HIT)));
         } catch (ActionException e) {
             e.printStackTrace();
+        } catch (NullPointerException e){
+            Log.d("BASIC ACTIVITY","TcpService pas encore lancé");
         }
         return super.onKeyDown(keyCode, event);
     }

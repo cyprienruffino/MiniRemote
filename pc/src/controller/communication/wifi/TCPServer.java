@@ -25,40 +25,40 @@ public class TCPServer {
 
     private Thread serverInputThread;
     private Thread serverOutputThread;
-    private Socket socket=null;
-    private ServerSocket serverSocket=null;
+    private Socket socket = null;
+    private ServerSocket serverSocket = null;
     private List<EventWrapper> events;
-    private Object lock=new Object();
+    private Object lock = new Object();
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
     public TCPServer() {
-        events= Collections.synchronizedList(new ArrayList<>());
+        events = Collections.synchronizedList(new ArrayList<>());
     }
 
     public void startServer() throws IOException {
-        serverSocket=new ServerSocket(PORT);
+        serverSocket = new ServerSocket(PORT);
         System.out.println("en attente de client");
-        socket=serverSocket.accept();
+        socket = serverSocket.accept();
         System.out.println("client connecté");
 
 
-        out=new ObjectOutputStream(socket.getOutputStream());
+        out = new ObjectOutputStream(socket.getOutputStream());
         out.flush();
         System.out.println("OutputStream Instancié");
-        in=new ObjectInputStream(socket.getInputStream());
+        in = new ObjectInputStream(socket.getInputStream());
         System.out.println("InputStream Instancié");
         ServerInput actionInput = new ServerInput(in, events, lock, this);
         ServerOutput actionOutput = new ServerOutput(out, events, lock, this);
 
-        serverInputThread=new Thread(actionInput);
-        serverOutputThread=new Thread(actionOutput);
+        serverInputThread = new Thread(actionInput,"InputThread");
+        serverOutputThread = new Thread(actionOutput,"OuputThread");
         serverInputThread.start();
         serverOutputThread.start();
         System.out.println("Threads lancés");
     }
 
-    public void send(EventWrapper event){
+    public void send(EventWrapper event) {
         synchronized (lock) {
             events.add(event);
             lock.notifyAll();
@@ -67,16 +67,26 @@ public class TCPServer {
 
 
     public void stop() throws IOException {
-        send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
-        serverOutputThread.interrupt();
-        serverInputThread.interrupt();
-        in.close();
-        out.close();
-        serverSocket.close();
-        socket.close();
+        //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
+        if (serverOutputThread != null)
+            serverOutputThread.interrupt();
+        if (serverInputThread != null)
+            serverInputThread.interrupt();
+        if (in != null)
+            in.close();
+        if (out != null)
+            out.close();
+        if (serverSocket != null)
+            serverSocket.close();
+        if (socket != null)
+            socket.close();
+        System.out.println("serverOuputThread : "+(serverOutputThread==null?"null":serverOutputThread.getState()));
+        System.out.println("serverInputThread : "+(serverInputThread==null?"null":serverInputThread.getState()));
+        System.out.println("serverSocket : "+(serverSocket==null?"null":serverSocket.isClosed()));
+        System.out.println("socket : "+(socket==null?"null":socket.isClosed()));
     }
 
-    private class ServerInput implements Runnable{
+    private class ServerInput implements Runnable {
         private ObjectInputStream in;
         private List<EventWrapper> events;
         private EventWrapper received;
@@ -85,25 +95,25 @@ public class TCPServer {
         private TCPServer server;
 
         public ServerInput(ObjectInputStream in, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
-            this.server=server;
-            this.in=in;
-            this.events=events;
-            this.lock=lock;
+            this.server = server;
+            this.in = in;
+            this.events = events;
+            this.lock = lock;
             System.out.println("InputThread instancié");
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
-                synchronized (lock){
-                    while(true) {
+                synchronized (lock) {
+                    while (true) {
                         try {
                             received = (EventWrapper) in.readObject();
-                        }catch (SocketException e) {
+                        } catch (SocketException e) {
                             server.stop();
                         }
                         System.out.println("Objet recu");
-                        response = Controller.handleControl(received);
+                        //response = Controller.handleControl(received);
                         events.add(response);
                         lock.notifyAll();
                     }
@@ -111,14 +121,15 @@ public class TCPServer {
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            } catch (AWTException e) {
+            }/* catch (AWTException e) {
                 e.printStackTrace();
             } catch (ActionException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
     }
-    private class ServerOutput implements Runnable{
+
+    private class ServerOutput implements Runnable {
         private List<EventWrapper> events;
         EventWrapper event;
         private ObjectOutputStream out;
@@ -126,22 +137,22 @@ public class TCPServer {
         private TCPServer server;
 
         public ServerOutput(ObjectOutputStream out, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
-            this.server=server;
-            this.out=out;
-            this.events=events;
-            this.lock=lock;
+            this.server = server;
+            this.out = out;
+            this.events = events;
+            this.lock = lock;
             System.out.println("OutputThread instancié");
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
                 synchronized (lock) {
                     while (true) {
                         lock.wait();
                         while (!events.isEmpty()) {
-                            event=events.remove(0);
-                            if(event!=null)
+                            event = events.remove(0);
+                            if (event != null)
                                 out.writeObject(event);
                             System.out.println("Event envoyé");
                         }
@@ -150,7 +161,8 @@ public class TCPServer {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.err.println("Thread Interrupted");
+                //e.printStackTrace();
             }
         }
     }
