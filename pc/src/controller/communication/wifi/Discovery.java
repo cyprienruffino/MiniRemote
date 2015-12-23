@@ -80,6 +80,7 @@ public class Discovery implements Runnable{
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private DatagramPacket sendBroadcast() throws Exception {
