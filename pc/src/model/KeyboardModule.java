@@ -36,6 +36,7 @@ public class KeyboardModule {
     public void hitKey(char charCode) {
         System.out.println("CHAR : "+ charCode);
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
+        if(charCode==(char)8)keycode=8; //Isolation du backspace
         System.out.println("KEY : " + keycode);
         try{
             robot.keyPress(keycode);
@@ -48,7 +49,7 @@ public class KeyboardModule {
      *
      * @param charCode A standard Java keycode
      */
-    public void keyPress(char charCode) {
+    public void keyPress(char charCode){
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
         try {
             robot.keyPress(keycode);

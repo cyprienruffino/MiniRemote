@@ -31,7 +31,8 @@ import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
  */
 public class Controller {
 
-    public EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
+    private static Controller controller;
+    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
@@ -84,7 +85,7 @@ public class Controller {
             if (responseEvent.getResponse().equals(ResponseEvent.OK))
                 return null;
             if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)){
-                tcpServer.stop();
+                Controller.controller.tcpServer.stop();
                 return null;
             }
             if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)){
@@ -104,6 +105,7 @@ public class Controller {
     private EventHandler connecteHandler;
 
     public Controller() throws IOException {
+        Controller.controller=this;
         t=new Thread(new LanceurThread(this));
         t.start();
         mainView=new MainView(e->t.interrupt());

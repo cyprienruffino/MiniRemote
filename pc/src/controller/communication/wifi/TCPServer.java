@@ -103,13 +103,17 @@ public class TCPServer {
                             server.stop();
                         }
                         System.out.println("Objet recu");
-                        //response = Controller.handleControl(received);
+                        response = Controller.handleControl(received);
                         events.add(response);
                         lock.notifyAll();
                     }
                 }
 
             } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (AWTException e) {
+                e.printStackTrace();
+            } catch (ActionException e) {
                 e.printStackTrace();
             }
         }

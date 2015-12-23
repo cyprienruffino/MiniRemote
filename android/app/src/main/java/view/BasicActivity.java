@@ -51,10 +51,10 @@ public class BasicActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("TEST", "onKeyDown");
+        int key=getKeyIntToSend(keyCode, event);
+        Log.wtf("KEY : ",String.valueOf(keyCode));
+        Log.wtf("UNICODE KEY : ", String.valueOf(key));
         try {
-            Log.wtf("KEY : ",String.valueOf(keyCode));
-            int key=event.getUnicodeChar();
-            Log.wtf("UNICODE KEY : ",String.valueOf(key));
             tcpService.send(new EventWrapper(new KeyboardEvent((char)key, KeyboardEvent.KEY_HIT)));
         } catch (ActionException e) {
             e.printStackTrace();
@@ -104,5 +104,10 @@ public class BasicActivity extends Activity {
     }
 
     public void gauche(View view) {
+    }
+
+    private int getKeyIntToSend(int keyCode, KeyEvent event) {
+        if(keyCode==67)return 8; //Isolation du backspace
+        return event.getUnicodeChar();
     }
 }
