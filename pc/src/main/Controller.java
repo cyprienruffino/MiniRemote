@@ -13,9 +13,12 @@ import controller.communication.events.MoveMouseEvent;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
 import controller.communication.events.ScrollMouseEvent;
+import controller.communication.wifi.TCPServer;
+import controller.communication.wifi.UDPServer;
 import model.CursorModule;
 import model.KeyboardModule;
 import model.ShellModule;
+import view.MainView;
 
 import static controller.communication.events.KeyboardEvent.KEY_HIT;
 import static controller.communication.events.KeyboardEvent.KEY_PRESS;
@@ -76,5 +79,24 @@ public class Controller {
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
         //throw new ActionException("Incorrect object received");
+    }
+
+    private TCPServer tcpServer;
+    private UDPServer udpServer;
+    private MainView mainView;
+
+    public Controller() throws IOException {
+        udpServer=new UDPServer();
+        udpServer.attendreRequete();
+        tcpServer=new TCPServer();
+        tcpServer.startServer();
+        mainView=new MainView(e->disconnect());
+    }
+    public void disconnect() {
+        try {
+            tcpServer.stop();
+        } catch (IOException e) {
+            System.err.println("Impossible de déconnecter le serveur");
+        }
     }
 }

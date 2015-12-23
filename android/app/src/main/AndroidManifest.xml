@@ -18,9 +18,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="view.KeyboardActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
             android:name="view.BasicActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
