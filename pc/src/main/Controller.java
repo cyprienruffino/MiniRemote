@@ -16,7 +16,6 @@ import controller.communication.events.ResponseEvent;
 import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import model.CursorModule;
 import model.KeyboardModule;
@@ -32,7 +31,7 @@ import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
  */
 public class Controller {
 
-    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
+    public EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
@@ -80,6 +79,19 @@ public class Controller {
             return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
+        if (event.getClass().equals(ResponseEvent.class)) {
+            ResponseEvent responseEvent=(ResponseEvent)event;
+            if (responseEvent.getResponse().equals(ResponseEvent.OK))
+                return null;
+            if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)){
+                tcpServer.stop();
+                return null;
+            }
+            if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)){
+                return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            }
+        }
+
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
         //throw new ActionException("Incorrect object received");
     }
@@ -100,7 +112,10 @@ public class Controller {
     }
     public void disconnect() {
         try {
-            tcpServer.stop();
+            if(tcpServer!=null)
+                tcpServer.stop();
+
+            System.out.println("Serveur déconnecté");
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
             //e.printStackTrace();

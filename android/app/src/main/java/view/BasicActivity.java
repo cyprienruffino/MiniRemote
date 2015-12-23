@@ -52,7 +52,9 @@ public class BasicActivity extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("TEST", "onKeyDown");
         try {
+            Log.wtf("KEY : ",String.valueOf(keyCode));
             int key=event.getUnicodeChar();
+            Log.wtf("UNICODE KEY : ",String.valueOf(key));
             tcpService.send(new EventWrapper(new KeyboardEvent((char)key, KeyboardEvent.KEY_HIT)));
         } catch (ActionException e) {
             e.printStackTrace();
@@ -75,6 +77,8 @@ public class BasicActivity extends Activity {
     @Override
     public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
         Log.d("TEST", "onKeyMultiple");
+        if(repeatCount<3)
+            onKeyDown(keyCode, event);
         return super.onKeyMultiple(keyCode, repeatCount, event);
     }
 

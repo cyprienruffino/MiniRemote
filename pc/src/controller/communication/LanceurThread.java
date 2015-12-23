@@ -1,5 +1,7 @@
 package controller.communication;
 
+import java.io.IOException;
+
 import main.Controller;
 
 /**
@@ -15,7 +17,6 @@ public class LanceurThread implements Runnable {
     @Override
     public void run() {
         controller.lancerServers();
-
     }
 
     @Override

@@ -115,6 +115,7 @@ public class TCPService extends Service{
     }
     private class ServerOutput implements Runnable{
         private final List<EventWrapper> events;
+        private EventWrapper event;
         private Socket socket=null;
         private String IP;
         private int PORT;
@@ -137,7 +138,9 @@ public class TCPService extends Service{
                     while (true) {
                         lock.wait();
                         while (!events.isEmpty()) {
-                            out.writeObject(events.remove(0));
+                            event=events.remove(0);
+                            if(event!=null)
+                                out.writeObject(event);
                             out.flush();
                         }
                     }

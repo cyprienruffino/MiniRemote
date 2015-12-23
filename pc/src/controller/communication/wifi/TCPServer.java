@@ -95,8 +95,6 @@ public class TCPServer {
         @Override
         public void run(){
             try {
-
-                System.out.println("InputStream instancié");
                 synchronized (lock){
                     while(true) {
                         try {
@@ -105,19 +103,20 @@ public class TCPServer {
                             server.stop();
                         }
                         System.out.println("Objet recu");
-                        response = Controller.handleControl(received);
+                        //response = Controller.handleControl(received);
                         events.add(response);
                         lock.notifyAll();
                     }
                 }
 
-            } catch (IOException | ClassNotFoundException | AWTException | ActionException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
     private class ServerOutput implements Runnable{
         private List<EventWrapper> events;
+        EventWrapper event;
         private ObjectOutputStream out;
         private Object lock;
         private TCPServer server;
@@ -133,13 +132,13 @@ public class TCPServer {
         @Override
         public void run(){
             try {
-
-                System.out.println("OutputStream instancié");
                 synchronized (lock) {
                     while (true) {
                         lock.wait();
                         while (!events.isEmpty()) {
-                            out.writeObject(events.remove(0));
+                            event=events.remove(0);
+                            if(event!=null)
+                                out.writeObject(event);
                             System.out.println("Event envoyé");
                         }
                     }
