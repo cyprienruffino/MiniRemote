@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.io.File;
 import java.io.IOException;
 
+import controller.communication.LanceurThread;
 import controller.communication.events.ActionException;
 import controller.communication.events.CommandEvent;
 import controller.communication.events.EventWrapper;
@@ -15,6 +16,8 @@ import controller.communication.events.ResponseEvent;
 import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import model.CursorModule;
 import model.KeyboardModule;
 import model.ShellModule;
@@ -84,19 +87,35 @@ public class Controller {
     private TCPServer tcpServer;
     private UDPServer udpServer;
     private MainView mainView;
+    private Thread t;
+    private EventHandler enAttenteHandler;
+    private EventHandler connecteHandler;
 
     public Controller() throws IOException {
-        udpServer=new UDPServer();
-        udpServer.attendreRequete();
-        tcpServer=new TCPServer();
-        tcpServer.startServer();
-        mainView=new MainView(e->disconnect());
+        t=new Thread(new LanceurThread(this));
+        t.start();
+        mainView=new MainView(e->t.interrupt());
+        enAttenteHandler=mainView.getEnAttenteEvent();
+        connecteHandler=mainView.getConnecteEvent();
     }
     public void disconnect() {
         try {
             tcpServer.stop();
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
+            //e.printStackTrace();
+        }
+    }
+    public void lancerServers() {
+        try {
+            udpServer=new UDPServer();
+            udpServer.attendreRequete();
+            tcpServer=new TCPServer();
+            tcpServer.startServer();
+            connecteHandler.handle(null);
+        } catch (IOException e) {
+            System.err.println("Impossible de connecter le serveur");
+            //e.printStackTrace();
         }
     }
 }

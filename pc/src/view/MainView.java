@@ -1,5 +1,6 @@
 package view;
 
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -15,6 +16,7 @@ import javafx.stage.WindowEvent;
  */
 public class MainView {
     private Stage primaryStage;
+    private Scene scene;
     private GridPane enAttente;
     private GridPane connecte;
     private EventHandler<WindowEvent> closeEvent;
@@ -41,15 +43,30 @@ public class MainView {
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(closeEvent);
         setEnAttente();
-        primaryStage.show();
     }
 
-
-    public void setEnAttente(){
-        primaryStage.setScene(new Scene(enAttente));
+    public EventHandler getEnAttenteEvent(){
+        return event -> setEnAttente();
     }
 
-    public void setConnecte(){
-        primaryStage.setScene(new Scene(connecte));
+    public EventHandler getConnecteEvent(){
+        return event -> setConnecte();
+    }
+
+    private void setEnAttente(){
+        Platform.runLater(()->
+        {
+            primaryStage.setScene(new Scene(enAttente));
+            primaryStage.show();
+        });
+
+    }
+
+    private void setConnecte(){
+        Platform.runLater(()->
+        {
+            primaryStage.setScene(new Scene(connecte));
+            primaryStage.show();
+        });
     }
 }
