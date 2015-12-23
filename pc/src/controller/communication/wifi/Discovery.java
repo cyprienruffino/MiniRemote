@@ -13,6 +13,8 @@ import java.util.Enumeration;
 /**
  * Created by whiteshad on 23/12/15.
  */
+
+
 public class Discovery implements Runnable{
     private static final int RECEIVING_TIMEOUT = 10000;
     private static final int EPSON_VP_PORT = 3629;

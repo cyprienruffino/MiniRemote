@@ -34,9 +34,13 @@ public class KeyboardModule {
      * @param charCode A standard Java keycode
      */
     public void hitKey(char charCode) {
+        System.out.println("CHAR : "+ charCode);
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
-        robot.keyPress(keycode);
-        robot.keyRelease(keycode);
+        System.out.println("KEY : " + keycode);
+        try{
+            robot.keyPress(keycode);
+            robot.keyRelease(keycode);
+        }catch(IllegalArgumentException e){}
     }
 
     /**
@@ -46,8 +50,11 @@ public class KeyboardModule {
      */
     public void keyPress(char charCode) {
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
-        robot.keyPress(keycode);
+        try {
+            robot.keyPress(keycode);
+        }catch(IllegalArgumentException e){}
     }
+
 
     /**
      * Release a holded keyboard key
@@ -56,7 +63,9 @@ public class KeyboardModule {
      */
     public void keyRelease(char charCode) {
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
-        robot.keyRelease(keycode);
+        try{
+            robot.keyRelease(keycode);
+        }catch(IllegalArgumentException e){}
     }
 
     /**
@@ -70,5 +79,6 @@ public class KeyboardModule {
             robot.keyRelease(toType.charAt(i));
         }
     }
+
 
 }

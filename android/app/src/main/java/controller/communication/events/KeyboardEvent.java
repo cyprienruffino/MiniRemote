@@ -13,7 +13,7 @@ public class KeyboardEvent extends RemoteEvent{
 
     public KeyboardEvent(char keycode, String action) throws ActionException {
         this.keycode = keycode;
-        if (action.equals(KEY_HIT) && action.equals(KEY_PRESS) && action.equals(KEY_RELEASE))
+        if (!action.equals(KEY_HIT) && !action.equals(KEY_PRESS) && !action.equals(KEY_RELEASE))
             throw new ActionException();
         this.action = action;
     }
