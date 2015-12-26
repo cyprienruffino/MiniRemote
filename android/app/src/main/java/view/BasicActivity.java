@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,8 @@ import controller.communication.events.ActionException;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.KeyboardEvent;
 import controller.communication.events.MouseClickEvent;
+import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.ResolutionEvent;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
@@ -38,6 +41,7 @@ public class BasicActivity extends Activity {
                     case MotionEvent.ACTION_MOVE:
                     case MotionEvent.ACTION_UP:
                         Log.d("MOVEMENT", "x : " + event.getX() + " y :" + event.getY());
+                        tcpService.send(new EventWrapper(new MoveMouseEvent(event.getX(), event.getY())));
                         return true;
                     default:
                         return false;
@@ -46,6 +50,8 @@ public class BasicActivity extends Activity {
         });
 
         tcpService=Controller.getTcpService();
+        Display display = getWindowManager().getDefaultDisplay();
+        tcpService.send(new EventWrapper(new ResolutionEvent(display.getHeight(),display.getWidth())));
     }
 
     @Override

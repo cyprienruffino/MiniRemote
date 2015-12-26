@@ -5,19 +5,19 @@ package controller.communication.events;
  */
 public class MoveMouseEvent extends RemoteEvent {
 
-    private int xmove;
-    private int ymove;
+    private float xmove;
+    private float ymove;
 
-    public MoveMouseEvent(int xmove, int ymove) {
+    public MoveMouseEvent(float xmove, float ymove) {
         this.xmove = xmove;
         this.ymove = ymove;
     }
 
-    public int getXmove() {
+    public float getXmove() {
         return xmove;
     }
 
-    public int getYmove() {
+    public float getYmove() {
         return ymove;
     }
 }

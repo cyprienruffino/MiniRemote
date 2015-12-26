@@ -12,6 +12,7 @@ import controller.communication.events.KeyboardEvent;
 import controller.communication.events.MouseClickEvent;
 import controller.communication.events.MoveMouseEvent;
 import controller.communication.events.RemoteEvent;
+import controller.communication.events.ResolutionEvent;
 import controller.communication.events.ResponseEvent;
 import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
@@ -93,6 +94,12 @@ public class Controller {
             if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)) {
                 return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
             }
+        }
+
+        if (event.getClass().equals(ResolutionEvent.class)){
+            ResolutionEvent resolutionEvent = (ResolutionEvent)event;
+            CursorModule.getInstance().setDeviceWidth(resolutionEvent.getHeight());
+            CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
         }
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));

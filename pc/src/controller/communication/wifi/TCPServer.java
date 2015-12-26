@@ -112,7 +112,7 @@ public class TCPServer {
         public void run() {
             try {
                 synchronized (lock) {
-                    while (server.isClosed()) {
+                    while (!server.isClosed()) {
                         try {
                             received = (EventWrapper) in.readObject();
                         } catch (SocketException e) {

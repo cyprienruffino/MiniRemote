@@ -1,6 +1,8 @@
 package model;
 
 import java.awt.AWTException;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Robot;
 
 /**
@@ -8,10 +10,28 @@ import java.awt.Robot;
  */
 public class CursorModule {
 
+    private int screenHeight;
+    private int screenWidth;
+
+    public void setDeviceHeight(int deviceHeight) {
+        this.deviceHeight = deviceHeight;
+    }
+
+    public void setDeviceWidth(int deviceWidth) {
+        this.deviceWidth = deviceWidth;
+    }
+
+    private int deviceHeight;
+    private int deviceWidth;
+
+
     //Singleton
     private static CursorModule instance;
 
     private CursorModule() throws AWTException {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        screenWidth = gd.getDisplayMode().getWidth();
+        screenHeight = gd.getDisplayMode().getHeight();
         robot = new Robot();
     }
 
@@ -29,23 +49,14 @@ public class CursorModule {
     private Robot robot;
 
     /**
-     * Move cursor by [x,y] pixels
-     *
-     * @param x Horizontal movement
-     * @param y Vertical movement
+     * Move cursor to [x,y] pixels
+     *  @param x Horizontal position
+     * @param y Vertical position
      */
-    public void moveCursor(int x, int y) {
-        robot.mouseMove(x, y);
-    }
-
-    /**
-     * Set cursor at position [x,y]
-     *
-     * @param x Horizontal movement
-     * @param y Vertical movement
-     */
-    public void setCursorPos(int x, int y) {
-        //TODO
+    public void moveCursor(float x, float y) {
+        y=y*(deviceHeight/screenHeight);
+        x=x*(deviceWidth/screenWidth);
+        robot.mouseMove((int)x,(int)y);
     }
 
     /**
