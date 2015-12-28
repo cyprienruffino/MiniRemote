@@ -7,8 +7,6 @@
     <item
         android:id="@+id/menu_serv"
         android:title="@string/servicedialog_title"/>
-    <item android:id="@+id/menu_net"
-        android:title="@string/networkdialog_network"/>
     <item
         android:id="@+id/menu_dev"
         android:title="@string/networkdialog_device"

@@ -22,6 +22,19 @@ import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
 public class HomeActivity extends Activity {
+    private TCPService tcpService;
+    private ServiceConnection sc=new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            tcpService = ((TCPService.TCPBinder)service).getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            tcpService=null;
+        }
+    };
     /**
      * Called when the activity is first created.
      */
@@ -29,6 +42,8 @@ public class HomeActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        DialogFragment dialogFragment=new ServiceDialog();
+        dialogFragment.show(getFragmentManager(),"ServiceDialog");
 
     }
 
@@ -51,14 +66,6 @@ public class HomeActivity extends Activity {
                 b.putStringArray("test", new String[]{"Dell petit mais puissant", "MSI tout pourri", "Papy Asus Rog", "Asus Rog disque tout mort","Asus trop vieux pour ces conneries"});
                 d.setArguments(b);
                 d.show(getFragmentManager(),"DiagDevice");
-                break;
-            case R.id.menu_net:
-                d=new NetworkDialog();
-                b=new Bundle();
-                b.putString("title",getString(R.string.networkdialog_network));
-                b.putStringArray("test",new String[]{"Ragnarok","Civil Wars", "Infinity Wars", "Winter Soldier"});
-                d.setArguments(b);
-                d.show(getFragmentManager(),"DiagNet");
                 break;
             case R.id.menu_serv:
                 d=new ServiceDialog();
@@ -88,4 +95,15 @@ public class HomeActivity extends Activity {
         }
     }
 
+    public TCPService getTcpService() {
+        return tcpService;
+    }
+
+    public void setTcpService(TCPService tcpService) {
+        this.tcpService = tcpService;
+    }
+
+    public ServiceConnection getSc() {
+        return sc;
+    }
 }

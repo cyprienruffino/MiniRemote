@@ -88,7 +88,7 @@ public class Controller {
             if (responseEvent.getResponse().equals(ResponseEvent.OK))
                 return null;
             if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)) {
-                Controller.controller.tcpServer.stop();
+                Controller.controller.clientShutdown();
                 return null;
             }
             if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)) {
@@ -104,6 +104,12 @@ public class Controller {
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
         //throw new ActionException("Incorrect object received");
+    }
+
+    private void clientShutdown() {
+        t.interrupt();
+        enAttenteHandler.handle(null);
+        t.start();
     }
 
     private TCPServer tcpServer;

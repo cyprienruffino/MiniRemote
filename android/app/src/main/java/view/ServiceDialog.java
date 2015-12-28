@@ -3,11 +3,12 @@ package view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.*;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 
+import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
 /**
@@ -26,10 +27,13 @@ public class ServiceDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
                             case 0:
-                                Log.d("ServiceDialog","Arg 0");
+                                //Wifi
+                                Intent i=new Intent(getActivity().getApplicationContext(), TCPService.class);
+                                getActivity().bindService(i,((HomeActivity)getActivity()).getSc(),Context.BIND_AUTO_CREATE);
                                 break;
                             case 1:
-                                Log.d("ServiceDialog","Arg 1");
+                                //Bluetooth
+
                                 break;
                         }
                     }
