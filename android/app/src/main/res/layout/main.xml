@@ -2,24 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/VerticalLinearLayout"
     >
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:text="@string/main_basic_button"
-        android:id="@+id/main_basic_button"
-        android:onClick="navigation"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:text="@string/main_connexion_button"
-        android:id="@+id/main_connexion_button"
-        android:onClick="navigation"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:text="@string/main_projo_text"
-        android:id="@+id/main_projo_button"
-        android:onClick="navigation"/>
+<ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout style="@style/VerticalLinearLayout">
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:text="@string/main_basic_button"
+                android:id="@+id/main_basic_button"
+                android:onClick="navigation"/>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:text="@string/main_connexion_button"
+                android:id="@+id/main_connexion_button"
+                android:onClick="navigation"/>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:text="@string/main_projo_text"
+                android:id="@+id/main_projo_button"
+                android:onClick="navigation"/>
+    </LinearLayout>
+</ScrollView>
 
     <!-- A voir à rajouter plus tard
     <ListView
