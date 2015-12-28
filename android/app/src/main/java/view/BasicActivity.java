@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import android.widget.Toast;
 import controller.Controller;
 import controller.communication.events.ActionException;
 import controller.communication.events.EventWrapper;
@@ -40,8 +41,9 @@ public class BasicActivity extends Activity {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_MOVE:
                     case MotionEvent.ACTION_UP:
-                        Log.d("MOVEMENT", "x : " + event.getX() + " y :" + event.getY());
-                        tcpService.send(new EventWrapper(new MoveMouseEvent(event.getX(), event.getY())));
+                        //Log.d("MOVEMENT", "x : " + event.getX() + " y :" + event.getY());
+                        if (tcpService != null)
+                            tcpService.send(new EventWrapper(new MoveMouseEvent(event.getX(), event.getY())));
                         return true;
                     default:
                         return false;
@@ -49,23 +51,26 @@ public class BasicActivity extends Activity {
             }
         });
 
-        tcpService=Controller.getTcpService();
+        tcpService = Controller.getTcpService();
+        if (tcpService == null)
+            Toast.makeText(this, getString(R.string.no_tcp_service), Toast.LENGTH_SHORT).show();
         Display display = getWindowManager().getDefaultDisplay();
-        tcpService.send(new EventWrapper(new ResolutionEvent(display.getHeight(),display.getWidth())));
+        if (tcpService != null)
+            tcpService.send(new EventWrapper(new ResolutionEvent(display.getHeight(), display.getWidth())));
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("TEST", "onKeyDown");
-        int key=getKeyIntToSend(keyCode, event);
-        Log.wtf("KEY : ",String.valueOf(keyCode));
+        int key = getKeyIntToSend(keyCode, event);
+        Log.wtf("KEY : ", String.valueOf(keyCode));
         Log.wtf("UNICODE KEY : ", String.valueOf(key));
         try {
-            tcpService.send(new EventWrapper(new KeyboardEvent((char)key, KeyboardEvent.KEY_HIT)));
+            tcpService.send(new EventWrapper(new KeyboardEvent((char) key, KeyboardEvent.KEY_HIT)));
         } catch (ActionException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
-            Log.d("BASIC ACTIVITY","TcpService pas encore lancé");
+        } catch (NullPointerException e) {
+            Log.d("BASIC ACTIVITY", "TcpService pas encore lancé");
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -85,7 +90,7 @@ public class BasicActivity extends Activity {
     @Override
     public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
         Log.d("TEST", "onKeyMultiple");
-        if(repeatCount<3)
+        if (repeatCount < 3)
             onKeyDown(keyCode, event);
         return super.onKeyMultiple(keyCode, repeatCount, event);
     }
@@ -115,7 +120,7 @@ public class BasicActivity extends Activity {
     }
 
     private int getKeyIntToSend(int keyCode, KeyEvent event) {
-        if(keyCode==67)return 8; //Isolation du backspace
+        if (keyCode == 67) return 8; //Isolation du backspace
         return event.getUnicodeChar();
     }
 }

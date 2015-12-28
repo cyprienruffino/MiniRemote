@@ -21,15 +21,20 @@ import controller.communication.events.EventWrapper;
 /**
  * Created by cyprien on 18/12/15.
  */
-public class TCPService extends Service{
+public class TCPService extends Service {
 
 
-    /*******************Service part**************************************/
+    /*******************
+     * Service part
+     **************************************/
 
 
-    private final IBinder mBinder = new TCPBinder() ;
-    public class TCPBinder extends Binder{
-        public TCPService getService(){ return TCPService.this;}
+    private final IBinder mBinder = new TCPBinder();
+
+    public class TCPBinder extends Binder {
+        public TCPService getService() {
+            return TCPService.this;
+        }
     }
 
     @Override
@@ -43,50 +48,54 @@ public class TCPService extends Service{
         return super.onUnbind(intent);
     }
 
-    /*******************Server part****************************************/
+    /*******************
+     * Server part
+     ****************************************/
 
     private final static int PORT = 8888;
     private Thread serverInputThread;
     private Thread serverOutputThread;
-    private ServerSocket serverSocket=null;
+    private ServerSocket serverSocket = null;
     private List<EventWrapper> events;
-    private Object lock=new Object();
+    private Object lock = new Object();
 
     public void startServer() throws IOException, InterruptedException {
 
-        events=Collections.synchronizedList(new ArrayList<EventWrapper>());
-        Discovery discovery=new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE);
-        Thread thread=new Thread(discovery);
+        events = Collections.synchronizedList(new ArrayList<EventWrapper>());
+        Discovery discovery = new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE);
+        Thread thread = new Thread(discovery);
         thread.start();
         thread.join();
-        String IP=discovery.getIpServer();
+        String IP = discovery.getIpServer();
         discovery.stop();
 
         ServerInput actionInput = new ServerInput(IP, PORT, events, lock);
         ServerOutput actionOutput = new ServerOutput(IP, PORT, events, lock);
-        serverInputThread=new Thread(actionInput);
-        serverOutputThread=new Thread(actionOutput);
+        serverInputThread = new Thread(actionInput);
+        serverOutputThread = new Thread(actionOutput);
         serverInputThread.start();
         serverOutputThread.start();
     }
 
-    public void send(EventWrapper event){
+    public void send(EventWrapper event) {
         synchronized (lock) {
-            if(events==null)
-                events=Collections.synchronizedList(new ArrayList<EventWrapper>());
+            if (events == null)
+                events = Collections.synchronizedList(new ArrayList<EventWrapper>());
             events.add(event);
             lock.notify();
         }
     }
 
 
-    public void stop(){
-        serverOutputThread.interrupt();
-        serverInputThread.interrupt();
+    public void stop() {
+        if (serverOutputThread != null)
+            serverOutputThread.interrupt();
+        if (serverInputThread != null)
+            serverInputThread.interrupt();
     }
 
-    private class ServerInput implements Runnable{
-        private Socket socket=null;
+    private class ServerInput implements Runnable {
+        private Socket socket = null;
         private List<EventWrapper> events;
         private EventWrapper received;
         private EventWrapper response;
@@ -95,56 +104,57 @@ public class TCPService extends Service{
         private Object lock;
 
         public ServerInput(String IP, int PORT, List<EventWrapper> events, Object lock) throws IOException {
-            this.IP=IP;
-            this.PORT=PORT;
-            this.events=events;
-            this.lock=lock;
+            this.IP = IP;
+            this.PORT = PORT;
+            this.events = events;
+            this.lock = lock;
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
-                this.socket=new Socket(IP, PORT);
-                ObjectInputStream in=new ObjectInputStream(socket.getInputStream());
+                this.socket = new Socket(IP, PORT);
+                ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-                while(true){
-                    received=(EventWrapper)in.readObject();
+                while (true) {
+                    received = (EventWrapper) in.readObject();
                     Log.wtf("OK!", "Ca marche!");
                     Controller.execute(received);
                 }
 
-            } catch (IOException | ClassNotFoundException  e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
-    private class ServerOutput implements Runnable{
+
+    private class ServerOutput implements Runnable {
         private final List<EventWrapper> events;
         private EventWrapper event;
-        private Socket socket=null;
+        private Socket socket = null;
         private String IP;
         private int PORT;
         private Object lock;
 
-        public ServerOutput(String IP, int PORT, List<EventWrapper> events,Object lock) throws IOException {
-            this.IP=IP;
-            this.PORT=PORT;
-            this.events=events;
-            this.lock=lock;
+        public ServerOutput(String IP, int PORT, List<EventWrapper> events, Object lock) throws IOException {
+            this.IP = IP;
+            this.PORT = PORT;
+            this.events = events;
+            this.lock = lock;
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
-                this.socket=new Socket(IP, PORT);
-                ObjectOutputStream out=new ObjectOutputStream(socket.getOutputStream());
+                this.socket = new Socket(IP, PORT);
+                ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 out.flush();
-                synchronized (lock){
+                synchronized (lock) {
                     while (true) {
                         lock.wait();
                         while (!events.isEmpty()) {
-                            event=events.remove(0);
-                            if(event!=null)
+                            event = events.remove(0);
+                            if (event != null)
                                 out.writeObject(event);
                             out.flush();
                         }

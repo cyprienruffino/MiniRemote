@@ -50,6 +50,7 @@ public class CoActivity extends Activity {
 
     @Override
     protected void onDestroy() {
+        Log.d("QUIT", "ONDESTROY ");
         try {
             unbindService(sc);
         } catch (IllegalArgumentException e){
