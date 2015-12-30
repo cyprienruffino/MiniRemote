@@ -23,9 +23,9 @@
 
         <ImageButton
             style="@style/WrapContent"
+            android:id="@+id/basic_gauche"
             android:contentDescription="@string/left_clic"
             android:layout_weight="1"
-            android:onClick="gauche"
             android:src="?attr/gauche" />
 
         <ImageButton

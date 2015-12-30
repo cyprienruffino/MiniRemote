@@ -10,6 +10,10 @@ public class MouseClickEvent extends RemoteEvent {
     //Clic gauche
     public static final String MOUSE_CONTEXT = "REMOTE_EVENT_MOUSE_CONTEXT";
 
+    public static final int MOUSE_LEFT=0;
+    public static final int MOUSE_RIGHT=1;
+    public static final int MOUSE_MIDDLE=2;
+
     private String action;
     private int click;
 

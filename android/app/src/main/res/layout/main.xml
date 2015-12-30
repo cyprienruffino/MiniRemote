@@ -24,13 +24,5 @@
                 android:onClick="navigation"/>
     </LinearLayout>
 </ScrollView>
-
-    <!-- A voir à rajouter plus tard
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main_listview"
-       />
--->
 </LinearLayout>
 
