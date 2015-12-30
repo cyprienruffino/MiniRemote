@@ -3,38 +3,26 @@ package controller.communication.events;
 /**
  * Created by cyprien on 09/11/15.
  */
-public class KeyboardEvent extends RemoteEvent{
+public class KeyboardEvent extends RemoteEvent {
+    public static final String KEY_PRESS = "REMOTE_EVENT_KEY_PRESS";
+    public static final String KEY_RELEASE = "REMOTE_EVENT_KEY_RELEASE";
+    public static final String KEY_HIT = "REMOTE_EVENT_KEY_HIT";
 
-    //On envoie le code Unicode du charactère
-    private int keycode;
+    private char keycode;
     private String action;
 
-    public KeyboardEvent(int keycode, KeyAction action) {
+    public KeyboardEvent(char keycode, String action) throws ActionException {
         this.keycode = keycode;
-        this.action = action.getCode();
+        if (action.equals(KEY_HIT) && action.equals(KEY_PRESS) && action.equals(KEY_RELEASE))
+            throw new ActionException();
+        this.action = action;
     }
 
-    public int getKeycode() {
+    public char getKeycode() {
         return keycode;
     }
 
     public String getAction() {
         return action;
-    }
-
-    public enum KeyAction{
-        KEY_PRESS("REMOTE_EVENT_KEY_PRESS"),
-        KEY_RELEASE("REMOTE_EVENT_KEY_RELEASE"),
-        KEY_HIT("REMOTE_EVENT_KEY_HIT");
-
-        private String code;
-
-        KeyAction(String code) {
-            this.code = code;
-        }
-
-        public String getCode() {
-            return code;
-        }
     }
 }
