@@ -1,8 +1,6 @@
 package controller.communication.wifi;
 
-import controller.communication.events.EventWrapper;
-import controller.communication.events.ResponseEvent;
-
+import java.awt.AWTException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,6 +10,11 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import controller.communication.events.ActionException;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.ResponseEvent;
+import main.Controller;
 
 
 /**
@@ -69,7 +72,7 @@ public class TCPServer {
 
 
     public void stop() throws IOException {
-        send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
+        //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
         closed=true;
         if (serverOutputThread != null)
             serverOutputThread.interrupt();
@@ -116,7 +119,7 @@ public class TCPServer {
                             server.stop();
                         }
                         System.out.println("Objet recu");
-                        //response = Controller.handleControl(received);
+                        response = Controller.handleControl(received);
                         events.add(response);
                         lock.notifyAll();
                     }
@@ -124,11 +127,11 @@ public class TCPServer {
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            }/* catch (AWTException e) {
+            }catch (AWTException e) {
                 e.printStackTrace();
             } catch (ActionException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
     }
 

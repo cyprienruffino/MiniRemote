@@ -113,10 +113,12 @@ public class BasicActivity extends Activity {
     }
 
     public void droite(View view) {
-        MouseClickEvent e = new MouseClickEvent(0, MouseClickEvent.MOUSE_CONTEXT);
+        tcpService.send(new EventWrapper(new MouseClickEvent(1, MouseClickEvent.MOUSE_HIT)));
     }
 
     public void gauche(View view) {
+        Log.wtf("ANDROID","J'AI FAIT UN CLIC GAUCHE!!! LAULE!");
+        tcpService.send(new EventWrapper(new MouseClickEvent(0, MouseClickEvent.MOUSE_HIT)));
     }
 
     private int getKeyIntToSend(int keyCode, KeyEvent event) {

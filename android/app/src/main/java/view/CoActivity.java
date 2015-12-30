@@ -16,6 +16,7 @@ import java.io.IOException;
 import controller.Controller;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.ResponseEvent;
 import controller.communication.wifi.ConnectionManager;
 import controller.communication.wifi.TCPService;
 import controller.communication.wifi.serviceTest.ServiceConnector;
@@ -65,8 +66,7 @@ public class CoActivity extends Activity {
         Controller.isServiceStarted=true;
     }
     public void test(View view){
-        MoveMouseEvent event = new MoveMouseEvent(1000, 1000);
-        tcpService.send(new EventWrapper(event));
+        tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.OK)));
     }
 
 

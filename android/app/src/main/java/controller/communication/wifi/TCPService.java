@@ -44,7 +44,6 @@ public class TCPService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        stop();
         return super.onUnbind(intent);
     }
 

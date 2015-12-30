@@ -10,8 +10,8 @@ import java.awt.Robot;
  */
 public class CursorModule {
 
-    private int screenHeight;
-    private int screenWidth;
+    private float screenHeight;
+    private float screenWidth;
 
     public void setDeviceHeight(int deviceHeight) {
         this.deviceHeight = deviceHeight;
@@ -21,8 +21,8 @@ public class CursorModule {
         this.deviceWidth = deviceWidth;
     }
 
-    private int deviceHeight;
-    private int deviceWidth;
+    private float deviceHeight;
+    private float deviceWidth;
 
 
     //Singleton
@@ -32,6 +32,7 @@ public class CursorModule {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         screenWidth = gd.getDisplayMode().getWidth();
         screenHeight = gd.getDisplayMode().getHeight();
+        System.out.println("Screen : Height:"+screenHeight+" Width:"+screenWidth);
         robot = new Robot();
     }
 
@@ -54,8 +55,17 @@ public class CursorModule {
      * @param y Vertical position
      */
     public void moveCursor(float x, float y) {
-        y=y*(deviceHeight/screenHeight);
-        x=x*(deviceWidth/screenWidth);
+        System.out.println("X:"+x+" Y:"+y);
+        System.out.println("Screen : Height:"+screenHeight+" Width:"+screenWidth);
+        System.out.println("Rapports : Height"+ (deviceHeight / screenHeight)+" Width:"+ deviceWidth / screenWidth);
+
+        if (deviceWidth>screenWidth) y = y * (deviceWidth / screenWidth);
+        else y = y * (screenWidth / deviceWidth);
+
+        if (deviceHeight>screenHeight) x = x * (deviceHeight / screenHeight);
+        else x = x * (screenHeight / deviceHeight);
+
+        System.out.println("X':"+x+" Y':"+y);
         robot.mouseMove((int)x,(int)y);
     }
 
