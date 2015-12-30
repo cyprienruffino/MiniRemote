@@ -1,20 +1,6 @@
 package main;
 
-import java.awt.AWTException;
-import java.io.File;
-import java.io.IOException;
-
-import controller.communication.LanceurThread;
-import controller.communication.events.ActionException;
-import controller.communication.events.CommandEvent;
-import controller.communication.events.EventWrapper;
-import controller.communication.events.KeyboardEvent;
-import controller.communication.events.MouseClickEvent;
-import controller.communication.events.MoveMouseEvent;
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.ResolutionEvent;
-import controller.communication.events.ResponseEvent;
-import controller.communication.events.ScrollMouseEvent;
+import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import javafx.application.Platform;
@@ -24,9 +10,10 @@ import model.KeyboardModule;
 import model.ShellModule;
 import view.MainView;
 
-import static controller.communication.events.KeyboardEvent.KEY_HIT;
-import static controller.communication.events.KeyboardEvent.KEY_PRESS;
-import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
+import java.awt.*;
+import java.io.IOException;
+
+import static controller.communication.events.KeyboardEvent.*;
 
 /**
  * Created by cyprien on 05/11/15.
@@ -96,8 +83,8 @@ public class Controller {
             }
         }
 
-        if (event.getClass().equals(ResolutionEvent.class)){
-            ResolutionEvent resolutionEvent = (ResolutionEvent)event;
+        if (event.getClass().equals(ResolutionEvent.class)) {
+            ResolutionEvent resolutionEvent = (ResolutionEvent) event;
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getHeight());
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
         }
@@ -126,26 +113,28 @@ public class Controller {
             public void run() {
                 lancerServers();
             }
-        }, "LanceurThread"){
+        }, "LanceurThread") {
             @Override
             public void interrupt() {
-                disconnect();
                 super.interrupt();
+                disconnect();
             }
         };
         t.start();
-        mainView = new MainView(event -> {t.interrupt(); Platform.exit();});
+        mainView = new MainView(event -> {
+            t.interrupt();
+            Platform.exit();
+        });
         enAttenteHandler = mainView.getEnAttenteEvent();
         connecteHandler = mainView.getConnecteEvent();
     }
 
     public void disconnect() {
-        System.out.println("TEST1");
         try {
+            if (udpServer != null)
+                udpServer.close();
             if (tcpServer != null)
                 tcpServer.stop();
-            if(udpServer!=null)
-                udpServer.close();
             System.out.println("Serveur déconnecté");
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
@@ -155,14 +144,17 @@ public class Controller {
 
     public void lancerServers() {
         try {
-            udpServer = new UDPServer();
-            udpServer.attendreRequete();
-            tcpServer = new TCPServer();
-            tcpServer.startServer();
-            connecteHandler.handle(null);
+            if (!t.isInterrupted()) {
+                udpServer = new UDPServer();
+                udpServer.attendreRequete();
+            }
+            if (!t.isInterrupted()) {
+                tcpServer = new TCPServer();
+                tcpServer.startServer();
+                connecteHandler.handle(null);
+            }
         } catch (IOException e) {
-            System.err.println("Impossible de connecter le serveur");
-            //e.printStackTrace();
+            System.err.println("Impossible de lancer le serveur");
         }
     }
 }

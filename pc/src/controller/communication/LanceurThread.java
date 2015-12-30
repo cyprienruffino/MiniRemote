@@ -1,7 +1,5 @@
 package controller.communication;
 
-import java.io.IOException;
-
 import main.Controller;
 
 /**

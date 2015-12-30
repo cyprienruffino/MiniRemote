@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.AWTException;
 import java.io.File;
 
 /**

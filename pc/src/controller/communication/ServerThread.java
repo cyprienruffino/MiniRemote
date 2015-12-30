@@ -2,8 +2,6 @@ package controller.communication;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-
-import controller.communication.events.RemoteEvent;
 import controller.communication.events.RemoteEventHandler;
 
 /**

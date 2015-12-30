@@ -1,7 +1,5 @@
 package controller.communication.wifi;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -47,14 +45,15 @@ public class UDPServer {
                 int portExp = paquetRecu.getPort();
                 // Si on reçoit un "ping", on répond "pong" à celui qui nous l'a envoyé
                 if (requete.contains("Ping")) {
-                    System.out.println("Ping reçu du client");
+                    System.out.println("Ping reçu du client ");
+                    //user.name au lieu de pong pour le choix
                     sendData = "Pong".getBytes();
                     DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
                     s.send(paquetRetour);
                     System.out.println("reponse envoyé au client");
                     s.close();
                     System.out.println("Serveur UDP fermé");
-                }
+               }
             }
             catch (Exception e)
             {
