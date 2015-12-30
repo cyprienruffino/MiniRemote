@@ -57,7 +57,8 @@ public class UDPServer {
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                System.err.println("Socket closed");
+                //e.printStackTrace();
             }
         }
     }

@@ -1,13 +1,19 @@
 package view;
 
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -16,33 +22,48 @@ import javafx.stage.WindowEvent;
  */
 public class MainView {
     private Stage primaryStage;
-    private Scene scene;
-    private GridPane enAttente;
-    private GridPane connecte;
+    private VBox enAttente;
+    private VBox connecte;
     private EventHandler<WindowEvent> closeEvent;
 
     public MainView(EventHandler<WindowEvent> closeEvent) {
         this.closeEvent = closeEvent;
 
-        enAttente = new GridPane();
+        enAttente = new VBox();
+        enAttente.setPrefSize(400,400);
         ProgressIndicator progressIndicator = new ProgressIndicator();
         Label label = new Label("En attente d'un client");
-        enAttente.addRow(0, progressIndicator);
-        enAttente.addRow(1, label);
+        label.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        enAttente.getChildren().addAll(progressIndicator,label);
+        VBox.setVgrow(progressIndicator, Priority.ALWAYS);
+        label.setAlignment(Pos.CENTER);
 
-        Image img = new Image("resource/check-mark.png", 120, 120, true, true);
+        connecte = new VBox();
+        connecte.setPrefSize(400,450);
+        Image img = new Image("resource/tick.png");
         ImageView imageView = new ImageView(img);
+        imageView.setPreserveRatio(true);
         Label coLabel = new Label("Connecté");
-        connecte = new GridPane();
-        connecte.addRow(0, imageView);
-        connecte.addRow(1, coLabel);
+        coLabel.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
+        connecte.getChildren().addAll(imageView,coLabel);
+        VBox.setVgrow(imageView,Priority.ALWAYS);
+        coLabel.setAlignment(Pos.CENTER);
 
         primaryStage = new Stage();
         primaryStage.setTitle("Remote Control");
         primaryStage.getIcons().add(new Image("resource/icone.png"));
-        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(closeEvent);
-        setEnAttente();
+
+        //Taille de la police
+        DoubleProperty fontSize = new SimpleDoubleProperty(10);
+        fontSize.bind(primaryStage.widthProperty().add(primaryStage.heightProperty()).divide(20));
+        label.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(),";"));
+        coLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(),";"));
+
+        imageView.fitWidthProperty().bind(primaryStage.widthProperty());
+        imageView.fitHeightProperty().bind(primaryStage.heightProperty());
+
+        setConnecte();
     }
 
     public EventHandler getEnAttenteEvent() {
