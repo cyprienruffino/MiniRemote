@@ -63,7 +63,7 @@ public class MainView {
         imageView.fitWidthProperty().bind(primaryStage.widthProperty());
         imageView.fitHeightProperty().bind(primaryStage.heightProperty());
 
-        setConnecte();
+        setEnAttente();
     }
 
     public EventHandler getEnAttenteEvent() {

@@ -123,8 +123,8 @@ public class Controller {
         }, "LanceurThread"){
             @Override
             public void interrupt() {
-                disconnect();
                 super.interrupt();
+                disconnect();
             }
         };
         t.start();
@@ -134,12 +134,11 @@ public class Controller {
     }
 
     public void disconnect() {
-        System.out.println("TEST1");
         try {
-            if (tcpServer != null)
-                tcpServer.stop();
             if(udpServer!=null)
                 udpServer.close();
+            if (tcpServer != null)
+                tcpServer.stop();
             System.out.println("Serveur déconnecté");
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
@@ -149,11 +148,15 @@ public class Controller {
 
     public void lancerServers() {
         try {
-            udpServer = new UDPServer();
-            udpServer.attendreRequete();
-            tcpServer = new TCPServer();
-            tcpServer.startServer();
-            connecteHandler.handle(null);
+            if(!t.isInterrupted()) {
+                udpServer = new UDPServer();
+                udpServer.attendreRequete();
+            }
+            if(!t.isInterrupted()) {
+                tcpServer = new TCPServer();
+                tcpServer.startServer();
+                connecteHandler.handle(null);
+            }
         } catch (IOException e) {
             System.err.println("Impossible de connecter le serveur");
             //e.printStackTrace();
