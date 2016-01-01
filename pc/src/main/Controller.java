@@ -11,6 +11,7 @@ import controller.communication.events.EventWrapper;
 import controller.communication.events.KeyboardEvent;
 import controller.communication.events.MouseClickEvent;
 import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.ProjectorEvent;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResolutionEvent;
 import controller.communication.events.ResponseEvent;
@@ -21,6 +22,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import model.CursorModule;
 import model.KeyboardModule;
+import model.ProjectorModule;
 import model.ShellModule;
 import view.MainView;
 
@@ -35,7 +37,7 @@ public class Controller {
 
     private static Controller controller;
 
-    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException {
+    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException, InterruptedException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
@@ -100,6 +102,15 @@ public class Controller {
             ResolutionEvent resolutionEvent = (ResolutionEvent)event;
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getHeight());
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
+        }
+
+        if(event.getClass().equals(ProjectorEvent.class)){
+            ProjectorEvent projectorEvent=(ProjectorEvent)event;
+            if(projectorEvent.getAction()==ProjectorEvent.POWER_ON)
+                ProjectorModule.getInstance().sendPowerOn();
+            if(projectorEvent.getAction()==ProjectorEvent.POWER_OFF)
+                ProjectorModule.getInstance().sendPowerOff();
+
         }
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));

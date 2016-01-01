@@ -32,6 +32,7 @@ public class CursorModule {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         screenWidth = gd.getDisplayMode().getWidth();
         screenHeight = gd.getDisplayMode().getHeight();
+        System.out.println("Device : Height:"+deviceHeight+" Width:"+deviceWidth);
         System.out.println("Screen : Height:"+screenHeight+" Width:"+screenWidth);
         robot = new Robot();
     }
