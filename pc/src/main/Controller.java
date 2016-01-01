@@ -1,10 +1,8 @@
 package main;
 
 import java.awt.AWTException;
-import java.io.File;
 import java.io.IOException;
 
-import controller.communication.LanceurThread;
 import controller.communication.events.ActionException;
 import controller.communication.events.CommandEvent;
 import controller.communication.events.EventWrapper;
@@ -100,8 +98,9 @@ public class Controller {
 
         if (event.getClass().equals(ResolutionEvent.class)){
             ResolutionEvent resolutionEvent = (ResolutionEvent)event;
-            CursorModule.getInstance().setDeviceWidth(resolutionEvent.getHeight());
+            CursorModule.getInstance().setDeviceHeight(resolutionEvent.getHeight());
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
+            System.out.println("Device on event reception : Height:"+resolutionEvent.getHeight()+" Width:"+resolutionEvent.getWidth());
         }
 
         if(event.getClass().equals(ProjectorEvent.class)){

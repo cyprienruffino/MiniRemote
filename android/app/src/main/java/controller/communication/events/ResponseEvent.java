@@ -21,4 +21,7 @@ public class ResponseEvent extends RemoteEvent {
         this.response=response;
     }
 
+    public static class ProjectorEvent extends RemoteEvent {
+
+    }
 }

@@ -131,6 +131,8 @@ public class TCPServer {
                 e.printStackTrace();
             } catch (ActionException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

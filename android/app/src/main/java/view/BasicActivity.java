@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.KeyListener;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -54,9 +55,11 @@ public class BasicActivity extends Activity {
         tcpService = Controller.getTcpService();
         if (tcpService == null)
             Toast.makeText(this, getString(R.string.no_tcp_service), Toast.LENGTH_SHORT).show();
-        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics display = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(display);
+        Log.wtf("DEVICE","Height : "+display.heightPixels+" Width : "+display.widthPixels);
         if (tcpService != null)
-            tcpService.send(new EventWrapper(new ResolutionEvent(display.getHeight(), display.getWidth())));
+            tcpService.send(new EventWrapper(new ResolutionEvent(display.heightPixels, display.widthPixels)));
     }
 
     @Override
@@ -117,7 +120,6 @@ public class BasicActivity extends Activity {
     }
 
     public void gauche(View view) {
-        Log.wtf("ANDROID","J'AI FAIT UN CLIC GAUCHE!!! LAULE!");
         tcpService.send(new EventWrapper(new MouseClickEvent(0, MouseClickEvent.MOUSE_HIT)));
     }
 
