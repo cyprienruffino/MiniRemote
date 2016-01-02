@@ -29,23 +29,23 @@ public class MainView {
         this.closeEvent = closeEvent;
 
         enAttente = new VBox();
-        enAttente.setPrefSize(400,400);
+        enAttente.setPrefSize(400, 400);
         ProgressIndicator progressIndicator = new ProgressIndicator();
         Label label = new Label("En attente d'un client");
-        label.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-        enAttente.getChildren().addAll(progressIndicator,label);
+        label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        enAttente.getChildren().addAll(progressIndicator, label);
         VBox.setVgrow(progressIndicator, Priority.ALWAYS);
         label.setAlignment(Pos.CENTER);
 
         connecte = new VBox();
-        connecte.setPrefSize(400,450);
+        connecte.setPrefSize(400, 450);
         Image img = new Image("resource/tick.png");
         ImageView imageView = new ImageView(img);
         imageView.setPreserveRatio(true);
         Label coLabel = new Label("Connecté");
-        coLabel.setMaxSize(Double.MAX_VALUE,Double.MAX_VALUE);
-        connecte.getChildren().addAll(imageView,coLabel);
-        VBox.setVgrow(imageView,Priority.ALWAYS);
+        coLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        connecte.getChildren().addAll(imageView, coLabel);
+        VBox.setVgrow(imageView, Priority.ALWAYS);
         coLabel.setAlignment(Pos.CENTER);
 
         primaryStage = new Stage();
@@ -56,8 +56,8 @@ public class MainView {
         //Taille de la police
         DoubleProperty fontSize = new SimpleDoubleProperty(10);
         fontSize.bind(primaryStage.widthProperty().add(primaryStage.heightProperty()).divide(20));
-        label.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(),";"));
-        coLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(),";"));
+        label.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(), ";"));
+        coLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(), ";"));
 
         imageView.fitWidthProperty().bind(primaryStage.widthProperty());
         imageView.fitHeightProperty().bind(primaryStage.heightProperty());
@@ -76,8 +76,12 @@ public class MainView {
     private void setEnAttente() {
         Platform.runLater(() ->
         {
-            primaryStage.setScene(new Scene(enAttente));
-            primaryStage.show();
+            try {
+                primaryStage.setScene(new Scene(enAttente));
+                primaryStage.show();
+            } catch (IllegalArgumentException e) {
+                //Si la scene est déjà affiché
+            }
         });
 
     }
@@ -85,8 +89,12 @@ public class MainView {
     private void setConnecte() {
         Platform.runLater(() ->
         {
-            primaryStage.setScene(new Scene(connecte));
-            primaryStage.show();
+            try {
+                primaryStage.setScene(new Scene(connecte));
+                primaryStage.show();
+            } catch (IllegalArgumentException e) {
+                //Si la scene est déjà affiché
+            }
         });
     }
 }

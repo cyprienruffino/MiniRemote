@@ -1,19 +1,6 @@
 package main;
 
-import java.awt.AWTException;
-import java.io.IOException;
-
-import controller.communication.events.ActionException;
-import controller.communication.events.CommandEvent;
-import controller.communication.events.EventWrapper;
-import controller.communication.events.KeyboardEvent;
-import controller.communication.events.MouseClickEvent;
-import controller.communication.events.MoveMouseEvent;
-import controller.communication.events.ProjectorEvent;
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.ResolutionEvent;
-import controller.communication.events.ResponseEvent;
-import controller.communication.events.ScrollMouseEvent;
+import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import javafx.application.Platform;
@@ -24,9 +11,10 @@ import model.ProjectorModule;
 import model.ShellModule;
 import view.MainView;
 
-import static controller.communication.events.KeyboardEvent.KEY_HIT;
-import static controller.communication.events.KeyboardEvent.KEY_PRESS;
-import static controller.communication.events.KeyboardEvent.KEY_RELEASE;
+import java.awt.*;
+import java.io.IOException;
+
+import static controller.communication.events.KeyboardEvent.*;
 
 /**
  * Created by cyprien on 05/11/15.
@@ -88,7 +76,7 @@ public class Controller {
             if (responseEvent.getResponse().equals(ResponseEvent.OK))
                 return null;
             if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)) {
-                Controller.controller.tcpServer.stop();
+                Controller.controller.restartServer();
                 return null;
             }
             if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)) {
@@ -143,13 +131,20 @@ public class Controller {
         connecteHandler = mainView.getConnecteEvent();
     }
 
+    public void restartServer(){
+        t.interrupt();
+        t.start();
+    }
+
     public void disconnect() {
         try {
             if(udpServer!=null)
                 udpServer.close();
             if (tcpServer != null)
+                tcpServer.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
                 tcpServer.stop();
             System.out.println("Serveur déconnecté");
+            enAttenteHandler.handle(null);
         } catch (IOException e) {
             System.err.println("Impossible de déconnecter le serveur");
             //e.printStackTrace();

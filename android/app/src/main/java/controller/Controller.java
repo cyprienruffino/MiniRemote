@@ -28,7 +28,7 @@ public class Controller {
             ResponseEvent responseEvent=(ResponseEvent)event;
                if (responseEvent.getResponse().equals(ResponseEvent.OK))
                 return null;
-            if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)){
+            if (responseEvent.getResponse().equals(ResponseEvent.SERVER_SHUTDOWN)){
                 tcpService.stop();
                 return null;
             }
