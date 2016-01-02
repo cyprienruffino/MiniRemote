@@ -66,11 +66,10 @@ public class Discovery implements Runnable{
         }
     }
 
-   private  String getServerIp() {
+    private String getServerIp() {
         try
         {
             DatagramPacket packet = sendBroadcast("Ping");
-            callback.onNetworkFound();
             return packet.getAddress().getHostAddress();
         }
         catch (InterruptedIOException ie)
@@ -82,7 +81,6 @@ public class Discovery implements Runnable{
                 socket.close();
             }
             catch (Exception e2) {}
-            callback.onNoNetworkFound();
             //ie.printStackTrace();
         }
         catch (Exception e)
@@ -99,6 +97,7 @@ public class Discovery implements Runnable{
         }
 
         stop();
+        callback.onNoNetworkFound();
         return null;
     }
 
@@ -153,6 +152,8 @@ public class Discovery implements Runnable{
     @Override
     public void run() {
         setIpServer(getServerIp());
+        if (ipServer != null)
+            callback.onNetworkFound();
     }
 
     /*private void makeToast(String s){
