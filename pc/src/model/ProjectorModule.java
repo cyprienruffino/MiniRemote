@@ -1,23 +1,14 @@
 package model;
 
-import java.awt.AWTException;
-import java.io.ByteArrayOutputStream;
+import controller.communication.wifi.Discovery;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import controller.communication.events.ActionException;
-import controller.communication.events.EventWrapper;
-import controller.communication.wifi.Discovery;
-import controller.communication.wifi.TCPServer;
-import main.Controller;
 
 /**
  * Created by cyprien on 01/01/16.
