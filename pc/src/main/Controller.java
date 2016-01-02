@@ -140,9 +140,10 @@ public class Controller {
         try {
             if(udpServer!=null)
                 udpServer.close();
-            if (tcpServer != null)
+            if (tcpServer != null) {
                 tcpServer.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
                 tcpServer.stop();
+            }
             System.out.println("Serveur déconnecté");
             enAttenteHandler.handle(null);
         } catch (IOException e) {
