@@ -21,7 +21,7 @@ public class Controller {
     private static TCPService tcpService=null;
 
     public static EventWrapper execute(EventWrapper recv){
-        EventWrapper wrapper = ((EventWrapper) recv);
+        EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
 
         if (event.getClass().equals(ResponseEvent.class)){

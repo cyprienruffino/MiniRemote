@@ -1,23 +1,14 @@
 package controller.communication.wifi;
 
-import java.io.InterruptedIOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
-
-import android.app.Activity;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
-import android.widget.Toast;
-import view.HomeActivity;
 import view.NetworkDiscovery;
+
+import java.io.InterruptedIOException;
+import java.net.*;
+import java.util.Enumeration;
 
 
 public class Discovery implements Runnable{
@@ -92,7 +83,7 @@ public class Discovery implements Runnable{
             }
             catch (Exception e2) {}
             callback.onNoNetworkFound();
-            ie.printStackTrace();
+            //ie.printStackTrace();
         }
         catch (Exception e)
         {
@@ -104,7 +95,7 @@ public class Discovery implements Runnable{
                 socket.close();
             }
             catch (Exception e2) {}
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         stop();
@@ -125,7 +116,7 @@ public class Discovery implements Runnable{
         }
         catch (SocketException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return null;
     }

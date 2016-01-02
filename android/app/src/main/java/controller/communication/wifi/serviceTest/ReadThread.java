@@ -3,13 +3,11 @@ package controller.communication.wifi.serviceTest;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
+import controller.Controller;
+import controller.communication.events.RemoteEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-
-import controller.Controller;
-import controller.communication.events.RemoteEvent;
 
 /**
  * Created by whiteshad on 25/11/15.

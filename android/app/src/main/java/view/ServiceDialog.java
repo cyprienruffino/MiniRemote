@@ -3,11 +3,10 @@ package view;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
-
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
@@ -29,6 +28,7 @@ public class ServiceDialog extends DialogFragment {
                             case 0:
                                 //Wifi
                                 HomeActivity act=(HomeActivity) getActivity();
+                                act.unbindTcpService();
                                 Intent i=new Intent(act.getApplicationContext(), TCPService.class);
                                 act.bindService(i,act.getSc(),Context.BIND_AUTO_CREATE);
                                 break;

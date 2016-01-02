@@ -4,17 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import controller.Controller;
+import controller.communication.events.RemoteEvent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-
-import controller.Controller;
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.RemoteEventHandler;
-import controller.communication.wifi.ConnectionManager;
-import controller.communication.wifi.Discovery;
 
 /**
  * Created by whiteshad on 25/11/15.

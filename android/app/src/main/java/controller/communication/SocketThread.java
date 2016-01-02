@@ -1,18 +1,15 @@
 package controller.communication;
 
 
+import controller.communication.events.RemoteEvent;
+import controller.communication.events.RemoteEventHandler;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.Observer;
-
-
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.RemoteEventHandler;
 
 /**
  * Created by whiteshad on 12/11/15.
