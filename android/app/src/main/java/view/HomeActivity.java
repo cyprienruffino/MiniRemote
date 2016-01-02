@@ -1,15 +1,12 @@
 package view;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.app.*;
+import android.content.*;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,16 +18,18 @@ import java.io.IOException;
 import java.security.Key;
 import java.util.ArrayList;
 
+import controller.Controller;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity implements ServiceAttached, NetworkDiscovery{
     private TCPService tcpService;
     private ServiceConnection sc=new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             tcpService = ((TCPService.TCPBinder)service).getService();
+            onServiceAttached();
         }
 
         @Override
@@ -47,7 +46,6 @@ public class HomeActivity extends Activity {
         setContentView(R.layout.main);
         DialogFragment dialogFragment=new ServiceDialog();
         dialogFragment.show(getFragmentManager(),"ServiceDialog");
-
     }
 
     @Override
@@ -55,6 +53,12 @@ public class HomeActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("ONACTIVITYRESULT", requestCode +" "+resultCode+" "+data.toString());
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -87,10 +91,6 @@ public class HomeActivity extends Activity {
 
                 startActivity(v);
                 break;
-            case R.id.main_connexion_button:
-                v= new Intent(HomeActivity.this,CoActivity.class);
-                startActivity(v);
-                break;
             case R.id.main_projo_button :
                 v=new Intent(HomeActivity.this, ProjoActivity.class);
                 startActivity(v);
@@ -108,5 +108,38 @@ public class HomeActivity extends Activity {
 
     public ServiceConnection getSc() {
         return sc;
+    }
+
+    @Override
+    public void onServiceAttached() {
+        DialogFragment dialog=new DialogFragment(){
+            @Override
+            public Dialog onCreateDialog(Bundle savedInstanceState) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater inflater = getActivity().getLayoutInflater();
+                builder.setView(inflater.inflate(R.layout.waiting,null));
+                return builder.create();
+            }
+        };
+        dialog.show(getFragmentManager(),"waiting_screen");
+        tcpService.startServer(this);
+        Controller.setTcpService(tcpService);
+        Controller.isServiceStarted=true;
+
+    }
+
+    @Override
+    public void onNetworkFound() {
+        Log.d("onNetworkFound ", "onNetworkFound ");
+        DialogFragment dialog=(DialogFragment) getFragmentManager().findFragmentByTag("waiting_screen");
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onNoNetworkFound() {
+        Log.d("onNoNetworkFound", "onNoNetworkFound ");
+        DialogFragment dialog=(DialogFragment) getFragmentManager().findFragmentByTag("waiting_screen");
+        dialog.dismiss();
+
     }
 }

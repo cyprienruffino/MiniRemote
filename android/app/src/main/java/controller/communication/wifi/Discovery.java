@@ -16,6 +16,8 @@ import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 import android.widget.Toast;
+import view.HomeActivity;
+import view.NetworkDiscovery;
 
 
 public class Discovery implements Runnable{
@@ -28,11 +30,13 @@ public class Discovery implements Runnable{
     private Context mContext;
     private String ipServer;
     private int port;
+    private NetworkDiscovery callback;
 
 
 
-    public Discovery(Context context,int mode) {
-        System.out.println("in discovery");
+    public Discovery(NetworkDiscovery cb,Context context,int mode) {
+        callback=cb;
+        //System.out.println("in discovery");
         mContext =context;
         try {
             switch (mode){
@@ -75,7 +79,7 @@ public class Discovery implements Runnable{
         try
         {
             DatagramPacket packet = sendBroadcast("Ping");
-
+            callback.onNetworkFound();
             return packet.getAddress().getHostAddress();
         }
         catch (InterruptedIOException ie)
@@ -87,6 +91,7 @@ public class Discovery implements Runnable{
                 socket.close();
             }
             catch (Exception e2) {}
+            callback.onNoNetworkFound();
             ie.printStackTrace();
         }
         catch (Exception e)

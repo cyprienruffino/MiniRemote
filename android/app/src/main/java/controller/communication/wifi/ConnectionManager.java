@@ -34,7 +34,7 @@ public class ConnectionManager extends Observable implements Observer {
         eventHandlerRecv.addObserver(this);
     }
 
-    public void startConnection(int mode){
+    /*public void startConnection(int mode){
         Discovery dis=new Discovery(context,PC_REMOTE_MODE_WIFI);
         Thread t= new Thread(dis);
         t.start();
@@ -59,7 +59,7 @@ public class ConnectionManager extends Observable implements Observer {
         client.start();
         dis.stop();
         t.interrupt();
-    }
+    }*/
 
 
     public void stop(){

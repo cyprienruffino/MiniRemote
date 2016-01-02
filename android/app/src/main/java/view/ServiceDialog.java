@@ -28,8 +28,9 @@ public class ServiceDialog extends DialogFragment {
                         switch (which){
                             case 0:
                                 //Wifi
-                                Intent i=new Intent(getActivity().getApplicationContext(), TCPService.class);
-                                getActivity().bindService(i,((HomeActivity)getActivity()).getSc(),Context.BIND_AUTO_CREATE);
+                                HomeActivity act=(HomeActivity) getActivity();
+                                Intent i=new Intent(act.getApplicationContext(), TCPService.class);
+                                act.bindService(i,act.getSc(),Context.BIND_AUTO_CREATE);
                                 break;
                             case 1:
                                 //Bluetooth

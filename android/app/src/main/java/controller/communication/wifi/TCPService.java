@@ -1,5 +1,6 @@
 package controller.communication.wifi;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -17,11 +18,13 @@ import java.util.List;
 
 import controller.Controller;
 import controller.communication.events.EventWrapper;
+import view.HomeActivity;
+import view.NetworkDiscovery;
 
 /**
  * Created by cyprien on 18/12/15.
  */
-public class TCPService extends Service {
+public class TCPService extends Service implements NetworkDiscovery {
 
 
     /*******************
@@ -30,6 +33,30 @@ public class TCPService extends Service {
 
 
     private final IBinder mBinder = new TCPBinder();
+
+    @Override
+    public void onNetworkFound() {
+        String IP = discovery.getIpServer();
+        discovery.stop();
+        try {
+            ServerInput actionInput = new ServerInput(IP, PORT, events, lock);
+            ServerOutput actionOutput = new ServerOutput(IP, PORT, events, lock);
+            serverInputThread = new Thread(actionInput);
+            serverOutputThread = new Thread(actionOutput);
+            serverInputThread.start();
+            serverOutputThread.start();
+            activity.onNetworkFound();
+        } catch (IOException e) {
+            activity.onNoNetworkFound();
+        }
+
+    }
+
+    @Override
+    public void onNoNetworkFound() {
+        activity.onNoNetworkFound();
+
+    }
 
     public class TCPBinder extends Binder {
         public TCPService getService() {
@@ -57,23 +84,15 @@ public class TCPService extends Service {
     private ServerSocket serverSocket = null;
     private List<EventWrapper> events;
     private Object lock = new Object();
+    private HomeActivity activity;
+    private Discovery discovery;
 
-    public void startServer() throws IOException, InterruptedException {
-
+    public void startServer(Activity act) {
+        activity = (HomeActivity) act;
         events = Collections.synchronizedList(new ArrayList<EventWrapper>());
-        Discovery discovery = new Discovery(this.getApplicationContext(), Discovery.PC_REMOTE_MODE);
+        discovery = new Discovery(this, this.getApplicationContext(), Discovery.PC_REMOTE_MODE);
         Thread thread = new Thread(discovery);
         thread.start();
-        thread.join();
-        String IP = discovery.getIpServer();
-        discovery.stop();
-
-        ServerInput actionInput = new ServerInput(IP, PORT, events, lock);
-        ServerOutput actionOutput = new ServerOutput(IP, PORT, events, lock);
-        serverInputThread = new Thread(actionInput);
-        serverOutputThread = new Thread(actionOutput);
-        serverInputThread.start();
-        serverOutputThread.start();
     }
 
     public void send(EventWrapper event) {

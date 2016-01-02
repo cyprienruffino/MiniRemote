@@ -13,12 +13,6 @@
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
-                android:text="@string/main_connexion_button"
-                android:id="@+id/main_connexion_button"
-                android:onClick="navigation"/>
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="100dip"
                 android:text="@string/main_projo_text"
                 android:id="@+id/main_projo_button"
                 android:onClick="navigation"/>

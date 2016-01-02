@@ -39,7 +39,7 @@ public class ConnectionService extends Service {
 
 
 
-    public void startService(int mode,Controller c){
+    /*public void startService(int mode,Controller c){
         controller=c;
         discovery(mode);
         try {
@@ -51,10 +51,10 @@ public class ConnectionService extends Service {
         }
         inThread=new ReadThread(in,this.getBaseContext(),controller);
         inThread.start();
-    }
+    }*/
 
 
-    private void discovery(int mode){
+   /* private void discovery(int mode){
         Discovery dis=new Discovery(this.getBaseContext(),mode);
         Thread t= new Thread(dis);
         t.start();
@@ -77,7 +77,7 @@ public class ConnectionService extends Service {
         }
         dis.stop();
         t.interrupt();
-    }
+    }*/
 
 
 
