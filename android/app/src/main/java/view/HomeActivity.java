@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 import controller.Controller;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.ResponseEvent;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
 
@@ -67,6 +69,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 d = new ServiceDialog();
                 d.show(getFragmentManager(), "ServiceDiag");
                 break;
+            case R.id.menu_dc:
+                unbindTcpService();
+                Toast.makeText(getApplicationContext(), getString(R.string.dc), Toast.LENGTH_SHORT);
+                break;
         }
         return super.onOptionsItemSelected(item);
 
@@ -77,7 +83,6 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
         switch (view.getId()) {
             case R.id.main_basic_button:
                 v = new Intent(HomeActivity.this, BasicActivity.class);
-
                 startActivity(v);
                 break;
             case R.id.main_projo_button:
@@ -102,38 +107,34 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 return builder.create();
             }
         };
-        //TODO encrer la string d'id dialog
-        dialog.show(getFragmentManager(), "waiting_screen");
+        dialog.show(getFragmentManager(), WAITING_SCREEN);
         tcpService.startServer(this);
         Controller.setTcpService(tcpService);
         Controller.isServiceStarted = true;
 
     }
 
+    private final String WAITING_SCREEN = "waiting_screen";
     @Override
     public void onNetworkFound() {
-        Log.d("onNetworkFound ", "onNetworkFound ");
-        DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag("waiting_screen");
+        DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag(WAITING_SCREEN);
         dialog.dismiss();
-        //TODO encrer les strings pour l'i18n
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Connecté !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.server_found), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     @Override
     public void onNoNetworkFound() {
-        Log.d("onNoNetworkFound", "onNoNetworkFound ");
-        DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag("waiting_screen");
+        DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag(WAITING_SCREEN);
         dialog.dismiss();
-        //TODO encrer les strings pour l'i18n
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Impossible de se connecter à un serveur !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.no_server_found, Toast.LENGTH_SHORT).show();
             }
         });
         unbindTcpService();
@@ -147,6 +148,7 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
 
     public void unbindTcpService() {
         try {
+            tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVICE_SHUTDOWN)));
             tcpService.stop();
             tcpService = null;
             Controller.setTcpService(tcpService);

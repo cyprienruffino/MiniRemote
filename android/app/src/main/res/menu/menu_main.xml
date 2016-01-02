@@ -5,5 +5,8 @@
     <item
         android:id="@+id/menu_serv"
         android:title="@string/servicedialog_title"/>
+    <item
+            android:id="@+id/menu_dc"
+            android:title="@string/menu_dc"/>
 
 </menu>

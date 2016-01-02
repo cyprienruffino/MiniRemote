@@ -21,4 +21,8 @@
     <string name="init_button">Initialisation</string>
     <string name="no_tcp_service">Pas connecté à un PC</string>
     <string name="waiting_string">Recherche de serveur</string>
+    <string name="no_server_found">Impossible de se connecter à un serveur !</string>
+    <string name="server_found">Connecté !</string>
+    <string name="menu_dc">Déconnection</string>
+    <string name="dc">Déconnecté</string>
 </resources>
