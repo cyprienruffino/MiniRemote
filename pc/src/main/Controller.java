@@ -1,5 +1,6 @@
 package main;
 
+import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
@@ -84,18 +85,18 @@ public class Controller {
             }
         }
 
-        if (event.getClass().equals(ResolutionEvent.class)){
-            ResolutionEvent resolutionEvent = (ResolutionEvent)event;
+        if (event.getClass().equals(ResolutionEvent.class)) {
+            ResolutionEvent resolutionEvent = (ResolutionEvent) event;
             CursorModule.getInstance().setDeviceHeight(resolutionEvent.getHeight());
             CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
-            System.out.println("Device on event reception : Height:"+resolutionEvent.getHeight()+" Width:"+resolutionEvent.getWidth());
+            System.out.println("Device on event reception : Height:" + resolutionEvent.getHeight() + " Width:" + resolutionEvent.getWidth());
         }
 
-        if(event.getClass().equals(ProjectorEvent.class)){
-            ProjectorEvent projectorEvent=(ProjectorEvent)event;
-            if(projectorEvent.getAction()==ProjectorEvent.POWER_ON)
+        if (event.getClass().equals(ProjectorEvent.class)) {
+            ProjectorEvent projectorEvent = (ProjectorEvent) event;
+            if (projectorEvent.getAction() == ProjectorEvent.POWER_ON)
                 ProjectorModule.getInstance().sendPowerOn();
-            if(projectorEvent.getAction()==ProjectorEvent.POWER_OFF)
+            if (projectorEvent.getAction() == ProjectorEvent.POWER_OFF)
                 ProjectorModule.getInstance().sendPowerOff();
 
         }
@@ -111,14 +112,17 @@ public class Controller {
     private EventHandler enAttenteHandler;
     private EventHandler connecteHandler;
 
+    class LanceurRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            lancerServers();
+        }
+    }
+
     public Controller() throws IOException {
         Controller.controller = this;
-        t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                lancerServers();
-            }
-        }, "LanceurThread"){
+        t = new Thread(new LanceurRunnable(), "LanceurThread") {
             @Override
             public void interrupt() {
                 super.interrupt();
@@ -126,39 +130,53 @@ public class Controller {
             }
         };
         t.start();
-        mainView = new MainView(event -> {t.interrupt(); Platform.exit();});
+        mainView = new MainView(event -> {
+            t.interrupt();
+            Platform.exit();
+        });
         enAttenteHandler = mainView.getEnAttenteEvent();
         connecteHandler = mainView.getConnecteEvent();
     }
 
-    public void restartServer(){
-        t.interrupt();
+    public void restartServer() {
+        disconnect();
+        t = new Thread(new LanceurRunnable(), "LanceurThread") {
+            @Override
+            public void interrupt() {
+                super.interrupt();
+                disconnect();
+            }
+        };
         t.start();
     }
 
     public void disconnect() {
-        try {
-            if(udpServer!=null)
-                udpServer.close();
-            if (tcpServer != null) {
-                tcpServer.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
-                tcpServer.stop();
-            }
-            System.out.println("Serveur déconnecté");
-            enAttenteHandler.handle(null);
-        } catch (IOException e) {
-            System.err.println("Impossible de déconnecter le serveur");
-            //e.printStackTrace();
+        if (udpServer != null)
+            udpServer.close();
+        if (tcpServer != null) {
+            tcpServer.setOnSendFinished(new SendFinished() {
+                @Override
+                public void onSendFinished() {
+                    try {
+                        tcpServer.stop();
+                    } catch (IOException e) {
+                        System.err.println("Impossible de déconnecter le serveur");
+                    }
+                }
+            });
+            tcpServer.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
         }
+        System.out.println("Serveur déconnecté");
+        enAttenteHandler.handle(null);
     }
 
     public void lancerServers() {
         try {
-            if(!t.isInterrupted()) {
+            if (!t.isInterrupted()) {
                 udpServer = new UDPServer();
                 udpServer.attendreRequete();
             }
-            if(!t.isInterrupted()) {
+            if (!t.isInterrupted()) {
                 tcpServer = new TCPServer();
                 tcpServer.startServer();
                 connecteHandler.handle(null);

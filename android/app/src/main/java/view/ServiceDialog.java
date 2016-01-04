@@ -18,7 +18,9 @@ public class ServiceDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String[] tab={getString(R.string.wifi),getString(R.string.bluetooth)};
+        //TODO quand bluetooth sera implem
+        //String[] tab={getString(R.string.wifi),getString(R.string.bluetooth)};
+        String[] tab={getString(R.string.wifi)};
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.servicedialog_title)
                 .setItems(tab, new DialogInterface.OnClickListener() {
@@ -32,10 +34,11 @@ public class ServiceDialog extends DialogFragment {
                                 Intent i=new Intent(act.getApplicationContext(), TCPService.class);
                                 act.bindService(i,act.getSc(),Context.BIND_AUTO_CREATE);
                                 break;
-                            case 1:
+                            /*case 1:
+                                //TODO quand bluetooth sera implem
                                 //Bluetooth
 
-                                break;
+                                break;*/
                         }
                     }
                 });

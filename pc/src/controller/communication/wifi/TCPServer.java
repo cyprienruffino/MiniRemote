@@ -1,5 +1,6 @@
 package controller.communication.wifi;
 
+import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.ActionException;
 import controller.communication.events.EventWrapper;
 import main.Controller;
@@ -30,7 +31,8 @@ public class TCPServer {
     private Object lock = new Object();
     private ObjectOutputStream out;
     private ObjectInputStream in;
-    private boolean closed=false;
+    private boolean closed = false;
+    private ServerOutput actionOutput;
 
     public boolean isClosed() {
         return closed;
@@ -53,10 +55,10 @@ public class TCPServer {
         in = new ObjectInputStream(socket.getInputStream());
         System.out.println("InputStream Instancié");
         ServerInput actionInput = new ServerInput(in, events, lock, this);
-        ServerOutput actionOutput = new ServerOutput(out, events, lock, this);
+        actionOutput = new ServerOutput(out, events, lock, this);
 
-        serverInputThread = new Thread(actionInput,"InputThread");
-        serverOutputThread = new Thread(actionOutput,"OuputThread");
+        serverInputThread = new Thread(actionInput, "InputThread");
+        serverOutputThread = new Thread(actionOutput, "OuputThread");
         serverInputThread.start();
         serverOutputThread.start();
         System.out.println("Threads lancés");
@@ -69,14 +71,19 @@ public class TCPServer {
         }
     }
 
+    public void setOnSendFinished(SendFinished cb) {
+        if (actionOutput != null)
+            actionOutput.setCallback(cb);
+    }
+
 
     public void stop() throws IOException {
         //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
-        closed=true;
+        closed = true;
         if (serverOutputThread != null)
             serverOutputThread.interrupt();
-        if (serverInputThread != null)
-            serverInputThread.interrupt();
+        /*if (serverInputThread != null)
+            serverInputThread.interrupt();*/
         if (in != null)
             in.close();
         if (out != null)
@@ -85,10 +92,10 @@ public class TCPServer {
             serverSocket.close();
         if (socket != null)
             socket.close();
-        System.out.println("serverOuputThread : "+(serverOutputThread==null?"null":serverOutputThread.getState()));
-        System.out.println("serverInputThread : "+(serverInputThread==null?"null":serverInputThread.getState()));
-        System.out.println("serverSocket : "+(serverSocket==null?"null":serverSocket.isClosed()));
-        System.out.println("socket : "+(socket==null?"null":socket.isClosed()));
+        System.out.println("serverOuputThread : " + (serverOutputThread == null ? "null" : serverOutputThread.getState()));
+        System.out.println("serverInputThread : " + (serverInputThread == null ? "null" : serverInputThread.getState()));
+        System.out.println("serverSocket : " + (serverSocket == null ? "null" : serverSocket.isClosed()));
+        System.out.println("socket : " + (socket == null ? "null" : socket.isClosed()));
     }
 
     private class ServerInput implements Runnable {
@@ -126,7 +133,7 @@ public class TCPServer {
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            }catch (AWTException e) {
+            } catch (AWTException e) {
                 e.printStackTrace();
             } catch (ActionException e) {
                 e.printStackTrace();
@@ -142,6 +149,7 @@ public class TCPServer {
         private ObjectOutputStream out;
         private Object lock;
         private TCPServer server;
+        private SendFinished callback;
 
         public ServerOutput(ObjectOutputStream out, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
             this.server = server;
@@ -162,6 +170,7 @@ public class TCPServer {
                             if (event != null)
                                 out.writeObject(event);
                             System.out.println("Event envoyé");
+                            executeCallback();
                         }
                     }
                 }
@@ -169,8 +178,18 @@ public class TCPServer {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 System.err.println("Thread Interrupted");
+                //executeCallback();
                 //e.printStackTrace();
             }
+        }
+
+        private void executeCallback() {
+            if (callback != null)
+                callback.onSendFinished();
+        }
+
+        public void setCallback(SendFinished callback) {
+            this.callback = callback;
         }
     }
 

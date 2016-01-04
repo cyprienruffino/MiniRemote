@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
 import android.util.Log;
-import view.NetworkDiscovery;
+import controller.communication.callbackInterface.NetworkDiscovery;
 
 import java.io.InterruptedIOException;
 import java.net.*;

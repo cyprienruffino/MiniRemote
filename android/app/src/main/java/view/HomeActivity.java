@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 import controller.Controller;
+import controller.communication.callbackInterface.NetworkDiscovery;
+import controller.communication.callbackInterface.SendFinished;
+import controller.communication.callbackInterface.ServiceAttached;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.ResponseEvent;
 import controller.communication.wifi.TCPService;
@@ -63,7 +65,6 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         DialogFragment d;
-        Bundle b;
         switch (item.getItemId()) {
             case R.id.menu_serv:
                 d = new ServiceDialog();
@@ -71,11 +72,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 break;
             case R.id.menu_dc:
                 unbindTcpService();
-                Toast.makeText(getApplicationContext(), getString(R.string.dc), Toast.LENGTH_SHORT);
+                runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.dc)));
                 break;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     public void navigation(View view) {
@@ -115,28 +115,28 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
     }
 
     private final String WAITING_SCREEN = "waiting_screen";
+
     @Override
     public void onNetworkFound() {
         DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag(WAITING_SCREEN);
-        dialog.dismiss();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), getString(R.string.server_found), Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            dialog.dismiss();
+        } catch (NullPointerException e) {
+
+        }
+        runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.server_found)));
     }
 
     @Override
     public void onNoNetworkFound() {
         DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag(WAITING_SCREEN);
-        dialog.dismiss();
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), R.string.no_server_found, Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            dialog.dismiss();
+        } catch (NullPointerException e) {
+
+        }
+        runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.no_server_found)));
+        ;
         unbindTcpService();
     }
 
@@ -147,15 +147,24 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
     }
 
     public void unbindTcpService() {
+        Controller.isServiceStarted = false;
+        Controller.setTcpService(null);
         try {
             tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVICE_SHUTDOWN)));
-            tcpService.stop();
-            tcpService = null;
-            Controller.setTcpService(tcpService);
-            Controller.isServiceStarted = false;
-            unbindService(sc);
-        } catch (IllegalArgumentException e) {
+            tcpService.setOnSendFinished(new SendFinished() {
+                @Override
+                public void onSendFinished() {
+                    tcpService.stop();
+                    tcpService = null;
+                }
+            });
         } catch (NullPointerException e) {
+            //Tcp qui a foiré
+        }
+        try {
+            unbindService(sc);
+        } catch (IllegalArgumentException e2) {
+            //Service not registered
         }
     }
 }
