@@ -15,8 +15,6 @@ import view.MainView;
 import java.awt.*;
 import java.io.IOException;
 
-import static controller.communication.events.KeyboardEvent.*;
-
 /**
  * Created by cyprien on 05/11/15.
  */
@@ -41,13 +39,13 @@ public class Controller {
             KeyboardEvent keyboardEvent = (KeyboardEvent) event;
             System.out.println(keyboardEvent.getKeycode());
             switch (keyboardEvent.getAction()) {
-                case KEY_HIT:
+                case KeyHit:
                     KeyboardModule.getInstance().hitKey(keyboardEvent.getKeycode());
                     break;
-                case KEY_PRESS:
+                case KeyPress:
                     KeyboardModule.getInstance().keyPress(keyboardEvent.getKeycode());
                     break;
-                case KEY_RELEASE:
+                case KeyRelease:
                     KeyboardModule.getInstance().keyRelease(keyboardEvent.getKeycode());
             }
             return new EventWrapper(new ResponseEvent(ResponseEvent.OK));

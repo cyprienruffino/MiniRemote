@@ -78,12 +78,7 @@ public class TCPServer {
 
 
     public void stop() throws IOException {
-        //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
         closed = true;
-        if (serverOutputThread != null)
-            serverOutputThread.interrupt();
-        /*if (serverInputThread != null)
-            serverInputThread.interrupt();*/
         if (in != null)
             in.close();
         if (out != null)
@@ -163,23 +158,21 @@ public class TCPServer {
         public void run() {
             try {
                 synchronized (lock) {
-                    while (true) {
+                    while (!server.isClosed()) {
                         lock.wait();
                         while (!events.isEmpty()) {
                             event = events.remove(0);
                             if (event != null)
                                 out.writeObject(event);
                             System.out.println("Event envoyé");
-                            executeCallback();
                         }
                     }
+                    executeCallback();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 System.err.println("Thread Interrupted");
-                //executeCallback();
-                //e.printStackTrace();
             }
         }
 

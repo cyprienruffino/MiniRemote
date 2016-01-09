@@ -1,7 +1,6 @@
 package model;
 
-import java.awt.AWTException;
-import java.awt.Robot;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
@@ -33,15 +32,22 @@ public class KeyboardModule {
      *
      * @param charCode A standard Java keycode
      */
-    public void hitKey(char charCode) {
-        System.out.println("CHAR : "+ charCode);
+    public void hitKey(int charCode) {
+        /*System.out.println("CHAR : "+ charCode);
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
         if(charCode==(char)8)keycode=8; //Isolation du backspace
         System.out.println("KEY : " + keycode);
         try{
             robot.keyPress(keycode);
             robot.keyRelease(keycode);
-        }catch(IllegalArgumentException e){}
+        }catch(IllegalArgumentException e){}*/
+        try {
+            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
+            robot.keyPress(keycode);
+            robot.keyRelease(keycode);
+        } catch (IllegalArgumentException e){
+            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        }
     }
 
     /**
@@ -49,24 +55,35 @@ public class KeyboardModule {
      *
      * @param charCode A standard Java keycode
      */
-    public void keyPress(char charCode){
+    public void keyPress(int charCode){/*
         int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
         try {
             robot.keyPress(keycode);
-        }catch(IllegalArgumentException e){}
+        }catch(IllegalArgumentException e){}*/
+        try {
+            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
+            robot.keyPress(keycode);
+        } catch (IllegalArgumentException e){
+            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        }
     }
-
 
     /**
      * Release a holded keyboard key
      *
      * @param charCode A standard java keycode
      */
-    public void keyRelease(char charCode) {
-        int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
+    public void keyRelease(int charCode) {
+       /* int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
         try{
             robot.keyRelease(keycode);
-        }catch(IllegalArgumentException e){}
+        }catch(IllegalArgumentException e){}*/
+        try {
+            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
+            robot.keyRelease(keycode);
+        } catch (IllegalArgumentException e){
+            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        }
     }
 
     /**

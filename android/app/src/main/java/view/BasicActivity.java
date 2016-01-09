@@ -61,13 +61,27 @@ public class BasicActivity extends Activity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        int key = getKeyIntToSend(keyCode, event);
-        try {
-            send(new KeyboardEvent((char) key, KeyboardEvent.KEY_HIT));
-        } catch (ActionException e) {
+    public boolean onKeyMultiple(int keyCode, int repeatCount, KeyEvent event) {
+        int n=event.getCharacters().length();
+        for (int i=0;i<n;i++){
+            int key=event.getCharacters().charAt(i);
+            send(new KeyboardEvent(key, KeyboardEvent.KeyboardAction.KeyHit));
         }
+        return super.onKeyMultiple(keyCode, repeatCount, event);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        int key = event.getUnicodeChar(event.getMetaState());
+        send(new KeyboardEvent(key, KeyboardEvent.KeyboardAction.KeyPress));
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        int key = event.getUnicodeChar(event.getMetaState());
+        send(new KeyboardEvent(key, KeyboardEvent.KeyboardAction.KeyRelease));
+        return super.onKeyUp(keyCode, event);
     }
 
     public void clavier(View view) {
