@@ -32,4 +32,12 @@ public class MouseClickEvent extends RemoteEvent implements Serializable{
     public int getClick() {
         return click;
     }
+
+    @Override
+    public String toString() {
+        return "MouseClickEvent{" +
+                "action='" + action + '\'' +
+                ", click=" + click +
+                '}';
+    }
 }

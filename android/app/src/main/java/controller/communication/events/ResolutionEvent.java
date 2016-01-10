@@ -19,4 +19,12 @@ public class ResolutionEvent extends RemoteEvent {
         this.height=height;
         this.width=width;
     }
+
+    @Override
+    public String toString() {
+        return "ResolutionEvent{" +
+                "height=" + height +
+                ", width=" + width +
+                '}';
+    }
 }
