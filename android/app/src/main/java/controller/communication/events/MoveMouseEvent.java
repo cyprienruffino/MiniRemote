@@ -20,4 +20,9 @@ public class MoveMouseEvent extends RemoteEvent {
     public float getYmove() {
         return ymove;
     }
+
+    @Override
+    public String toString() {
+        return "MoveMouseEvent : x : " + xmove + " y : " + ymove;
+    }
 }
