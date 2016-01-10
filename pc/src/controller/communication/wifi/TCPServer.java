@@ -65,9 +65,10 @@ public class TCPServer {
     }
 
     public void send(EventWrapper event) {
+        //TODO ne marche pas
         synchronized (lock) {
             events.add(event);
-            lock.notifyAll();
+            lock.notify();
         }
     }
 
@@ -125,14 +126,7 @@ public class TCPServer {
                         lock.notifyAll();
                     }
                 }
-
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (AWTException e) {
-                e.printStackTrace();
-            } catch (ActionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | ClassNotFoundException | AWTException | ActionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -164,10 +158,11 @@ public class TCPServer {
                             event = events.remove(0);
                             if (event != null)
                                 out.writeObject(event);
+                            out.flush();
                             System.out.println("Event envoyé");
+                            executeCallback();
                         }
                     }
-                    executeCallback();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

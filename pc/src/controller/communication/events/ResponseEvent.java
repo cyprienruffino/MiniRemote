@@ -21,4 +21,10 @@ public class ResponseEvent extends RemoteEvent {
         this.response=response;
     }
 
+    @Override
+    public String toString() {
+        return "ResponseEvent{" +
+                "response='" + response + '\'' +
+                '}';
+    }
 }

@@ -65,15 +65,7 @@ public class MainView {
         setEnAttente();
     }
 
-    public EventHandler getEnAttenteEvent() {
-        return event -> setEnAttente();
-    }
-
-    public EventHandler getConnecteEvent() {
-        return event -> setConnecte();
-    }
-
-    private void setEnAttente() {
+    public void setEnAttente() {
         Platform.runLater(() ->
         {
             try {
@@ -86,7 +78,7 @@ public class MainView {
 
     }
 
-    private void setConnecte() {
+    public void setConnecte() {
         Platform.runLater(() ->
         {
             try {

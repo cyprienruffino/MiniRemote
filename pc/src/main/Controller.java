@@ -1,11 +1,9 @@
 package main;
 
-import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import model.CursorModule;
 import model.KeyboardModule;
 import model.ProjectorModule;
@@ -27,7 +25,7 @@ public class Controller {
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
 
-        System.out.println(event.getClass());
+        System.out.println(event);
 
         if (event.getClass().equals(CommandEvent.class)) {
             CommandEvent commandEvent = (CommandEvent) event;
@@ -53,8 +51,48 @@ public class Controller {
 
         if (event.getClass().equals(MouseClickEvent.class)) {
             MouseClickEvent mouseClickEvent = (MouseClickEvent) event;
-            if (mouseClickEvent.getClick() == 1) CursorModule.getInstance().mouseRightClick();
-            else CursorModule.getInstance().mouseLeftClick();
+            CursorModule cursorModule = CursorModule.getInstance();
+            switch (mouseClickEvent.getAction()) {
+                case MouseClickEvent.MOUSE_PRESS:
+                    switch (mouseClickEvent.getClick()) {
+                        case MouseClickEvent.MOUSE_LEFT:
+                            cursorModule.mouseLeftPress();
+                            break;
+                        case MouseClickEvent.MOUSE_MIDDLE:
+                            //TODO a voir à l'intégration du bouton middle
+                            break;
+                        case MouseClickEvent.MOUSE_RIGHT:
+                            cursorModule.mouseRightPress();
+                            break;
+                    }
+                    break;
+                case MouseClickEvent.MOUSE_RELEASE:
+                    switch (mouseClickEvent.getClick()) {
+                        case MouseClickEvent.MOUSE_LEFT:
+                            cursorModule.mouseLeftRelease();
+                            break;
+                        case MouseClickEvent.MOUSE_MIDDLE:
+                            //TODO a voir à l'intégration du bouton middle
+                            break;
+                        case MouseClickEvent.MOUSE_RIGHT:
+                            cursorModule.mouseRightRelease();
+                            break;
+                    }
+                    break;
+                case MouseClickEvent.MOUSE_HIT:
+                    switch (mouseClickEvent.getClick()) {
+                        case MouseClickEvent.MOUSE_LEFT:
+                            cursorModule.mouseLeftClick();
+                            break;
+                        case MouseClickEvent.MOUSE_MIDDLE:
+                            //TODO a voir à l'intégration du bouton middle
+                            break;
+                        case MouseClickEvent.MOUSE_RIGHT:
+                            cursorModule.mouseRightClick();
+                            break;
+                    }
+                    break;
+            }
             return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
 
@@ -85,9 +123,7 @@ public class Controller {
 
         if (event.getClass().equals(ResolutionEvent.class)) {
             ResolutionEvent resolutionEvent = (ResolutionEvent) event;
-            CursorModule.getInstance().setDeviceHeight(resolutionEvent.getHeight());
-            CursorModule.getInstance().setDeviceWidth(resolutionEvent.getWidth());
-            System.out.println("Device on event reception : Height:" + resolutionEvent.getHeight() + " Width:" + resolutionEvent.getWidth());
+            CursorModule.getInstance().setDeviceSize(resolutionEvent.getHeight(), resolutionEvent.getWidth());
         }
 
         if (event.getClass().equals(ProjectorEvent.class)) {
@@ -107,8 +143,7 @@ public class Controller {
     private UDPServer udpServer;
     private MainView mainView;
     private Thread t;
-    private EventHandler enAttenteHandler;
-    private EventHandler connecteHandler;
+    private boolean stop = false;
 
     class LanceurRunnable implements Runnable {
 
@@ -119,65 +154,47 @@ public class Controller {
     }
 
     public Controller() throws IOException {
-        Controller.controller = this;
-        t = new Thread(new LanceurRunnable(), "LanceurThread") {
-            @Override
-            public void interrupt() {
-                super.interrupt();
-                disconnect();
-            }
-        };
-        t.start();
         mainView = new MainView(event -> {
-            t.interrupt();
+            disconnect();
             Platform.exit();
         });
-        enAttenteHandler = mainView.getEnAttenteEvent();
-        connecteHandler = mainView.getConnecteEvent();
+        Controller.controller = this;
+        t = new Thread(new LanceurRunnable(), "LanceurThread");
+        t.start();
     }
 
     public void restartServer() {
         disconnect();
-        t = new Thread(new LanceurRunnable(), "LanceurThread") {
-            @Override
-            public void interrupt() {
-                super.interrupt();
-                disconnect();
-            }
-        };
+        t = new Thread(new LanceurRunnable(), "LanceurThread");
         t.start();
     }
 
     public void disconnect() {
+        stop = true;
         if (udpServer != null)
             udpServer.close();
         if (tcpServer != null) {
-            tcpServer.setOnSendFinished(new SendFinished() {
-                @Override
-                public void onSendFinished() {
-                    try {
-                        tcpServer.stop();
-                    } catch (IOException e) {
-                        System.err.println("Impossible de déconnecter le serveur");
-                    }
-                }
-            });
-            tcpServer.send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
+            try {
+                tcpServer.stop();
+            } catch (IOException e) {
+                System.err.println("Impossible de déconnecter le serveur");
+            }
         }
         System.out.println("Serveur déconnecté");
-        enAttenteHandler.handle(null);
+        mainView.setEnAttente();
     }
 
     public void lancerServers() {
         try {
-            if (!t.isInterrupted()) {
+            stop = false;
+            if (!stop) {
                 udpServer = new UDPServer();
                 udpServer.attendreRequete();
             }
-            if (!t.isInterrupted()) {
+            if (!stop) {
                 tcpServer = new TCPServer();
                 tcpServer.startServer();
-                connecteHandler.handle(null);
+                mainView.setConnecte();
             }
         } catch (IOException e) {
             System.err.println("Impossible de connecter le serveur");

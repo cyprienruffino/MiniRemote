@@ -33,6 +33,7 @@ public class TCPService extends Service implements NetworkDiscovery {
 
 
     private final IBinder mBinder = new TCPBinder();
+    private boolean closed = false;
 
     @Override
     public void onNetworkFound() {
@@ -84,12 +85,12 @@ public class TCPService extends Service implements NetworkDiscovery {
     private final static int PORT = 8888;
     private Thread serverInputThread;
     private Thread serverOutputThread;
+    private ServerOutput actionOutput;
     private ServerSocket serverSocket = null;
     private List<EventWrapper> events;
     private Object lock = new Object();
     private HomeActivity activity;
     private Discovery discovery;
-    private ServerOutput actionOutput;
 
     public void startServer(Activity act) {
         activity = (HomeActivity) act;
@@ -110,10 +111,7 @@ public class TCPService extends Service implements NetworkDiscovery {
 
 
     public void stop() {
-        if (serverOutputThread != null)
-            actionOutput.close();
-        if (serverInputThread != null)
-            serverInputThread.interrupt();
+        closed = true;
     }
 
     private class ServerInput implements Runnable {
@@ -138,14 +136,13 @@ public class TCPService extends Service implements NetworkDiscovery {
                 this.socket = new Socket(IP, PORT);
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-                while (true) {
+                while (!closed) {
                     received = (EventWrapper) in.readObject();
                     Log.wtf("OK!", "Ca marche!");
                     Controller.execute(received);
                 }
-
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
     }
@@ -158,7 +155,6 @@ public class TCPService extends Service implements NetworkDiscovery {
         private int PORT;
         private Object lock;
         private SendFinished callback;
-        private boolean finish=true;
 
         public void setcallback(SendFinished cb) {
             callback = cb;
@@ -178,16 +174,16 @@ public class TCPService extends Service implements NetworkDiscovery {
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 out.flush();
                 synchronized (lock) {
-                    while (finish) {
+                    while (!closed) {
                         lock.wait();
                         while (!events.isEmpty()) {
                             event = events.remove(0);
                             if (event != null)
                                 out.writeObject(event);
                             out.flush();
+                            executeCallback();
                         }
                     }
-                    executeCallback();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -199,10 +195,6 @@ public class TCPService extends Service implements NetworkDiscovery {
         private void executeCallback() {
             if (callback != null)
                 callback.onSendFinished();
-        }
-
-        public void close() {
-            finish=false;
         }
     }
 }
