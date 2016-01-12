@@ -201,4 +201,12 @@ public class Controller {
             //e.printStackTrace();
         }
     }
+
+    public void send(EventWrapper event){
+        tcpServer.send(event);
+    }
+
+    public static Controller getInstance(){
+        return controller;
+    }
 }

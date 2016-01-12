@@ -1,5 +1,7 @@
 package controller;
 
+import android.util.Log;
+
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
@@ -34,6 +36,9 @@ public class Controller {
             }
             if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)){
                 return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            }
+            if (responseEvent.getResponse().equals(ResponseEvent.TEST)){
+                Log.d("Rec", "OK");
             }
         }
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));

@@ -8,6 +8,7 @@ public class ResponseEvent extends RemoteEvent {
     public static final String SERVICE_SHUTDOWN = "REMOTECONTROL_SERVICE_SHUTDOWN";
     public static final String OK = "REMOTECONTROL_ACKNOWLEDGEMENT";
     public static final String FAILURE = "REMOTECONTROL_FAILURE";
+    public static final String TEST = "REMOTECONTROL_TEST";
 
 
 

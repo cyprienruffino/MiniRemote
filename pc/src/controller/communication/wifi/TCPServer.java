@@ -49,8 +49,8 @@ public class TCPServer {
         System.out.println("client connecté");
 
 
-      //  out = new ObjectOutputStream(socket.getOutputStream());
-      //  out.flush();
+        out = new ObjectOutputStream(socket.getOutputStream());
+        out.flush();
         System.out.println("OutputStream Instancié");
         in = new ObjectInputStream(socket.getInputStream());
         System.out.println("InputStream Instancié");
@@ -58,9 +58,9 @@ public class TCPServer {
         actionOutput = new ServerOutput(out, events, lock, this);
 
         serverInputThread = new Thread(actionInput, "InputThread");
-      //  serverOutputThread = new Thread(actionOutput, "OuputThread");
+        serverOutputThread = new Thread(actionOutput, "OuputThread");
         serverInputThread.start();
-      //  serverOutputThread.start();
+        serverOutputThread.start();
         System.out.println("Threads lancés");
     }
 
@@ -68,7 +68,7 @@ public class TCPServer {
         //TODO ne marche pas
         synchronized (lock) {
             events.add(event);
-            lock.notify();
+            lock.notifyAll();
         }
     }
 
