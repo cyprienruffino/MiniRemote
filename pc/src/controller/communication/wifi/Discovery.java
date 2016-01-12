@@ -17,15 +17,16 @@ import java.util.Enumeration;
 
 public class Discovery implements Runnable{
     private static final int RECEIVING_TIMEOUT = 10000;
-    private static final int EPSON_VP_PORT = 3629;
+    private static final int EPSON_VP_PORT=55799;
+    private static final int EPSON_VP_PORT_TCP = 3629;
     private DatagramSocket socket;
     private String ipServer;
-
+    private String vpName;
 
     public Discovery() {
 
         try {
-            socket = new DatagramSocket(EPSON_VP_PORT);
+            socket = new DatagramSocket(EPSON_VP_PORT_TCP);
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -103,6 +104,7 @@ public class Discovery implements Runnable{
     private  String getServerIp() {
         try {
             DatagramPacket packet = sendBroadcast();
+            analyseReponse(packet.getData());
             return packet.getAddress().getHostAddress();
         }catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +117,20 @@ public class Discovery implements Runnable{
         return null;
     }
 
+public void analyseReponse(byte [] rec){
+    switch (rec[14]){
+        case 0x20://ok
+            vpName=new String(rec,17,16);
+            break;
+        default://ko
+            vpName=null;
+            break;
+    }
+}
 
+    public String getVpName(){
+        return vpName;
+    }
 
     @Override
     public void run() {

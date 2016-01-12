@@ -6,6 +6,10 @@ package controller.communication.events;
 public class ProjectorEvent extends RemoteEvent{
     public static final String POWER_ON="PROJECTOR_POWER_ON";
     public static final String POWER_OFF="PROJECTOR_POWER_OFF";
+    public static final String GET_SOURCE="PROJECTOR_GET_SOURCE";
+    public static final String SET_SOURCE_PC="PROJECTOR_SET_SOURCE_PC";
+    public static final String SET_SOURCE_HDMI="PROJECTOR_SET_SOURCE_HDMI";
+    public static final String SET_SOURCE_VIDEO="PROJECTOR_SET_SOURCE_VIDEO";
 
     public String getAction() {
         return action;

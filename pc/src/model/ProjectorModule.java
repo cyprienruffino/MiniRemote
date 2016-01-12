@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,6 +20,7 @@ public class ProjectorModule {
     private class ProjectorTCPServer {
 
         private static final int EPSON_VP_PORT = 3629;
+
 
         private Thread serverOutputThread;
         private Socket socket = null;
@@ -138,10 +140,24 @@ public class ProjectorModule {
     }
 
     public void sendPowerOn(){
-        //TODO
+        String pwrOn="PWR ON\n";
+        byte [] b=pwrOn.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
     }
     public void sendPowerOff(){
-        //TODO
+        String pwrOff="PWR OFF\n";
+        byte [] b=pwrOff.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void sendGetSource(){
+        String getSrc="SOURCE?\n";
+        byte [] b=getSrc.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void sendSetSource(int src){
+
     }
 
     public void stop() throws IOException {
