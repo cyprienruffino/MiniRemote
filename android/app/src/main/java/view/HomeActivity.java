@@ -74,6 +74,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 unbindTcpService();
                 runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.dc)));
                 break;
+            case R.id.setting:
+                d = new ChangeThemeDialog();
+                d.show(getFragmentManager(),"settingDialog");
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

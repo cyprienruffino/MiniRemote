@@ -25,4 +25,9 @@
     <string name="server_found">Connecté !</string>
     <string name="menu_dc">Déconnection</string>
     <string name="dc">Déconnecté</string>
+    <string name="th">theme holo</string>
+    <string name="tl">theme light</string>
+    <string name="titre_theme">Choix du theme</string>
+    <string name="lightTheme">Light Theme</string>
+    <string name="darkTheme">Dark Theme</string>
 </resources>

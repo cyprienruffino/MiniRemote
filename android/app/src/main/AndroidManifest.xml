@@ -21,6 +21,7 @@
             android:name="view.BasicActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name="view.ProjoActivity"/>
+
         <service android:name="controller.communication.wifi.serviceTest.ConnectionService"/>
         <service android:name="controller.communication.wifi.TCPService" />
     </application>
