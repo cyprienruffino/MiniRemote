@@ -35,16 +35,26 @@ public class Controller {
 
         if (event.getClass().equals(KeyboardEvent.class)) {
             KeyboardEvent keyboardEvent = (KeyboardEvent) event;
+            KeyboardModule module = KeyboardModule.getInstance();
             System.out.println(keyboardEvent.getKeycode());
             switch (keyboardEvent.getAction()) {
                 case KeyHit:
-                    KeyboardModule.getInstance().hitKey(keyboardEvent.getKeycode());
+                    if (keyboardEvent.getKeycode() == -1)
+                        module.hitKey(keyboardEvent.getSpecialKey());
+                    else
+                        module.hitKey(keyboardEvent.getKeycode());
                     break;
                 case KeyPress:
-                    KeyboardModule.getInstance().keyPress(keyboardEvent.getKeycode());
+                    if (keyboardEvent.getKeycode() == -1)
+                        module.keyPress(((KeyboardEvent) event).getSpecialKey());
+                    else
+                        module.keyPress(((KeyboardEvent) event).getKeycode());
                     break;
                 case KeyRelease:
-                    KeyboardModule.getInstance().keyRelease(keyboardEvent.getKeycode());
+                    if (keyboardEvent.getKeycode() == -1)
+                        module.keyPress(keyboardEvent.getSpecialKey());
+                    else
+                        module.keyPress(keyboardEvent.getKeycode());
             }
             return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
         }
@@ -202,11 +212,11 @@ public class Controller {
         }
     }
 
-    public void send(EventWrapper event){
+    public void send(EventWrapper event) {
         tcpServer.send(event);
     }
 
-    public static Controller getInstance(){
+    public static Controller getInstance() {
         return controller;
     }
 }

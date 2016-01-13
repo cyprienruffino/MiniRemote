@@ -1,15 +1,16 @@
 package controller.communication.events;
-
 /**
  * Created by cyprien on 09/11/15.
  */
 public class KeyboardEvent extends RemoteEvent {
     private int keycode;
     private KeyboardAction action;
+    private SpecialKey specialKey;
 
-    public KeyboardEvent(int keycode, KeyboardAction action) {
+    public KeyboardEvent(int keycode, KeyboardAction action, SpecialKey sp) {
         this.keycode = keycode;
         this.action = action;
+        specialKey = sp;
     }
 
     public int getKeycode() {
@@ -20,12 +21,8 @@ public class KeyboardEvent extends RemoteEvent {
         return action;
     }
 
-    @Override
-    public String toString() {
-        return "KeyboardEvent{" +
-                "keycode=" + keycode +
-                ", action=" + action.getId() +
-                '}';
+    public SpecialKey getSpecialKey() {
+        return specialKey;
     }
 
     public enum KeyboardAction {
@@ -42,5 +39,18 @@ public class KeyboardEvent extends RemoteEvent {
         public String getId() {
             return id;
         }
+    }
+
+    public enum SpecialKey {
+        Alt,
+        Tab,
+        Alt_Gr,
+        Ctrl,
+        Context,
+        Del,
+        Forward_Del,
+        Shift,
+        Caps_Lock,
+        Enter;
     }
 }

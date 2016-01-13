@@ -19,8 +19,8 @@
         <Button
                 style="@style/MatchParent"
                 android:layout_weight="1"
-                android:text="@string/projo_status"
-                android:onClick="status"
+                android:text="@string/source"
+                android:onClick="source"
                 />
         <Button
                 style="@style/MatchParent"

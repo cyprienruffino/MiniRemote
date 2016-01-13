@@ -1,6 +1,7 @@
 package view;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
 import orleans.info.fr.remotecontrol.R;
@@ -15,9 +16,12 @@ public class ProjoActivity extends Activity {
         setContentView(R.layout.projoview);
     }
 
-    public void status(View view) {
+    public void onoff(View view) {
     }
 
-    public void onoff(View view) {
+    public void source(View view) {
+
+        DialogFragment dialogFragment = new SourceDialog();
+        dialogFragment.show(getFragmentManager(), "SourceDialog");
     }
 }

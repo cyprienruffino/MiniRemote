@@ -1,5 +1,7 @@
 package model;
 
+import controller.communication.events.KeyboardEvent;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -33,21 +35,18 @@ public class KeyboardModule {
      * @param charCode A standard Java keycode
      */
     public void hitKey(int charCode) {
-        /*System.out.println("CHAR : "+ charCode);
-        int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
-        if(charCode==(char)8)keycode=8; //Isolation du backspace
-        System.out.println("KEY : " + keycode);
-        try{
-            robot.keyPress(keycode);
-            robot.keyRelease(keycode);
-        }catch(IllegalArgumentException e){}*/
         try {
-            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
+            int keycode = KeyEvent.getExtendedKeyCodeForChar((char) charCode);
             robot.keyPress(keycode);
             robot.keyRelease(keycode);
-        } catch (IllegalArgumentException e){
-            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        } catch (IllegalArgumentException e) {
+            System.out.println(charCode + " non supporté par " + robot.getClass().toString());
         }
+    }
+
+    public void hitKey(KeyboardEvent.SpecialKey key) {
+        robot.keyPress(getIntToSend(key));
+        robot.keyRelease(getIntToSend(key));
     }
 
     /**
@@ -55,17 +54,17 @@ public class KeyboardModule {
      *
      * @param charCode A standard Java keycode
      */
-    public void keyPress(int charCode){/*
-        int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
+    public void keyPress(int charCode) {
         try {
+            int keycode = KeyEvent.getExtendedKeyCodeForChar((char) charCode);
             robot.keyPress(keycode);
-        }catch(IllegalArgumentException e){}*/
-        try {
-            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
-            robot.keyPress(keycode);
-        } catch (IllegalArgumentException e){
-            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        } catch (IllegalArgumentException e) {
+            System.out.println(charCode + " non supporté par " + robot.getClass().toString());
         }
+    }
+
+    public void keyPress(KeyboardEvent.SpecialKey key) {
+        robot.keyPress(getIntToSend(key));
     }
 
     /**
@@ -74,29 +73,43 @@ public class KeyboardModule {
      * @param charCode A standard java keycode
      */
     public void keyRelease(int charCode) {
-       /* int keycode = KeyEvent.getExtendedKeyCodeForChar(charCode);
-        try{
-            robot.keyRelease(keycode);
-        }catch(IllegalArgumentException e){}*/
         try {
-            int keycode=KeyEvent.getExtendedKeyCodeForChar((char)charCode);
+            int keycode = KeyEvent.getExtendedKeyCodeForChar((char) charCode);
             robot.keyRelease(keycode);
-        } catch (IllegalArgumentException e){
-            System.out.println(charCode+" non supporté par "+robot.getClass().toString());
+        } catch (IllegalArgumentException e) {
+            System.out.println(charCode + " non supporté par " + robot.getClass().toString());
         }
     }
 
-    /**
-     * Type, key by key, a string
-     *
-     * @param toType Command to type
-     */
-    public void type(String toType) {
-        for (int i = 0; i < toType.length(); i++) {
-            robot.keyPress(toType.charAt(i));
-            robot.keyRelease(toType.charAt(i));
-        }
+    public void keyRelease(KeyboardEvent.SpecialKey key) {
+        robot.keyRelease(getIntToSend(key));
     }
 
+    private int getIntToSend(KeyboardEvent.SpecialKey key) {
+        switch (key) {
+            case Alt:
+                return KeyEvent.VK_ALT;
+            case Alt_Gr:
+                return KeyEvent.VK_ALT_GRAPH;
+            case Caps_Lock:
+                return KeyEvent.VK_CAPS_LOCK;
+            case Context:
+                return KeyEvent.VK_CONTEXT_MENU;
+            case Ctrl:
+                return KeyEvent.VK_CONTROL;
+            case Del:
+                return KeyEvent.VK_BACK_SPACE;
+            case Enter:
+                return KeyEvent.VK_ENTER;
+            case Forward_Del:
+                return KeyEvent.VK_DELETE;
+            case Shift:
+                return KeyEvent.VK_SHIFT;
+            case Tab:
+                return KeyEvent.VK_TAB;
 
+            default:
+                return 0;
+        }
+    }
 }

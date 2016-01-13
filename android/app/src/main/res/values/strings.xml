@@ -25,6 +25,12 @@
     <string name="server_found">Connecté !</string>
     <string name="menu_dc">Déconnection</string>
     <string name="dc">Déconnecté</string>
+    <string name="source">Source</string>
+    <string name="source_pc">Ordinateur</string>
+    <string name="source_HDMI">HDMI</string>
+    <string name="source_video">Video</string>
+    <string name="getsource">Obtenir source</string>
+    <string name="source_title">Choisir source</string>
     <string name="th">theme holo</string>
     <string name="tl">theme light</string>
     <string name="titre_theme">Choix du theme</string>
