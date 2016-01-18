@@ -16,6 +16,10 @@ import java.util.List;
  */
 
 public class ProjectorModule {
+    public static final String SET_SOURCE_PC="1F";
+    public static final String SET_SOURCE_HDMI="30";
+    public static final String SET_SOURCE_VIDEO="41";
+
 
     private class ProjectorTCPServer {
 
@@ -156,8 +160,10 @@ public class ProjectorModule {
         sendByteArray(b);
     }
 
-    public void sendSetSource(int src){
-
+    public void sendSetSource(String src){
+        String getSrc="SOURCE "+src+"\n";
+        byte [] b=getSrc.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
     }
 
     public void stop() throws IOException {
