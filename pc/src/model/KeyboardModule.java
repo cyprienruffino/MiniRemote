@@ -86,30 +86,33 @@ public class KeyboardModule {
     }
 
     private int getIntToSend(KeyboardEvent.SpecialKey key) {
-        switch (key) {
-            case Alt:
-                return KeyEvent.VK_ALT;
-            case Alt_Gr:
-                return KeyEvent.VK_ALT_GRAPH;
-            case Caps_Lock:
-                return KeyEvent.VK_CAPS_LOCK;
-            case Context:
-                return KeyEvent.VK_CONTEXT_MENU;
-            case Ctrl:
-                return KeyEvent.VK_CONTROL;
-            case Del:
-                return KeyEvent.VK_BACK_SPACE;
-            case Enter:
-                return KeyEvent.VK_ENTER;
-            case Forward_Del:
-                return KeyEvent.VK_DELETE;
-            case Shift:
-                return KeyEvent.VK_SHIFT;
-            case Tab:
-                return KeyEvent.VK_TAB;
-
-            default:
-                return 0;
+        try {
+            switch (key) {
+                case Alt:
+                    return KeyEvent.VK_ALT;
+                case Alt_Gr:
+                    return KeyEvent.VK_ALT_GRAPH;
+                case Caps_Lock:
+                    return KeyEvent.VK_CAPS_LOCK;
+                case Context:
+                    return KeyEvent.VK_CONTEXT_MENU;
+                case Ctrl:
+                    return KeyEvent.VK_CONTROL;
+                case Del:
+                    return KeyEvent.VK_BACK_SPACE;
+                case Enter:
+                    return KeyEvent.VK_ENTER;
+                case Forward_Del:
+                    return KeyEvent.VK_DELETE;
+                case Shift:
+                    return KeyEvent.VK_SHIFT;
+                case Tab:
+                    return KeyEvent.VK_TAB;
+                default:
+                    return 0;
+            }
+        } catch (NullPointerException e) {
+            return 0;
         }
     }
 }

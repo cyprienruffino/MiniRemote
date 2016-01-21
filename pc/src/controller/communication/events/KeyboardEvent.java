@@ -26,6 +26,15 @@ public class KeyboardEvent extends RemoteEvent {
         return specialKey;
     }
 
+    @Override
+    public String toString() {
+        return "KeyboardEvent{" +
+                "keycode=" + keycode +
+                ", action=" + action +
+                ", specialKey=" + specialKey +
+                '}';
+    }
+
     public enum KeyboardAction {
         KeyPress("REMOTE_EVENT_KEY_PRESS"),
         KeyRelease("REMOTE_EVENT_KEY_RELEASE"),

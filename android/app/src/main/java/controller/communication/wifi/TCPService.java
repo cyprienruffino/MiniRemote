@@ -39,10 +39,17 @@ public class TCPService extends Service implements NetworkDiscovery {
     public void onNetworkFound() {
         String IP = discovery.getIpServer();
         discovery.stop();
-        ServerStart serverStart = new ServerStart(IP, PORT, events, lock);
-        Thread serverThread=new Thread(serverStart);
-        serverThread.start();
-        activity.onNetworkFound();
+        try {
+            ServerInput actionInput = new ServerInput(IP, PORT, events, lock);
+            actionOutput = new ServerOutput(IP, PORT, events, lock);
+            serverInputThread = new Thread(actionInput);
+            serverOutputThread = new Thread(actionOutput);
+            serverInputThread.start();
+            serverOutputThread.start();
+            activity.onNetworkFound();
+        } catch (IOException e) {
+            activity.onNoNetworkFound();
+        }
     }
 
     @Override
@@ -107,47 +114,18 @@ public class TCPService extends Service implements NetworkDiscovery {
         closed = true;
     }
 
-    private class ServerStart implements Runnable {
-        private String IP;
-        private int PORT;
-
-        private ServerInput serverInput;
-        private ServerOutput serverOutput;
-        private List<EventWrapper> events;
-        private Object lock;
-
-        public ServerStart(String IP, int PORT, List<EventWrapper> events, Object lock){
-            this.IP=IP;
-            this.PORT=PORT;
-            this.events=events;
-            this.lock=lock;
-        }
-
-        @Override
-        public void run() {
-            try {
-                Socket socket=new Socket(IP,PORT);
-                serverInput=new ServerInput(socket, events, lock);
-                serverOutput=new ServerOutput(socket,events,lock);
-                Thread inputThread=new Thread(serverInput);
-                Thread outputThread=new Thread(serverOutput);
-                inputThread.start();
-                outputThread.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private class ServerInput implements Runnable {
         private Socket socket = null;
         private List<EventWrapper> events;
         private EventWrapper received;
         private EventWrapper response;
+        private String IP;
+        private int PORT;
         private Object lock;
 
-        public ServerInput(Socket socket, List<EventWrapper> events, Object lock) throws IOException {
-           this.socket=socket;
+        public ServerInput(String IP, int PORT, List<EventWrapper> events, Object lock) throws IOException {
+            this.IP = IP;
+            this.PORT = PORT;
             this.events = events;
             this.lock = lock;
         }
@@ -155,6 +133,7 @@ public class TCPService extends Service implements NetworkDiscovery {
         @Override
         public void run() {
             try {
+                this.socket = new Socket(IP, PORT);
                 ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
                 while (!closed) {
@@ -172,6 +151,8 @@ public class TCPService extends Service implements NetworkDiscovery {
         private final List<EventWrapper> events;
         private EventWrapper event;
         private Socket socket = null;
+        private String IP;
+        private int PORT;
         private Object lock;
         private SendFinished callback;
 
@@ -179,8 +160,9 @@ public class TCPService extends Service implements NetworkDiscovery {
             callback = cb;
         }
 
-        public ServerOutput(Socket socket, List<EventWrapper> events, Object lock) throws IOException {
-            this.socket=socket;
+        public ServerOutput(String IP, int PORT, List<EventWrapper> events, Object lock) throws IOException {
+            this.IP = IP;
+            this.PORT = PORT;
             this.events = events;
             this.lock = lock;
         }
@@ -188,6 +170,7 @@ public class TCPService extends Service implements NetworkDiscovery {
         @Override
         public void run() {
             try {
+                this.socket = new Socket(IP, PORT);
                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
                 out.flush();
                 synchronized (lock) {
