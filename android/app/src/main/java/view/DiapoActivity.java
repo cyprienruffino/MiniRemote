@@ -28,7 +28,9 @@ public class DiapoActivity extends Activity {
     }
 
     public void go_to(View view) {
-        int num = Integer.parseInt(((EditText) findViewById(R.id.numpagediapo)).getText().toString());
+        EditText editText = (EditText) findViewById(R.id.numpagediapo);
+        int num = Integer.parseInt(editText.getText().toString());
+        editText.setText("");
         send(new DiapoEvent(num));
     }
 

@@ -2,6 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               style="@style/VerticalLinearLayout"
               android:gravity="center">
+    <View android:layout_width="0dip" android:layout_height="0dip"
+          android:focusable="true"
+          android:focusableInTouchMode="true"
+    />
+
     <LinearLayout style="@style/HorizontalLinearLayout"
                   android:layout_height="wrap_content">
         <TextView
