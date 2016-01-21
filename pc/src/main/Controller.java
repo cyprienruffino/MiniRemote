@@ -138,11 +138,23 @@ public class Controller {
 
         if (event.getClass().equals(ProjectorEvent.class)) {
             ProjectorEvent projectorEvent = (ProjectorEvent) event;
-            if (projectorEvent.getAction() == ProjectorEvent.POWER_ON)
-                ProjectorModule.getInstance().sendPowerOn();
-            if (projectorEvent.getAction() == ProjectorEvent.POWER_OFF)
-                ProjectorModule.getInstance().sendPowerOff();
-
+            switch (projectorEvent.getAction()){
+                case ProjectorEvent.POWER_ON:
+                    ProjectorModule.getInstance().sendPowerOn();
+                    break;
+                case ProjectorEvent.POWER_OFF:
+                    ProjectorModule.getInstance().sendPowerOff();
+                    break;
+                case ProjectorEvent.SET_SOURCE_PC:
+                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_PC);
+                    break;
+                case  ProjectorModule.SET_SOURCE_HDMI:
+                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_HDMI);
+                    break;
+                case ProjectorModule.SET_SOURCE_VIDEO:
+                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
+                    break;
+            }
         }
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
