@@ -93,6 +93,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 v = new Intent(HomeActivity.this, ProjoActivity.class);
                 startActivity(v);
                 break;
+            case R.id.main_diapo_button:
+                v = new Intent(HomeActivity.this, DiapoActivity.class);
+                startActivity(v);
+                break;
         }
     }
 
@@ -140,7 +144,6 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
 
         }
         runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.no_server_found)));
-        ;
         unbindTcpService();
     }
 

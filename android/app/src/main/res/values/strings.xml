@@ -36,4 +36,13 @@
     <string name="titre_theme">Choix du theme</string>
     <string name="lightTheme">Light Theme</string>
     <string name="darkTheme">Dark Theme</string>
+    <string name="diapo_aller_a">Aller à la page :</string>
+    <string name="diapo_go">Go !</string>
+    <string name="precedent">Précédent</string>
+    <string name="demarrer">Démarrer</string>
+    <string name="suivant">Suivant</string>
+    <string name="debut">Début</string>
+    <string name="fin">Fin</string>
+    <string name="diapo_demarrer_page_courante">Démarrer à la page courante</string>
+    <string name="main_diapo_text">Gestion Diaporama</string>
 </resources>

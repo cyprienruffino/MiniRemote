@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              style="@style/VerticalLinearLayout"
+              android:gravity="center">
+    <LinearLayout style="@style/HorizontalLinearLayout"
+                  android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:text="@string/diapo_aller_a"
+                android:gravity="center"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:inputType="number"/>
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/diapo_go"
+                android:onClick="go_to"
+        />
+    </LinearLayout>
+    <LinearLayout style="@style/HorizontalLinearLayout"
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/precedent"
+                android:onClick="prec"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/demarrer"
+                android:onClick="start"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/suivant"
+                android:onClick="next"/>
+    </LinearLayout>
+    <LinearLayout style="@style/HorizontalLinearLayout"
+                  android:layout_height="wrap_content">
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/debut"
+                android:onClick="origin"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/diapo_demarrer_page_courante"
+                android:onClick="startHere"/>
+        <Button android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:layout_weight="1"
+                android:text="@string/fin"
+                android:onClick="last"/>
+    </LinearLayout>
+
+</LinearLayout>
