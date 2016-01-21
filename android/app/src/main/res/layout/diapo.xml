@@ -15,7 +15,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:inputType="number"/>
+                android:inputType="number"
+                android:id="@+id/numpagediapo"/>
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="100dip"

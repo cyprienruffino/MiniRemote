@@ -4,10 +4,7 @@ import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import javafx.application.Platform;
-import model.CursorModule;
-import model.KeyboardModule;
-import model.ProjectorModule;
-import model.ShellModule;
+import model.*;
 import view.MainView;
 
 import java.awt.*;
@@ -138,7 +135,7 @@ public class Controller {
 
         if (event.getClass().equals(ProjectorEvent.class)) {
             ProjectorEvent projectorEvent = (ProjectorEvent) event;
-            switch (projectorEvent.getAction()){
+            switch (projectorEvent.getAction()) {
                 case ProjectorEvent.POWER_ON:
                     ProjectorModule.getInstance().sendPowerOn();
                     break;
@@ -148,11 +145,38 @@ public class Controller {
                 case ProjectorEvent.SET_SOURCE_PC:
                     ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_PC);
                     break;
-                case  ProjectorModule.SET_SOURCE_HDMI:
+                case ProjectorModule.SET_SOURCE_HDMI:
                     ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_HDMI);
                     break;
                 case ProjectorModule.SET_SOURCE_VIDEO:
                     ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
+                    break;
+            }
+        }
+        if (event.getClass().equals(DiapoEvent.class)) {
+            DiapoEvent diapoEvent = (DiapoEvent) event;
+            DiapoModule module = DiapoModule.getInstance();
+            switch (diapoEvent.getType()) {
+                case Goto:
+                    module.go_to(diapoEvent.getNumPage());
+                    break;
+                case Last:
+                    module.last();
+                    break;
+                case Next:
+                    module.next();
+                    break;
+                case Origin:
+                    module.origin();
+                    break;
+                case Prec:
+                    module.prec();
+                    break;
+                case Start:
+                    module.start();
+                    break;
+                case StartHere:
+                    module.startHere();
                     break;
             }
         }

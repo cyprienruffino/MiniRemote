@@ -17,7 +17,7 @@ import orleans.info.fr.remotecontrol.R;
  * Created by Valentin on 02/11/2015.
  */
 public class BasicActivity extends Activity {
-    TCPService tcpService;
+    private TCPService tcpService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
