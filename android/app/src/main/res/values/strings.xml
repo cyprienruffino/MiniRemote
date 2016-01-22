@@ -45,4 +45,5 @@
     <string name="fin">Fin</string>
     <string name="diapo_demarrer_page_courante">Démarrer à la page courante</string>
     <string name="main_diapo_text">Gestion Diaporama</string>
+    <string name="diapo_text_null">Besoin d\'un numéro de page</string>
 </resources>

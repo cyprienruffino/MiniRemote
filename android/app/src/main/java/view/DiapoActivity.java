@@ -2,6 +2,7 @@ package view;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import controller.Controller;
@@ -29,9 +30,14 @@ public class DiapoActivity extends Activity {
 
     public void go_to(View view) {
         EditText editText = (EditText) findViewById(R.id.numpagediapo);
-        int num = Integer.parseInt(editText.getText().toString());
-        editText.setText("");
-        send(new DiapoEvent(num));
+        Editable text = editText.getText();
+        if (text.equals("")) {
+            int num = Integer.parseInt(text.toString());
+            editText.setText("");
+            send(new DiapoEvent(num));
+        } else {
+            runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.diapo_text_null)));
+        }
     }
 
     public void prec(View view) {
