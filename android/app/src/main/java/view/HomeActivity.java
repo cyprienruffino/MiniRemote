@@ -78,6 +78,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 d = new ChangeThemeDialog();
                 d.show(getFragmentManager(),"settingDialog");
                 break;
+            case R.id.credit:
+                d = new AboutDialog();
+                d.show(getFragmentManager(), "creditDialog");
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

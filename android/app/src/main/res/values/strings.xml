@@ -30,7 +30,7 @@
     <string name="source_HDMI">HDMI</string>
     <string name="source_video">Video</string>
     <string name="getsource">Obtenir source</string>
-    <string name="source_title">Choisir source</string>
+    <string name="source_title">Connection</string>
     <string name="th">theme holo</string>
     <string name="tl">theme light</string>
     <string name="titre_theme">Choix du theme</string>
@@ -46,4 +46,8 @@
     <string name="diapo_demarrer_page_courante">Démarrer à la page courante</string>
     <string name="main_diapo_text">Gestion Diaporama</string>
     <string name="diapo_text_null">Besoin d\'un numéro de page</string>
+    <string name="crd">Application réalisé par :\nCorentin Colomier\nValentin Jubert\nNicolas Serrette\nCyprien
+        Ruffino
+    </string>
+    <string name="credit">Crédits</string>
 </resources>

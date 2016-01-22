@@ -9,6 +9,9 @@
             android:id="@+id/menu_dc"
             android:title="@string/menu_dc"/>
     <item
-        android:id="@+id/setting"
-        android:title="@string/settings"/>
+            android:id="@+id/setting"
+            android:title="@string/settings"/>
+    <item
+            android:id="@+id/credit"
+            android:title="@string/credit"/>
 </menu>

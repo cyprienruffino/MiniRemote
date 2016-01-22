@@ -18,6 +18,5 @@ public class ToastRunnable implements Runnable {
     @Override
     public void run() {
         Toast.makeText(context, string, Toast.LENGTH_SHORT).show();
-
     }
 }
