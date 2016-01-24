@@ -27,17 +27,16 @@ public class DiapoModule {
 
     public void go_to(int numPage) {
         char[] charArray = String.valueOf(numPage).toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
+        for (char aCharArray : charArray) {
             robot.keyPress(KeyEvent.VK_SHIFT);
-            hitKey(KeyEvent.getExtendedKeyCodeForChar(charArray[i]));
+            hitKey(KeyEvent.getExtendedKeyCodeForChar(aCharArray));
             robot.keyRelease(KeyEvent.VK_SHIFT);
         }
         hitKey(KeyEvent.VK_ENTER);
     }
 
     public void last() {
-        //TODO trouver une alternative
-        hitKey(KeyEvent.VK_FINAL);
+        hitKey(KeyEvent.VK_END);
     }
 
     public void next() {
@@ -45,7 +44,7 @@ public class DiapoModule {
     }
 
     public void origin() {
-        //TODO trouver la touche KeyEvent pour Début
+        hitKey(KeyEvent.VK_HOME);
     }
 
     public void prec() {
