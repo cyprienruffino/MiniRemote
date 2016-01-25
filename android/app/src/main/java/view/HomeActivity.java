@@ -92,14 +92,14 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 break;
             case R.id.menu_dc:
                 if (tcpService != null)
-                    tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServiceShutdown)), new SendFinished() {
+                    tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServiceShutdown)), this, new SendFinished() {
                         @Override
                         public void onSendFinished() {
                             unbindUdpService();
                             unbindTcpService();
                             runOnUiThread(new ToastRunnable(HomeActivity.this, getString(R.string.dc)));
                         }
-                    }, this);
+                    });
 
                 break;
             case R.id.setting:
@@ -188,13 +188,13 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
         Controller.isServiceStarted = false;
         Controller.setTcpService(null);
         try {
-            tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServiceShutdown)), new SendFinished() {
+            tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServiceShutdown)), this, new SendFinished() {
                 @Override
                 public void onSendFinished() {
                     tcpService.stop();
                     tcpService = null;
                 }
-            }, this);
+            });
         } catch (NullPointerException e) {
             //Tcp qui a foiré
         }

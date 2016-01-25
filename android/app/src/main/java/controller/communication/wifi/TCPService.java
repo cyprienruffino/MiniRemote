@@ -1,6 +1,9 @@
 package controller.communication.wifi;
 
 import android.os.AsyncTask;
+import controller.communication.callbackInterface.ErrorInterface;
+import controller.communication.callbackInterface.SendFinished;
+import controller.communication.events.EventWrapper;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -8,10 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-
-import controller.communication.callbackInterface.ErrorInterface;
-import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.EventWrapper;
 
 /**
  * Created by Valentin on 23/01/2016.
@@ -21,7 +20,23 @@ public class TCPService extends SurService {
     private Socket socket;
     private ObjectOutputStream outputStream;
 
-    public synchronized void send(EventWrapper e, SendFinished callback, ErrorInterface errorInterface) {
+    public void send(EventWrapper e) {
+        privateSend(e, null, null);
+    }
+
+    public void send(EventWrapper e, ErrorInterface errorInterface) {
+        privateSend(e, null, errorInterface);
+    }
+
+    public void send(EventWrapper e, SendFinished s) {
+        privateSend(e, s, null);
+    }
+
+    public void send(EventWrapper e, ErrorInterface errorInterface, SendFinished s) {
+        privateSend(e, s, errorInterface);
+    }
+
+    private synchronized void privateSend(EventWrapper e, SendFinished callback, ErrorInterface errorInterface) {
         if (running) {
             new AsyncTask<EventWrapper, Void, Void>() {
                 @Override

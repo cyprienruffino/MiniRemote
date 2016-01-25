@@ -19,6 +19,7 @@ import orleans.info.fr.remotecontrol.R;
  */
 public class DiapoActivity extends Activity implements ErrorInterface {
     private TCPService tcpService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +68,8 @@ public class DiapoActivity extends Activity implements ErrorInterface {
 
     private void send(RemoteEvent e) {
         if (tcpService != null) {
-            tcpService.send(new EventWrapper(e), null, this);
+            tcpService.send(new EventWrapper(e), this);
         }
-
     }
 
     @Override

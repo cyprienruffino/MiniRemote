@@ -48,7 +48,7 @@ public class SourceDialog extends DialogFragment {
 
     private void send(RemoteEvent event) {
         try {
-            Controller.getTcpService().send(new EventWrapper(event), null, null);
+            Controller.getTcpService().send(new EventWrapper(event));
         } catch (NullPointerException e) {
             getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getString(R.string.no_tcp_service)));
         }

@@ -133,7 +133,7 @@ public class BasicActivity extends Activity implements ErrorInterface {
 
     private void send(RemoteEvent e) {
         if (tcpService != null)
-            tcpService.send(new EventWrapper(e), null, this);
+            tcpService.send(new EventWrapper(e), this);
     }
 
     @Override
