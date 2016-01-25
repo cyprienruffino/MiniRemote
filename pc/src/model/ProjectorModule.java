@@ -1,19 +1,73 @@
 package model;
 
+import controller.communication.wifi.projector.Discovery;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by cyprien on 01/01/16.
  */
 
 public class ProjectorModule {
-    /*public static final String SET_SOURCE_PC="1F";
-    public static final String SET_SOURCE_HDMI="30";
-    public static final String SET_SOURCE_VIDEO="41";
+    public static final String SET_SOURCE_PC = "1F";
+    public static final String SET_SOURCE_HDMI = "30";
+    public static final String SET_SOURCE_VIDEO = "41";
+    private static ProjectorModule instance;
+    private ProjectorTCPServer server;
 
+    private ProjectorModule() throws IOException, InterruptedException {
+        server = new ProjectorTCPServer();
+        server.startServer();
+    }
+
+    public static ProjectorModule getInstance() throws IOException, InterruptedException {
+        if (instance == null)
+            instance = new ProjectorModule();
+        return instance;
+    }
+
+    private void sendByteArray(byte[] bytes) {
+        server.send(bytes);
+    }
+
+    public void sendPowerOn() {
+        String pwrOn = "PWR ON\n";
+        byte[] b = pwrOn.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void sendPowerOff() {
+        String pwrOff = "PWR OFF\n";
+        byte[] b = pwrOff.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void sendGetSource() {
+        String getSrc = "SOURCE?\n";
+        byte[] b = getSrc.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void sendSetSource(String src) {
+        String getSrc = "SOURCE " + src + "\n";
+        byte[] b = getSrc.getBytes(StandardCharsets.US_ASCII);
+        sendByteArray(b);
+    }
+
+    public void stop() throws IOException {
+        server.stop();
+    }
 
     private class ProjectorTCPServer {
 
         private static final int EPSON_VP_PORT = 3629;
-
 
         private Thread serverOutputThread;
         private Socket socket = null;
@@ -23,12 +77,12 @@ public class ProjectorModule {
         private DataOutputStream out;
         private boolean closed = false;
 
-        public boolean isClosed() {
-            return closed;
-        }
-
         public ProjectorTCPServer() {
             events = Collections.synchronizedList(new ArrayList<>());
+        }
+
+        public boolean isClosed() {
+            return closed;
         }
 
         public void startServer() throws IOException, InterruptedException {
@@ -39,7 +93,7 @@ public class ProjectorModule {
             thread.join();
             String IP = discovery.getIpServer();
 
-            socket=new Socket(IP, EPSON_VP_PORT);
+            socket = new Socket(IP, EPSON_VP_PORT);
             out = new DataOutputStream(socket.getOutputStream());
             out.flush();
             System.out.println("OutputStream projecteur Instancié");
@@ -57,7 +111,6 @@ public class ProjectorModule {
             }
         }
 
-
         public void stop() throws IOException {
             //send(new EventWrapper(new ResponseEvent(ResponseEvent.SERVER_SHUTDOWN)));
             closed = true;
@@ -74,10 +127,9 @@ public class ProjectorModule {
             System.out.println("socket projecteur : " + (socket == null ? "null" : socket.isClosed()));
         }
 
-
         private class ServerOutput implements Runnable {
-            private List<byte[]> events;
             byte[] event;
+            private List<byte[]> events;
             private DataOutputStream out;
             private Object lock;
             private ProjectorTCPServer server;
@@ -114,49 +166,4 @@ public class ProjectorModule {
         }
     }
 
-    private ProjectorModule() throws IOException, InterruptedException {
-        server=new ProjectorTCPServer();
-        server.startServer();
-    }
-    private static ProjectorModule instance;
-
-    private ProjectorTCPServer server;
-
-    public static ProjectorModule getInstance() throws IOException, InterruptedException {
-        if(instance==null)
-            instance=new ProjectorModule();
-        return instance;
-    }
-
-    private void sendByteArray(byte[] bytes){
-        server.send(bytes);
-    }
-
-    public void sendPowerOn(){
-        String pwrOn="PWR ON\n";
-        byte [] b=pwrOn.getBytes(StandardCharsets.US_ASCII);
-        sendByteArray(b);
-    }
-    public void sendPowerOff(){
-        String pwrOff="PWR OFF\n";
-        byte [] b=pwrOff.getBytes(StandardCharsets.US_ASCII);
-        sendByteArray(b);
-    }
-
-    public void sendGetSource(){
-        String getSrc="SOURCE?\n";
-        byte [] b=getSrc.getBytes(StandardCharsets.US_ASCII);
-        sendByteArray(b);
-    }
-
-    public void sendSetSource(String src){
-        String getSrc="SOURCE "+src+"\n";
-        byte [] b=getSrc.getBytes(StandardCharsets.US_ASCII);
-        sendByteArray(b);
-    }
-
-    public void stop() throws IOException {
-        server.stop();
-    }
-*/
 }
