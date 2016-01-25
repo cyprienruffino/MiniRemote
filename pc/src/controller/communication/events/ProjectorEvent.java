@@ -20,4 +20,11 @@ public class ProjectorEvent extends RemoteEvent{
     public ProjectorEvent(String action){
         this.action=action;
     }
+
+    @Override
+    public String toString() {
+        return "ProjectorEvent{" +
+                "action='" + action + '\'' +
+                '}';
+    }
 }

@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import controller.communication.wifi.TCPService;
+import controller.communication.wifi.UDPService;
 import orleans.info.fr.remotecontrol.R;
 
 /**
@@ -18,21 +18,20 @@ public class ServiceDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        //TODO quand bluetooth sera implem
-        //String[] tab={getString(R.string.wifi),getString(R.string.bluetooth)};
-        String[] tab={getString(R.string.wifi)};
-        AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+        String[] tab = {getString(R.string.wifi)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.servicedialog_title)
                 .setItems(tab, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case 0:
                                 //Wifi
-                                HomeActivity act=(HomeActivity) getActivity();
+                                HomeActivity act = (HomeActivity) getActivity();
                                 act.unbindTcpService();
-                                Intent i=new Intent(act.getApplicationContext(), TCPService.class);
-                                act.bindService(i,act.getSc(),Context.BIND_AUTO_CREATE);
+                                act.unbindUdpService();
+                                Intent i = new Intent(act.getApplicationContext(), UDPService.class);
+                                act.bindService(i, act.getUdpServiceConnection(), Context.BIND_AUTO_CREATE);
                                 break;
                             /*case 1:
                                 //TODO quand bluetooth sera implem

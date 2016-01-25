@@ -4,28 +4,25 @@ package controller.communication.events;
  * Created by cyprien on 09/11/15.
  */
 public class ResponseEvent extends RemoteEvent {
-    public static final String SERVER_SHUTDOWN = "REMOTECONTROL_SERVER_SHUTDOWN";
-    public static final String SERVICE_SHUTDOWN = "REMOTECONTROL_SERVICE_SHUTDOWN";
-    public static final String OK = "REMOTECONTROL_ACKNOWLEDGEMENT";
-    public static final String FAILURE = "REMOTECONTROL_FAILURE";
-    public static final String TEST = "REMOTECONTROL_TEST";
-
-
-
-    public String getResponse() {
-        return response;
+    public enum Response {
+        ServerShutdown, ServiceShutdown, Ok, Failure
     }
 
-    private String response;
-
-    public ResponseEvent(String response){
-        this.response=response;
-    }
+    private Response response;
 
     @Override
     public String toString() {
         return "ResponseEvent{" +
-                "response='" + response + '\'' +
+                "response=" + response +
                 '}';
+    }
+
+    public Response getResponse() {
+        return response;
+    }
+
+    public ResponseEvent(Response response) {
+
+        this.response = response;
     }
 }

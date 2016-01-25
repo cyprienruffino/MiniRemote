@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 public class KeyboardModule {
     //Singleton
     private static KeyboardModule instance;
+    private Robot robot;
 
     private KeyboardModule() throws AWTException {
         robot = new Robot();
@@ -26,8 +27,6 @@ public class KeyboardModule {
         if (instance == null) instance = new KeyboardModule();
         return instance;
     }
-
-    private Robot robot;
 
     /**
      * Press one time a keyboard key
@@ -45,8 +44,10 @@ public class KeyboardModule {
     }
 
     public void hitKey(KeyboardEvent.SpecialKey key) {
-        robot.keyPress(getIntToSend(key));
-        robot.keyRelease(getIntToSend(key));
+        if (key != null) {
+            robot.keyPress(getIntToSend(key));
+            robot.keyRelease(getIntToSend(key));
+        }
     }
 
     /**
@@ -64,7 +65,8 @@ public class KeyboardModule {
     }
 
     public void keyPress(KeyboardEvent.SpecialKey key) {
-        robot.keyPress(getIntToSend(key));
+        if (key != null)
+            robot.keyPress(getIntToSend(key));
     }
 
     /**
@@ -82,37 +84,34 @@ public class KeyboardModule {
     }
 
     public void keyRelease(KeyboardEvent.SpecialKey key) {
-        robot.keyRelease(getIntToSend(key));
+        if (key != null)
+            robot.keyRelease(getIntToSend(key));
     }
 
     private int getIntToSend(KeyboardEvent.SpecialKey key) {
-        try {
-            switch (key) {
-                case Alt:
-                    return KeyEvent.VK_ALT;
-                case Alt_Gr:
-                    return KeyEvent.VK_ALT_GRAPH;
-                case Caps_Lock:
-                    return KeyEvent.VK_CAPS_LOCK;
-                case Context:
-                    return KeyEvent.VK_CONTEXT_MENU;
-                case Ctrl:
-                    return KeyEvent.VK_CONTROL;
-                case Del:
-                    return KeyEvent.VK_BACK_SPACE;
-                case Enter:
-                    return KeyEvent.VK_ENTER;
-                case Forward_Del:
-                    return KeyEvent.VK_DELETE;
-                case Shift:
-                    return KeyEvent.VK_SHIFT;
-                case Tab:
-                    return KeyEvent.VK_TAB;
-                default:
-                    return 0;
-            }
-        } catch (NullPointerException e) {
-            return 0;
+        switch (key) {
+            case Alt:
+                return KeyEvent.VK_ALT;
+            case Alt_Gr:
+                return KeyEvent.VK_ALT_GRAPH;
+            case Caps_Lock:
+                return KeyEvent.VK_CAPS_LOCK;
+            case Context:
+                return KeyEvent.VK_CONTEXT_MENU;
+            case Ctrl:
+                return KeyEvent.VK_CONTROL;
+            case Del:
+                return KeyEvent.VK_BACK_SPACE;
+            case Enter:
+                return KeyEvent.VK_ENTER;
+            case Forward_Del:
+                return KeyEvent.VK_DELETE;
+            case Shift:
+                return KeyEvent.VK_SHIFT;
+            case Tab:
+                return KeyEvent.VK_TAB;
+            default:
+                return 0;
         }
     }
 }

@@ -1,10 +1,14 @@
 package main;
 
+import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import javafx.application.Platform;
-import model.*;
+import model.CursorModule;
+import model.DiapoModule;
+import model.KeyboardModule;
+import model.ShellModule;
 import view.MainView;
 
 import java.awt.*;
@@ -27,7 +31,7 @@ public class Controller {
         if (event.getClass().equals(CommandEvent.class)) {
             CommandEvent commandEvent = (CommandEvent) event;
             ShellModule.getInstance().execute(commandEvent.getCommand());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(KeyboardEvent.class)) {
@@ -49,82 +53,82 @@ public class Controller {
                     break;
                 case KeyRelease:
                     if (keyboardEvent.getKeycode() == -1)
-                        module.keyPress(keyboardEvent.getSpecialKey());
+                        module.keyRelease(keyboardEvent.getSpecialKey());
                     else
-                        module.keyPress(keyboardEvent.getKeycode());
+                        module.keyRelease(keyboardEvent.getKeycode());
             }
-            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(MouseClickEvent.class)) {
             MouseClickEvent mouseClickEvent = (MouseClickEvent) event;
             CursorModule cursorModule = CursorModule.getInstance();
             switch (mouseClickEvent.getAction()) {
-                case MouseClickEvent.MOUSE_PRESS:
-                    switch (mouseClickEvent.getClick()) {
-                        case MouseClickEvent.MOUSE_LEFT:
+                case Press:
+                    switch (mouseClickEvent.getButton()) {
+                        case Left:
                             cursorModule.mouseLeftPress();
                             break;
-                        case MouseClickEvent.MOUSE_MIDDLE:
-                            //TODO a voir à l'intégration du bouton middle
-                            break;
-                        case MouseClickEvent.MOUSE_RIGHT:
+                        case Right:
                             cursorModule.mouseRightPress();
                             break;
+                        case Center:
+                            //TODO a voir à l'intégration du bouton middle
+                            break;
                     }
                     break;
-                case MouseClickEvent.MOUSE_RELEASE:
-                    switch (mouseClickEvent.getClick()) {
-                        case MouseClickEvent.MOUSE_LEFT:
+                case Release:
+                    switch (mouseClickEvent.getButton()) {
+                        case Left:
                             cursorModule.mouseLeftRelease();
                             break;
-                        case MouseClickEvent.MOUSE_MIDDLE:
-                            //TODO a voir à l'intégration du bouton middle
-                            break;
-                        case MouseClickEvent.MOUSE_RIGHT:
+                        case Right:
                             cursorModule.mouseRightRelease();
+                            break;
+                        case Center:
+                            //TODO a voir à l'intégration du bouton middle
                             break;
                     }
                     break;
-                case MouseClickEvent.MOUSE_HIT:
-                    switch (mouseClickEvent.getClick()) {
-                        case MouseClickEvent.MOUSE_LEFT:
+                case Hit:
+                    switch (mouseClickEvent.getButton()) {
+                        case Left:
                             cursorModule.mouseLeftClick();
                             break;
-                        case MouseClickEvent.MOUSE_MIDDLE:
-                            //TODO a voir à l'intégration du bouton middle
-                            break;
-                        case MouseClickEvent.MOUSE_RIGHT:
+                        case Right:
                             cursorModule.mouseRightClick();
+                            break;
+                        case Center:
+                            //TODO a voir à l'intégration du bouton middle
                             break;
                     }
                     break;
             }
-            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(MoveMouseEvent.class)) {
             MoveMouseEvent moveMouseEvent = (MoveMouseEvent) event;
             CursorModule.getInstance().moveCursor(moveMouseEvent.getXmove(), moveMouseEvent.getYmove());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(ScrollMouseEvent.class)) {
             ScrollMouseEvent scrollMouseEvent = (ScrollMouseEvent) event;
             CursorModule.getInstance().mouseScroll(scrollMouseEvent.getScroll());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
-            if (responseEvent.getResponse().equals(ResponseEvent.OK))
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok))
                 return null;
-            if (responseEvent.getResponse().equals(ResponseEvent.SERVICE_SHUTDOWN)) {
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.ServiceShutdown)) {
                 Controller.controller.restartServer();
                 return null;
             }
-            if (responseEvent.getResponse().equals(ResponseEvent.FAILURE)) {
-                return new EventWrapper(new ResponseEvent(ResponseEvent.OK));
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
+                return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
             }
         }
 
@@ -133,7 +137,7 @@ public class Controller {
             CursorModule.getInstance().setDeviceSize(resolutionEvent.getHeight(), resolutionEvent.getWidth());
         }
 
-        if (event.getClass().equals(ProjectorEvent.class)) {
+        /*if (event.getClass().equals(ProjectorEvent.class)) {
             ProjectorEvent projectorEvent = (ProjectorEvent) event;
             switch (projectorEvent.getAction()) {
                 case ProjectorEvent.POWER_ON:
@@ -152,7 +156,7 @@ public class Controller {
                     ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
                     break;
             }
-        }
+        }*/
         if (event.getClass().equals(DiapoEvent.class)) {
             DiapoEvent diapoEvent = (DiapoEvent) event;
             DiapoModule module = DiapoModule.getInstance();
@@ -181,15 +185,13 @@ public class Controller {
             }
         }
 
-        return new EventWrapper(new ResponseEvent(ResponseEvent.FAILURE));
+        return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
         //throw new ActionException("Incorrect object received");
     }
 
+    private MainView mainView;
     private TCPServer tcpServer;
     private UDPServer udpServer;
-    private MainView mainView;
-    private Thread t;
-    private boolean stop = false;
 
     class LanceurRunnable implements Runnable {
 
@@ -205,51 +207,36 @@ public class Controller {
             Platform.exit();
         });
         Controller.controller = this;
-        t = new Thread(new LanceurRunnable(), "LanceurThread");
-        t.start();
+        new Thread(new LanceurRunnable(), "LanceurThread").start();
+    }
+
+    public void send(EventWrapper eventWrapper) {
+        tcpServer.send(eventWrapper);
+    }
+
+    public void send(EventWrapper eventWrapper, SendFinished callback) {
+        tcpServer.send(eventWrapper, callback);
     }
 
     public void restartServer() {
-        disconnect();
-        t = new Thread(new LanceurRunnable(), "LanceurThread");
-        t.start();
+
     }
 
     public void disconnect() {
-        stop = true;
         if (udpServer != null)
             udpServer.close();
-        if (tcpServer != null) {
-            try {
-                tcpServer.stop();
-            } catch (IOException e) {
-                System.err.println("Impossible de déconnecter le serveur");
-            }
-        }
-        System.out.println("Serveur déconnecté");
-        mainView.setEnAttente();
+        if (tcpServer != null)
+            tcpServer.close();
+
     }
 
     public void lancerServers() {
-        try {
-            stop = false;
-            if (!stop) {
-                udpServer = new UDPServer();
-                udpServer.attendreRequete();
-            }
-            if (!stop) {
-                tcpServer = new TCPServer();
-                tcpServer.startServer();
-                mainView.setConnecte();
-            }
-        } catch (IOException e) {
-            System.err.println("Impossible de connecter le serveur");
-            //e.printStackTrace();
-        }
-    }
+        mainView.setEnAttente();
+        udpServer = new UDPServer((port, address) -> {
+            tcpServer = new TCPServer(port, x -> mainView.setConnecte(address.getHostName()));
+            udpServer.close();
+        });
 
-    public void send(EventWrapper event) {
-        tcpServer.send(event);
     }
 
     public static Controller getInstance() {

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import controller.Controller;
+import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.events.*;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
@@ -16,7 +17,7 @@ import orleans.info.fr.remotecontrol.R;
 /**
  * Created by Valentin on 02/11/2015.
  */
-public class BasicActivity extends Activity {
+public class BasicActivity extends Activity implements ErrorInterface {
     private TCPService tcpService;
 
     @Override
@@ -42,10 +43,10 @@ public class BasicActivity extends Activity {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        send(new MouseClickEvent(0, MouseClickEvent.MOUSE_PRESS));
+                        send(new MouseClickEvent(MouseClickEvent.MouseAction.Press, MouseClickEvent.MouseButton.Left));
                         break;
                     case MotionEvent.ACTION_UP:
-                        send(new MouseClickEvent(0, MouseClickEvent.MOUSE_RELEASE));
+                        send(new MouseClickEvent(MouseClickEvent.MouseAction.Release, MouseClickEvent.MouseButton.Left));
                         break;
                 }
                 return true;
@@ -88,7 +89,7 @@ public class BasicActivity extends Activity {
     }
 
     public void droite(View view) {
-        send(new MouseClickEvent(1, MouseClickEvent.MOUSE_HIT));
+        send(new MouseClickEvent(MouseClickEvent.MouseAction.Hit, MouseClickEvent.MouseButton.Right));
     }
 
     private KeyboardEvent getKeyToSend(KeyEvent event, KeyboardEvent.KeyboardAction action) {
@@ -132,6 +133,11 @@ public class BasicActivity extends Activity {
 
     private void send(RemoteEvent e) {
         if (tcpService != null)
-            tcpService.send(new EventWrapper(e));
+            tcpService.send(new EventWrapper(e), null, this);
+    }
+
+    @Override
+    public void onError(String message) {
+        runOnUiThread(new ToastRunnable(this, message));
     }
 }

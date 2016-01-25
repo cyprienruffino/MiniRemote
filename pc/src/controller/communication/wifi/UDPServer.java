@@ -1,96 +1,59 @@
 package controller.communication.wifi;
 
+import controller.communication.callbackInterface.ClientConnectionRequest;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.SocketException;
 
 /**
- * Created by whiteshad on 27/10/15.
- * Serveur UDP servant a la reconnaissance du réseau par le client, permet au client d'optenir l'adresse IP du Serveur TCP
- * le client doit connaitre le port utilisé
+ * Created by Valentin on 23/01/2016.
  */
 public class UDPServer {
-    private final static int PORT=8888;
-    public static final int RECEIVING_TIMEOUT = 10000;
-    public static final int RECEIVING_TIMEOUT_SERVER = 30000;
-    private DatagramSocket s=null;
+    public static final int port = 1337;
+    private boolean running = true;
+    private DatagramSocket server;
 
+    public UDPServer(ClientConnectionRequest callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    server = new DatagramSocket(port);
+                    while (running) {
+                        try {
+                            byte[] buffer = new byte[4096];
+                            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                            server.receive(packet);
+                            String recv = new String(packet.getData());
+                            packet.setLength(buffer.length);
+                            if (recv.contains("Ping")) {
+                                byte[] buffer2 = "Pong".getBytes();
+                                DatagramPacket packet2 = new DatagramPacket(buffer2, buffer2.length, packet.getAddress(), packet.getPort());
+                                server.send(packet2);
+                                System.out.println("Ping recv");
+                            } else if (recv.contains("Connect")) {
+                                System.out.println("Connect recv");
+                                callback.onClientConnection(packet.getPort(), packet.getAddress());
+                            }
+                        } catch (SocketException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
-    public UDPServer() {
-        try {
-            s = new DatagramSocket(PORT);
-            // s.setSoTimeout(RECEIVING_TIMEOUT_SERVER);
-            System.out.println("serveur UDP lancé");
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void attendreRequete() {
-        // On initialise les trames qui vont servir à recevoir et envoyer les paquets
-        byte[] receiveData = new byte[1024];
-        byte[] sendData = new byte[1024];
-        System.out.println("En attente de Ping du client!");
-        // Tant qu'on est connecté, on attend une requête et on y répond
-        while (s != null && !s.isClosed()) {
-            try
-            {
-                DatagramPacket paquetRecu = new DatagramPacket(receiveData, receiveData.length);
-                s.receive(paquetRecu);
-
-                System.out.println("packet reçu");
-                String requete = new String(paquetRecu.getData());
-                InetAddress IPAddress = paquetRecu.getAddress();
-                int portExp = paquetRecu.getPort();
-                // Si on reçoit un "ping", on répond "pong" à celui qui nous l'a envoyé
-                if (requete.contains("Ping")) {
-                    System.out.println("Ping reçu du client ");
-                    //user.name au lieu de pong pour le choix
-                    sendData = "Pong".getBytes();
-                    DatagramPacket paquetRetour = new DatagramPacket(sendData, sendData.length, IPAddress, portExp);
-                    s.send(paquetRetour);
-                    System.out.println("reponse envoyé au client");
-                    s.close();
-                    System.out.println("Serveur UDP fermé");
-               }
+                    }
+                } catch (SocketException e) {
+                    e.printStackTrace();
+                }
             }
-            catch (Exception e)
-            {
-                System.err.println("Socket closed");
-                //e.printStackTrace();
-            }
-        }
+        }).start();
     }
 
-    public void close(){
-        s.close();
+    public void close() {
+        running = false;
+        if (server != null)
+            server.close();
     }
-
-
 }
-/*
-Echange UDP pour préparer la connection
-
-(1)server listens on a pre-arranged port
-
-DatagramSocket s = new DatagramSocket(8888);
-s.receive  //(1)
-s.send     //(2)
-
-(3)client sends a message to the port, on the broadcast IP, 255.255.255.255
-
-DatagramSocket c = new DatagramSocket();
-c.send(255.255.255.255:8888,msg)     //(3)
-c.receive  //(4)
-
-the client binds to a port too. we didn't specify it, so it's random chosen for us.
-
-(3) will broadcast the message to all local machines, server at (1) receives message, with the client IP:port.
-
-(2) server sends response message to client IP:port
-
-(4) client gets the reponse message from server.
-
-
- */

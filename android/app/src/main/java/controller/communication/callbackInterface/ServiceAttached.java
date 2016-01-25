@@ -4,5 +4,7 @@ package controller.communication.callbackInterface;
  * Created by Valentin on 02/01/2016.
  */
 public interface ServiceAttached {
-    public void onServiceAttached();
+    void onTCPServiceAttached();
+
+    void onUDPServiceAttached();
 }

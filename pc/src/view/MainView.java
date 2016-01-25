@@ -1,7 +1,5 @@
 package view;
 
-import controller.communication.events.EventWrapper;
-import controller.communication.events.ResponseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -9,17 +7,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import main.Controller;
 
 /**
  * Created by Valentin on 23/12/2015.
@@ -28,10 +23,9 @@ public class MainView {
     private Stage primaryStage;
     private VBox enAttente;
     private VBox connecte;
-    private EventHandler<WindowEvent> closeEvent;
+    private Label coLabel;
 
     public MainView(EventHandler<WindowEvent> closeEvent) {
-        this.closeEvent = closeEvent;
 
         enAttente = new VBox();
         enAttente.setPrefSize(400, 400);
@@ -47,22 +41,11 @@ public class MainView {
         Image img = new Image("resource/tick.png");
         ImageView imageView = new ImageView(img);
         imageView.setPreserveRatio(true);
-        Label coLabel = new Label("Connecté");
+        coLabel = new Label("Connecté");
         coLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         connecte.getChildren().addAll(imageView, coLabel);
         VBox.setVgrow(imageView, Priority.ALWAYS);
         coLabel.setAlignment(Pos.CENTER);
-        Button button=new Button();
-        button.setText("Test");
-        EventHandler handler=  new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                System.out.println("Envoi");
-                Controller.getInstance().send(new EventWrapper(new ResponseEvent(ResponseEvent.TEST)));
-                System.out.println("Envoyé");
-            }
-        };
-        button.addEventHandler(MouseEvent.MOUSE_CLICKED, handler);
-        connecte.getChildren().add(button);
 
 
         primaryStage = new Stage();
@@ -95,7 +78,8 @@ public class MainView {
 
     }
 
-    public void setConnecte() {
+    public void setConnecte(String hostName) {
+        coLabel.setText("Connecté à " + hostName);
         Platform.runLater(() ->
         {
             try {

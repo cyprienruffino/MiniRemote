@@ -1,5 +1,6 @@
 package controller.communication.wifi;
 
+import controller.communication.callbackInterface.ClientConnected;
 import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.ActionException;
 import controller.communication.events.EventWrapper;
@@ -12,173 +13,111 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 
 /**
- * Created by cyprien on 04/11/15.
+ * Created by Valentin on 23/01/2016.
  */
 public class TCPServer {
-    private final static int PORT = 8888;
+    private ServerSocket serverSocket;
+    private Socket client;
+    private ObjectOutputStream outputStream;
 
-    private Thread serverInputThread;
-    private Thread serverOutputThread;
-    private Socket socket = null;
-    private ServerSocket serverSocket = null;
-    private List<EventWrapper> events;
-    private Object lock = new Object();
-    private ObjectOutputStream out;
-    private ObjectInputStream in;
-    private boolean closed = false;
-    private ServerOutput actionOutput;
+    public TCPServer(int port, ClientConnected coCallback) {
+        try {
+            serverSocket = new ServerSocket(port);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("TCP begin");
+                        client = serverSocket.accept();
+                        System.out.println("TCP accepted");
+                        new Thread(new ClientProcess(client, coCallback), "InputStream").start();
+                    } catch (SocketException e) {
 
-    public boolean isClosed() {
-        return closed;
-    }
-
-    public TCPServer() {
-        events = Collections.synchronizedList(new ArrayList<>());
-    }
-
-    public void startServer() throws IOException {
-        serverSocket = new ServerSocket(PORT);
-        System.out.println("en attente de client");
-        socket = serverSocket.accept();
-        System.out.println("client connecté");
-
-
-        out = new ObjectOutputStream(socket.getOutputStream());
-        out.flush();
-        System.out.println("OutputStream Instancié");
-        in = new ObjectInputStream(socket.getInputStream());
-        System.out.println("InputStream Instancié");
-        ServerInput actionInput = new ServerInput(in, events, lock, this);
-        actionOutput = new ServerOutput(out, events, lock, this);
-
-        serverInputThread = new Thread(actionInput, "InputThread");
-        serverOutputThread = new Thread(actionOutput, "OuputThread");
-        serverInputThread.start();
-        serverOutputThread.start();
-        System.out.println("Threads lancés");
-    }
-
-    public void send(EventWrapper event) {
-        //TODO ne marche pas
-        synchronized (lock) {
-            events.add(event);
-            lock.notifyAll();
-        }
-    }
-
-    public void setOnSendFinished(SendFinished cb) {
-        if (actionOutput != null)
-            actionOutput.setCallback(cb);
-    }
-
-
-    public void stop() throws IOException {
-        closed = true;
-        if (in != null)
-            in.close();
-        if (out != null)
-            out.close();
-        if (serverSocket != null)
-            serverSocket.close();
-        if (socket != null)
-            socket.close();
-        System.out.println("serverOuputThread : " + (serverOutputThread == null ? "null" : serverOutputThread.getState()));
-        System.out.println("serverInputThread : " + (serverInputThread == null ? "null" : serverInputThread.getState()));
-        System.out.println("serverSocket : " + (serverSocket == null ? "null" : serverSocket.isClosed()));
-        System.out.println("socket : " + (socket == null ? "null" : socket.isClosed()));
-    }
-
-    private class ServerInput implements Runnable {
-        private ObjectInputStream in;
-        private List<EventWrapper> events;
-        private EventWrapper received;
-        private EventWrapper response;
-        private Object lock;
-        private TCPServer server;
-
-        public ServerInput(ObjectInputStream in, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
-            this.server = server;
-            this.in = in;
-            this.events = events;
-            this.lock = lock;
-            System.out.println("InputThread instancié");
-        }
-
-        @Override
-        public void run() {
-            try {
-                synchronized (lock) {
-                    while (!server.isClosed()) {
-                        try {
-                            received = (EventWrapper) in.readObject();
-                        } catch (SocketException e) {
-                            server.stop();
-                        }
-                        System.out.println("Objet recu");
-                        response = Controller.handleControl(received);
-                        events.add(response);
-                        lock.notifyAll();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
-            } catch (IOException | ClassNotFoundException | AWTException | ActionException | InterruptedException e) {
-                e.printStackTrace();
-            }
+            }).start();
+        } catch (IOException e) {
+            System.err.println(port + " déjà utilisé par la machine !");
         }
     }
 
-    private class ServerOutput implements Runnable {
-        private List<EventWrapper> events;
-        EventWrapper event;
-        private ObjectOutputStream out;
-        private Object lock;
-        private TCPServer server;
-        private SendFinished callback;
+    public void close() {
+        try {
+            if (serverSocket != null)
+                serverSocket.close();
+            if (client != null)
+                client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        public ServerOutput(ObjectOutputStream out, List<EventWrapper> events, Object lock, TCPServer server) throws IOException {
-            this.server = server;
-            this.out = out;
-            this.events = events;
-            this.lock = lock;
-            System.out.println("OutputThread instancié");
+    public void send(EventWrapper e, SendFinished callback) {
+        privateSend(e, callback);
+    }
+
+    public void send(EventWrapper e) {
+        privateSend(e, null);
+    }
+
+    private synchronized void privateSend(EventWrapper e, SendFinished callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    outputStream.writeObject(e);
+                    outputStream.flush();
+                    if (callback != null)
+                        callback.onSendFinished();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }, "OutputStream").start();
+    }
+
+    public class ClientProcess implements Runnable {
+        private Socket client;
+        private ObjectInputStream inputStream;
+        private ClientConnected coCallback;
+
+        public ClientProcess(Socket client, ClientConnected coCallback) {
+            this.client = client;
+            this.coCallback = coCallback;
         }
 
         @Override
         public void run() {
             try {
-                synchronized (lock) {
-                    while (!server.isClosed()) {
-                        lock.wait();
-                        while (!events.isEmpty()) {
-                            event = events.remove(0);
-                            if (event != null)
-                                out.writeObject(event);
-                            out.flush();
-                            System.out.println("Event envoyé");
-                            executeCallback();
-                        }
+                outputStream = new ObjectOutputStream(client.getOutputStream());
+                outputStream.flush();
+                System.out.println("OutputStream OK");
+                inputStream = new ObjectInputStream(client.getInputStream());
+                System.out.println("InputStream OK");
+                coCallback.onConnection(null);
+                while (!client.isClosed()) {
+                    try {
+                        Object resp = inputStream.readObject();
+                        Controller.handleControl(resp);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (AWTException e) {
+                        e.printStackTrace();
+                    } catch (ActionException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                System.err.println("Thread Interrupted");
+                System.err.println("Problème lors de la connexion");
             }
         }
-
-        private void executeCallback() {
-            if (callback != null)
-                callback.onSendFinished();
-        }
-
-        public void setCallback(SendFinished callback) {
-            this.callback = callback;
-        }
     }
-
 }

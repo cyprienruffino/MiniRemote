@@ -45,11 +45,12 @@ public class SourceDialog extends DialogFragment {
                 });
         return builder.create();
     }
-    private void send(RemoteEvent event){
+
+    private void send(RemoteEvent event) {
         try {
-            Controller.getTcpService().send(new EventWrapper(event));
-        } catch (NullPointerException e){
-            getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(),getString(R.string.no_tcp_service)));
+            Controller.getTcpService().send(new EventWrapper(event), null, null);
+        } catch (NullPointerException e) {
+            getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getString(R.string.no_tcp_service)));
         }
     }
 }

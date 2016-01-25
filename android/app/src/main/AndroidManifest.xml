@@ -25,8 +25,8 @@
                 android:name="view.DiapoActivity"
                 android:windowSoftInputMode="adjustResize"/>
 
-        <service android:name="controller.communication.wifi.serviceTest.ConnectionService"/>
         <service android:name="controller.communication.wifi.TCPService"/>
+        <service android:name="controller.communication.wifi.UDPService"/>
     </application>
 
 </manifest>

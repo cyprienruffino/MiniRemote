@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
 import controller.Controller;
+import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.events.DiapoEvent;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
@@ -16,7 +17,7 @@ import orleans.info.fr.remotecontrol.R;
 /**
  * Created by Valentin on 21/01/2016.
  */
-public class DiapoActivity extends Activity {
+public class DiapoActivity extends Activity implements ErrorInterface {
     private TCPService tcpService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +67,13 @@ public class DiapoActivity extends Activity {
 
     private void send(RemoteEvent e) {
         if (tcpService != null) {
-            tcpService.send(new EventWrapper(e));
+            tcpService.send(new EventWrapper(e), null, this);
         }
 
+    }
+
+    @Override
+    public void onError(String message) {
+        runOnUiThread(new ToastRunnable(this, message));
     }
 }

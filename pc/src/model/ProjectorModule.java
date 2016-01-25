@@ -1,22 +1,11 @@
 package model;
 
-import controller.communication.wifi.Discovery;
-
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by cyprien on 01/01/16.
  */
 
 public class ProjectorModule {
-    public static final String SET_SOURCE_PC="1F";
+    /*public static final String SET_SOURCE_PC="1F";
     public static final String SET_SOURCE_HDMI="30";
     public static final String SET_SOURCE_VIDEO="41";
 
@@ -169,5 +158,5 @@ public class ProjectorModule {
     public void stop() throws IOException {
         server.stop();
     }
-
+*/
 }

@@ -1,4 +1,5 @@
 package controller.communication.events;
+
 /**
  * Created by cyprien on 09/11/15.
  */
@@ -35,19 +36,7 @@ public class KeyboardEvent extends RemoteEvent {
     }
 
     public enum KeyboardAction {
-        KeyPress("REMOTE_EVENT_KEY_PRESS"),
-        KeyRelease("REMOTE_EVENT_KEY_RELEASE"),
-        KeyHit("REMOTE_EVENT_KEY_HIT");
-
-        private String id;
-
-        KeyboardAction(String id) {
-            this.id = id;
-        }
-
-        public String getId() {
-            return id;
-        }
+        KeyPress, KeyRelease, KeyHit
     }
 
     public enum SpecialKey {
@@ -60,6 +49,6 @@ public class KeyboardEvent extends RemoteEvent {
         Forward_Del,
         Shift,
         Caps_Lock,
-        Enter;
+        Enter
     }
 }
