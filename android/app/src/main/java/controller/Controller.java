@@ -13,6 +13,7 @@ public class Controller {
     public static boolean isServiceStarted = false;
     public static ClientDisconnected callback;
     private static TCPService tcpService = null;
+    private static int port = 1337;
 
     public static TCPService getTcpService() {
         return tcpService;
@@ -51,4 +52,11 @@ public class Controller {
     }
 
 
+    public static int getPort() {
+        return port;
+    }
+
+    public static void setPort(Integer port) {
+        Controller.port = port;
+    }
 }

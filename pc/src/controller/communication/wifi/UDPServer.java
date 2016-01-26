@@ -11,11 +11,12 @@ import java.net.SocketException;
  * Created by Valentin on 23/01/2016.
  */
 public class UDPServer {
-    public static final int port = 1337;
+    public int port;
     private boolean running = true;
     private DatagramSocket server;
 
-    public UDPServer(ClientConnectionRequest callback) {
+    public UDPServer(int port, ClientConnectionRequest callback) {
+        this.port = port;
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -16,12 +16,11 @@ import java.io.IOException;
  * Created by cyprien on 05/11/15.
  */
 public class Controller {
-
     private static Controller controller;
+    private int port = 1337;
     private MainView mainView;
     private TCPServer tcpServer;
     private UDPServer udpServer;
-
     public Controller() throws IOException {
         mainView = new MainView(event -> {
             try {
@@ -234,6 +233,14 @@ public class Controller {
         return controller;
     }
 
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     public void send(EventWrapper eventWrapper) {
         if (tcpServer != null)
             tcpServer.send(eventWrapper);
@@ -260,7 +267,7 @@ public class Controller {
 
     public void lancerServers() {
         mainView.setEnAttente();
-        udpServer = new UDPServer((port, address) -> {
+        udpServer = new UDPServer(port, (port, address) -> {
             tcpServer = new TCPServer(port, x -> mainView.setConnecte(address.getHostName()));
             udpServer.close();
         });

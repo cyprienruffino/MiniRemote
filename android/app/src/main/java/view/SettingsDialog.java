@@ -28,6 +28,8 @@ public class SettingsDialog extends DialogFragment {
                                 d.show(getFragmentManager(), "changeThemeDialog");
                                 break;
                             case 1:
+                                d = new PortDialog();
+                                d.show(getFragmentManager(), "portDiaog");
                                 break;
                         }
                         dismiss();

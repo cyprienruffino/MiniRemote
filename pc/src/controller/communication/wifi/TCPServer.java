@@ -110,15 +110,7 @@ public class TCPServer {
                         Controller.getInstance().restartServer();
                     } catch (SocketException e) {
                         //TODO check si c'est normal
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (AWTException e) {
-                        e.printStackTrace();
-                    } catch (ActionException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (ClassNotFoundException | InterruptedException | ActionException | AWTException | IOException e) {
                         e.printStackTrace();
                     }
                 }

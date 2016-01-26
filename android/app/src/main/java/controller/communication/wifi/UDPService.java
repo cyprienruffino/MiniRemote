@@ -1,6 +1,7 @@
 package controller.communication.wifi;
 
 import android.content.Context;
+import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.callbackInterface.NetworkDiscovery;
 
@@ -12,14 +13,15 @@ import java.net.*;
  * Created by Valentin on 23/01/2016.
  */
 public class UDPService extends SurService {
-    public static final int port = 1337;
     public static final int timeout = 10000;
+    public int port;
     private boolean serverFound = false;
     private DatagramSocket socket;
     private DatagramSocket socketConnect;
     private NetworkDiscovery cb;
 
     public void startServer(Context context, NetworkDiscovery callback, ErrorInterface errorCallback) {
+        port = Controller.getPort();
         cb = callback;
         new Thread(new Runnable() {
             @Override

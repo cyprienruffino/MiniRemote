@@ -250,4 +250,11 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
             runOnUiThread(new ToastRunnable(this, "Erreur dans l'adresse du serveur"));
         }
     }
+
+    public void restartCom() {
+        unbindTcpService();
+        unbindUdpService();
+        DialogFragment dialogFragment = new ServiceDialog();
+        dialogFragment.show(getFragmentManager(), "ServiceDialog");
+    }
 }
