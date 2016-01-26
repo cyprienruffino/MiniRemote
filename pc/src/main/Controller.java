@@ -4,11 +4,9 @@ import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
+import controller.communication.wifi.exception.NoTcpServerException;
 import javafx.application.Platform;
-import model.CursorModule;
-import model.DiapoModule;
-import model.KeyboardModule;
-import model.ShellModule;
+import model.*;
 import view.MainView;
 
 import java.awt.*;
@@ -20,6 +18,25 @@ import java.io.IOException;
 public class Controller {
 
     private static Controller controller;
+    private MainView mainView;
+    private TCPServer tcpServer;
+    private UDPServer udpServer;
+
+    public Controller() throws IOException {
+        mainView = new MainView(event -> {
+            try {
+                send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServerShutdown)), () -> {
+                    disconnect();
+                    Platform.exit();
+                });
+            } catch (NoTcpServerException e) {
+                disconnect();
+                Platform.exit();
+            }
+        });
+        Controller.controller = this;
+        new Thread(new LanceurRunnable(), "LanceurThread").start();
+    }
 
     public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException, InterruptedException {
 
@@ -137,7 +154,7 @@ public class Controller {
             CursorModule.getInstance().setDeviceSize(resolutionEvent.getHeight(), resolutionEvent.getWidth());
         }
 
-        /*if (event.getClass().equals(ProjectorEvent.class)) {
+        if (event.getClass().equals(ProjectorEvent.class)) {
             ProjectorEvent projectorEvent = (ProjectorEvent) event;
             switch (projectorEvent.getAction()) {
                 case ProjectorEvent.POWER_ON:
@@ -156,7 +173,7 @@ public class Controller {
                     ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
                     break;
             }
-        }*/
+        }
         if (event.getClass().equals(DiapoEvent.class)) {
             DiapoEvent diapoEvent = (DiapoEvent) event;
             DiapoModule module = DiapoModule.getInstance();
@@ -186,40 +203,26 @@ public class Controller {
         }
 
         return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
-        //throw new ActionException("Incorrect object received");
     }
 
-    private MainView mainView;
-    private TCPServer tcpServer;
-    private UDPServer udpServer;
-
-    class LanceurRunnable implements Runnable {
-
-        @Override
-        public void run() {
-            lancerServers();
-        }
-    }
-
-    public Controller() throws IOException {
-        mainView = new MainView(event -> {
-            disconnect();
-            Platform.exit();
-        });
-        Controller.controller = this;
-        new Thread(new LanceurRunnable(), "LanceurThread").start();
+    public static Controller getInstance() {
+        return controller;
     }
 
     public void send(EventWrapper eventWrapper) {
-        tcpServer.send(eventWrapper);
+        if (tcpServer != null)
+            tcpServer.send(eventWrapper);
     }
 
-    public void send(EventWrapper eventWrapper, SendFinished callback) {
-        tcpServer.send(eventWrapper, callback);
+    public void send(EventWrapper eventWrapper, SendFinished callback) throws NoTcpServerException {
+        if (tcpServer != null)
+            tcpServer.send(eventWrapper, callback);
+        throw new NoTcpServerException();
     }
 
     public void restartServer() {
-
+        disconnect();
+        new Thread(new LanceurRunnable(), "LanceurThread").start();
     }
 
     public void disconnect() {
@@ -227,7 +230,6 @@ public class Controller {
             udpServer.close();
         if (tcpServer != null)
             tcpServer.close();
-
     }
 
     public void lancerServers() {
@@ -236,10 +238,13 @@ public class Controller {
             tcpServer = new TCPServer(port, x -> mainView.setConnecte(address.getHostName()));
             udpServer.close();
         });
-
     }
 
-    public static Controller getInstance() {
-        return controller;
+    class LanceurRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            lancerServers();
+        }
     }
 }

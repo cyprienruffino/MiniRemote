@@ -32,7 +32,7 @@ public class DiapoActivity extends Activity implements ErrorInterface {
 
     public void go_to(View view) {
         EditText editText = (EditText) findViewById(R.id.numpagediapo);
-        Editable text = editText.getText();// ZOB
+        Editable text = editText.getText();
         if (!text.equals("")) {
             int num = Integer.parseInt(text.toString());
             editText.setText("");

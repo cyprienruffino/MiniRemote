@@ -37,7 +37,7 @@ public class MainView {
         label.setAlignment(Pos.CENTER);
 
         connecte = new VBox();
-        connecte.setPrefSize(400, 450);
+        connecte.setPrefSize(400, 400);
         Image img = new Image("resource/tick.png");
         ImageView imageView = new ImageView(img);
         imageView.setPreserveRatio(true);
@@ -55,7 +55,7 @@ public class MainView {
 
         //Taille de la police
         DoubleProperty fontSize = new SimpleDoubleProperty(10);
-        fontSize.bind(primaryStage.widthProperty().add(primaryStage.heightProperty()).divide(20));
+        fontSize.bind(primaryStage.widthProperty().add(primaryStage.heightProperty()).divide(40));
         label.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(), ";"));
         coLabel.styleProperty().bind(Bindings.concat("-fx-font-size: ", fontSize.asString(), ";"));
 
@@ -79,9 +79,9 @@ public class MainView {
     }
 
     public void setConnecte(String hostName) {
-        coLabel.setText("Connecté à " + hostName);
         Platform.runLater(() ->
         {
+            coLabel.setText("Connecté à " + hostName);
             try {
                 primaryStage.setScene(new Scene(connecte));
                 primaryStage.show();
