@@ -107,6 +107,7 @@ public class TCPServer {
                         Object resp = inputStream.readObject();
                         Controller.handleControl(resp);
                     } catch (EOFException e) {
+                        Controller.getInstance().restartServer();
                     } catch (SocketException e) {
                         e.printStackTrace();
                     } catch (ClassNotFoundException e) {
