@@ -60,4 +60,6 @@
     <string name="recule">Reculer</string>
     <string name="play_pause">Lecture/Pause</string>
     <string name="main_media_text">Lecteur Multimedia</string>
+    <string name="theme">Thème</string>
+    <string name="port">Changer port</string>
 </resources>

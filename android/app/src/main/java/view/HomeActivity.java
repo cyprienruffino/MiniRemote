@@ -108,7 +108,7 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
 
                 break;
             case R.id.setting:
-                d = new ChangeThemeDialog();
+                d = new SettingsDialog();
                 d.show(getFragmentManager(), "settingDialog");
                 break;
             case R.id.credit:

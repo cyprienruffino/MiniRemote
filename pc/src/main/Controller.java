@@ -193,7 +193,7 @@ public class Controller {
                     break;
             }
         }
-  if (event.getClass().equals(MediaEvent.class)) {
+        if (event.getClass().equals(MediaEvent.class)) {
             MediaEvent mediaEvent = (MediaEvent) event;
             MediaModule module = MediaModule.getInstance();
             switch (mediaEvent.getType()) {
@@ -228,7 +228,6 @@ public class Controller {
                     module.fullscreen();
             }
         }
-        return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
     }
 
     public static Controller getInstance() {
