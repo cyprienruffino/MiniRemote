@@ -5,7 +5,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 
 /**
- * Created by Valentin on 21/01/2016.
+ * Created by cyprien on 26/01/2016.
  */
 public class MediaModule {
     private static MediaModule instance;
@@ -18,7 +18,7 @@ public class MediaModule {
 
     private Robot robot;
 
-    public MediaModule() {
+    private MediaModule() {
         try {
             this.robot = new Robot();
         } catch (AWTException e) {
