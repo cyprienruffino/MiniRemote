@@ -1,16 +1,33 @@
 package main;
 
+import java.awt.AWTException;
+import java.io.IOException;
+
 import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.*;
+import controller.communication.events.ActionException;
+import controller.communication.events.CommandEvent;
+import controller.communication.events.DiapoEvent;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.KeyboardEvent;
+import controller.communication.events.MediaEvent;
+import controller.communication.events.MouseClickEvent;
+import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.ProjectorEvent;
+import controller.communication.events.RemoteEvent;
+import controller.communication.events.ResolutionEvent;
+import controller.communication.events.ResponseEvent;
+import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import controller.communication.wifi.exception.NoTcpServerException;
 import javafx.application.Platform;
-import model.*;
+import model.CursorModule;
+import model.DiapoModule;
+import model.KeyboardModule;
+import model.MediaModule;
+import model.ProjectorModule;
+import model.ShellModule;
 import view.MainView;
-
-import java.awt.*;
-import java.io.IOException;
 
 /**
  * Created by cyprien on 05/11/15.
@@ -201,7 +218,41 @@ public class Controller {
                     break;
             }
         }
-
+  if (event.getClass().equals(MediaEvent.class)) {
+            MediaEvent mediaEvent = (MediaEvent) event;
+            MediaModule module = MediaModule.getInstance();
+            switch (mediaEvent.getType()) {
+                case Prec:
+                    module.prec();
+                    break;
+                case Start:
+                    module.start();
+                    break;
+                case Next:
+                    module.next();
+                    break;
+                case Origin:
+                    module.origin();
+                    break;
+                case Stop:
+                    module.last();
+                    break;
+                case Volup:
+                    module.volup();
+                    break;
+                case Voldown:
+                    module.voldown();
+                    break;
+                case Mute:
+                    module.mute();
+                    break;
+                case Play:
+                    module.play();
+                    break;
+                case Fullscreen:
+                    module.fullscreen();
+            }
+        }
         return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
     }
 

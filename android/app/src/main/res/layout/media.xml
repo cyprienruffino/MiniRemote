@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/VerticalLinearLayout"
+    android:gravity="center">
+
+    <View
+        android:layout_width="0dip"
+        android:layout_height="0dip"
+        android:focusable="true"
+        android:focusableInTouchMode="true" />
+
+
+    <LinearLayout
+        style="@style/HorizontalLinearLayout"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="voldown"
+            android:text="@string/voldown" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="mute"
+            android:text="@string/mute" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="volup"
+            android:text="@string/volup" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/HorizontalLinearLayout"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="prec"
+            android:text="@string/recule" />
+
+        <Button
+            android:id="@+id/playpause"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="play"
+            android:text="@string/play_pause" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="next"
+            android:text="@string/avance" />
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/HorizontalLinearLayout"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="origin"
+            android:text="@string/debut" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="fullscreen"
+            android:text="@string/fullscreen" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:layout_weight="1"
+            android:onClick="stop"
+            android:text="@string/stop" />
+    </LinearLayout>
+
+</LinearLayout>

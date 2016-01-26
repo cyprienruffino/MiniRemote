@@ -17,9 +17,11 @@ import orleans.info.fr.remotecontrol.R;
 /**
  * Created by Valentin on 21/01/2016.
  */
-public class DiapoActivity extends Activity implements ErrorInterface {
-    private TCPService tcpService;
 
+
+public class DiapoActivity extends Activity implements ErrorInterface {
+
+    private TCPService tcpService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +34,7 @@ public class DiapoActivity extends Activity implements ErrorInterface {
 
     public void go_to(View view) {
         EditText editText = (EditText) findViewById(R.id.numpagediapo);
-        Editable text = editText.getText();
+        Editable text = editText.getText();// ZOB
         if (!text.equals("")) {
             int num = Integer.parseInt(text.toString());
             editText.setText("");
@@ -70,6 +72,7 @@ public class DiapoActivity extends Activity implements ErrorInterface {
         if (tcpService != null) {
             tcpService.send(new EventWrapper(e), this);
         }
+
     }
 
     @Override

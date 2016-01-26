@@ -13,6 +13,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.callbackInterface.NetworkDiscovery;
@@ -24,9 +28,6 @@ import controller.communication.wifi.SurService;
 import controller.communication.wifi.TCPService;
 import controller.communication.wifi.UDPService;
 import orleans.info.fr.remotecontrol.R;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class HomeActivity extends Activity implements ServiceAttached, NetworkDiscovery, ErrorInterface {
     public static final String WAITING_SCREEN = "waiting_screen";
@@ -127,6 +128,10 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 break;
             case R.id.main_diapo_button:
                 v = new Intent(HomeActivity.this, DiapoActivity.class);
+                startActivity(v);
+                break;
+             case R.id.main_media_button:
+                v = new Intent(HomeActivity.this, MultimediaActivity.class);
                 startActivity(v);
                 break;
         }

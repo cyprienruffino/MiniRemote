@@ -42,10 +42,22 @@
     <string name="debut">Début</string>
     <string name="fin">Fin</string>
     <string name="diapo_demarrer_page_courante">Démarrer à la page courante</string>
-    <string name="main_diapo_text">Gestion Diaporama</string>
+    <string name="main_diapo_text">Diaporama</string>
     <string name="diapo_text_null">Besoin d\'un numéro de page</string>
     <string name="crd">Application réalisé par :\nCorentin Colomier\nValentin Jubert\nCyprien Ruffino\nNicolas
         Serrette
     </string>
     <string name="credit">Crédits</string>
+    <string name="pause">Pause</string>
+    <string name="play">Lecture</string>
+    <string name="volup">Volume +</string>
+    <string name="voldown">Volume -</string>
+    <string name="mute">Muet</string>
+    <string name="fullscreen">Plein écran</string>
+    <string name="stop">Stop</string>
+    <string name="playpause">Lecture / Pause</string>
+    <string name="avance">Avancer</string>
+    <string name="recule">Reculer</string>
+    <string name="play_pause">Lecture</string>
+    <string name="main_media_text">Lecteur Multimedia</string>
 </resources>
