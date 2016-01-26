@@ -21,6 +21,7 @@ public class UDPServer {
             public void run() {
                 try {
                     server = new DatagramSocket(port);
+                    System.out.println("Server UDP started");
                     while (running) {
                         try {
                             byte[] buffer = new byte[4096];

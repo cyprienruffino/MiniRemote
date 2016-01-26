@@ -7,6 +7,7 @@ import controller.communication.events.EventWrapper;
 import main.Controller;
 
 import java.awt.*;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -73,6 +74,8 @@ public class TCPServer {
                     outputStream.flush();
                     if (callback != null)
                         callback.onSendFinished();
+                } catch (SocketException e) {
+                    e.printStackTrace();
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -103,6 +106,9 @@ public class TCPServer {
                     try {
                         Object resp = inputStream.readObject();
                         Controller.handleControl(resp);
+                    } catch (EOFException e) {
+                    } catch (SocketException e) {
+                        e.printStackTrace();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {

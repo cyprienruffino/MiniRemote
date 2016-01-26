@@ -217,7 +217,8 @@ public class Controller {
     public void send(EventWrapper eventWrapper, SendFinished callback) throws NoTcpServerException {
         if (tcpServer != null)
             tcpServer.send(eventWrapper, callback);
-        throw new NoTcpServerException();
+        else
+            throw new NoTcpServerException();
     }
 
     public void restartServer() {
