@@ -58,6 +58,6 @@
     <string name="playpause">Lecture / Pause</string>
     <string name="avance">Avancer</string>
     <string name="recule">Reculer</string>
-    <string name="play_pause">Lecture</string>
+    <string name="play_pause">Lecture/Pause</string>
     <string name="main_media_text">Lecteur Multimedia</string>
 </resources>

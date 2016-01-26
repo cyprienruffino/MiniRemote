@@ -3,12 +3,11 @@ package view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
-import controller.communication.events.MediaEvent;
 import controller.communication.events.EventWrapper;
+import controller.communication.events.MediaEvent;
 import controller.communication.events.RemoteEvent;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
@@ -19,7 +18,6 @@ import orleans.info.fr.remotecontrol.R;
  */
 public class MultimediaActivity extends Activity implements ErrorInterface {
     private TCPService tcpService;
-    private boolean play=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +56,7 @@ public class MultimediaActivity extends Activity implements ErrorInterface {
     }
 
     public void play(View view) {
-        Button b= (Button) findViewById(R.id.playpause);
-        if(play)
-            b.setText("Pause");
-        else
-            b.setText("Lecture");
         send(new MediaEvent(MediaEvent.MediaEventType.Play));
-        play=!play;
     }
 
     public void fullscreen(View view) {
