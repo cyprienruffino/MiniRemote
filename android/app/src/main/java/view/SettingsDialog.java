@@ -8,32 +8,31 @@ import android.os.Bundle;
 import orleans.info.fr.remotecontrol.R;
 
 /**
- * Created by corentin on 19/12/15.
+ * Created by Valentin on 26/01/2016.
  */
-public class ChangeThemeDialog extends DialogFragment{
-
+public class SettingsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        String[] tab={getString(R.string.lightTheme), getString(R.string.darkTheme)};
-        AlertDialog.Builder builder =new AlertDialog.Builder(getActivity());
+        String[] tab = {getString(R.string.theme), getString(R.string.port)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.titre_theme)
+        builder.setTitle(R.string.settings)
                 .setItems(tab, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            //TODO a refaire
+                        DialogFragment d;
+                        switch (which) {
                             case 0:
-                                getActivity().setTheme(R.style.AppTheme_Light);
+                                d = new ChangeThemeDialog();
+                                d.show(getFragmentManager(), "changeThemeDialog");
                                 break;
                             case 1:
-                                getActivity().setTheme(R.style.AppTheme);
                                 break;
                         }
+                        dismiss();
                     }
                 });
         return builder.create();
     }
-
 }
