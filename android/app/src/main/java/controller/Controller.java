@@ -1,5 +1,6 @@
 package controller;
 
+import controller.communication.callbackInterface.ClientDisconnected;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
@@ -10,6 +11,8 @@ import controller.communication.wifi.TCPService;
  */
 public class Controller {
     public static boolean isServiceStarted = false;
+    public static ClientDisconnected callback;
+    private static TCPService tcpService = null;
 
     public static TCPService getTcpService() {
         return tcpService;
@@ -19,25 +22,32 @@ public class Controller {
         Controller.tcpService = tcpService;
     }
 
-    private static TCPService tcpService = null;
+    public static void setClientDisconnected(ClientDisconnected clientDisconnected) {
+        callback = clientDisconnected;
+    }
 
-    public static EventWrapper execute(EventWrapper recv) {
+    public static void onClientDisconnection() {
+        if (callback != null)
+            callback.onDisconnection();
+    }
+
+    public static void execute(EventWrapper recv) {
         EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
-
+        System.out.println(event);
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
-            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok))
-                return null;
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok)) {
+
+            }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.ServerShutdown)) {
-                tcpService.stop();
-                return null;
+                if (callback != null) {
+                    callback.onDisconnection();
+                }
             }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
-                return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
             }
         }
-        return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
     }
 
 

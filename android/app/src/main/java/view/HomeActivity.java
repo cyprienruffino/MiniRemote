@@ -13,21 +13,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import controller.Controller;
-import controller.communication.callbackInterface.ErrorInterface;
-import controller.communication.callbackInterface.NetworkDiscovery;
-import controller.communication.callbackInterface.SendFinished;
-import controller.communication.callbackInterface.ServiceAttached;
+import controller.communication.callbackInterface.*;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.ResponseEvent;
 import controller.communication.wifi.SurService;
 import controller.communication.wifi.TCPService;
 import controller.communication.wifi.UDPService;
 import orleans.info.fr.remotecontrol.R;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class HomeActivity extends Activity implements ServiceAttached, NetworkDiscovery, ErrorInterface {
     public static final String WAITING_SCREEN = "waiting_screen";
@@ -75,6 +71,14 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
         setContentView(R.layout.main);
         DialogFragment dialogFragment = new ServiceDialog();
         dialogFragment.show(getFragmentManager(), "ServiceDialog");
+        Controller.setClientDisconnected(new ClientDisconnected() {
+            @Override
+            public void onDisconnection() {
+                unbindUdpService();
+                unbindTcpService();
+                runOnUiThread(new ToastRunnable(HomeActivity.this, getString(R.string.dc)));
+            }
+        });
     }
 
     @Override
@@ -183,15 +187,7 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
 
     @Override
     protected void onDestroy() {
-        unbindUdpService();
-        unbindTcpService();
-        super.onDestroy();
-    }
-
-    public void unbindTcpService() {
-        //TODO a refaire
-        Controller.isServiceStarted = false;
-        Controller.setTcpService(null);
+        Controller.onClientDisconnection();
         try {
             tcpService.send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServiceShutdown)), this, new SendFinished() {
                 @Override
@@ -203,6 +199,12 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
         } catch (NullPointerException e) {
             //Tcp qui a foiré
         }
+        super.onDestroy();
+    }
+
+    public void unbindTcpService() {
+        Controller.isServiceStarted = false;
+        Controller.setTcpService(null);
         try {
             unbindService(tcpServiceConnection);
         } catch (IllegalArgumentException e2) {

@@ -47,18 +47,19 @@ public class UDPService extends SurService {
                                 if (!serverFound) {
                                     onNoServerFound();
                                 }
+                            } catch (SocketException e) {
                             } catch (IOException e) {
                                 errorCallback.onError("Erreur inconnu");
                             }
                         }
                     }, "UDPServerResponseThread").start();
                 } catch (SocketException e) {
-                    errorCallback.onError("Erreur inconnu");
+                    errorCallback.onError("Erreur inconnu 3");
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
                     errorCallback.onError("Can't have BroadcastAddress");
                 } catch (IOException e) {
-                    errorCallback.onError("Erreur inconnu");
+                    errorCallback.onError("Erreur inconnu 2");
                     e.printStackTrace();
                 }
             }

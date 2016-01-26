@@ -109,7 +109,7 @@ public class TCPServer {
                     } catch (EOFException e) {
                         Controller.getInstance().restartServer();
                     } catch (SocketException e) {
-                        e.printStackTrace();
+                        //TODO check si c'est normal
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     } catch (InterruptedException e) {

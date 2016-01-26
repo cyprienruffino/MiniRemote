@@ -1,33 +1,16 @@
 package main;
 
-import java.awt.AWTException;
-import java.io.IOException;
-
 import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.ActionException;
-import controller.communication.events.CommandEvent;
-import controller.communication.events.DiapoEvent;
-import controller.communication.events.EventWrapper;
-import controller.communication.events.KeyboardEvent;
-import controller.communication.events.MediaEvent;
-import controller.communication.events.MouseClickEvent;
-import controller.communication.events.MoveMouseEvent;
-import controller.communication.events.ProjectorEvent;
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.ResolutionEvent;
-import controller.communication.events.ResponseEvent;
-import controller.communication.events.ScrollMouseEvent;
+import controller.communication.events.*;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import controller.communication.wifi.exception.NoTcpServerException;
 import javafx.application.Platform;
-import model.CursorModule;
-import model.DiapoModule;
-import model.KeyboardModule;
-import model.MediaModule;
-import model.ProjectorModule;
-import model.ShellModule;
+import model.*;
 import view.MainView;
+
+import java.awt.*;
+import java.io.IOException;
 
 /**
  * Created by cyprien on 05/11/15.
@@ -55,7 +38,7 @@ public class Controller {
         new Thread(new LanceurRunnable(), "LanceurThread").start();
     }
 
-    public static EventWrapper handleControl(Object recv) throws AWTException, IOException, ActionException, InterruptedException {
+    public static void handleControl(Object recv) throws AWTException, IOException, ActionException, InterruptedException {
 
         EventWrapper wrapper = ((EventWrapper) recv);
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
@@ -65,7 +48,6 @@ public class Controller {
         if (event.getClass().equals(CommandEvent.class)) {
             CommandEvent commandEvent = (CommandEvent) event;
             ShellModule.getInstance().execute(commandEvent.getCommand());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(KeyboardEvent.class)) {
@@ -91,7 +73,6 @@ public class Controller {
                     else
                         module.keyRelease(keyboardEvent.getKeycode());
             }
-            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(MouseClickEvent.class)) {
@@ -138,31 +119,25 @@ public class Controller {
                     }
                     break;
             }
-            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(MoveMouseEvent.class)) {
             MoveMouseEvent moveMouseEvent = (MoveMouseEvent) event;
             CursorModule.getInstance().moveCursor(moveMouseEvent.getXmove(), moveMouseEvent.getYmove());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(ScrollMouseEvent.class)) {
             ScrollMouseEvent scrollMouseEvent = (ScrollMouseEvent) event;
             CursorModule.getInstance().mouseScroll(scrollMouseEvent.getScroll());
-            return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
         }
 
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok))
-                return null;
-            if (responseEvent.getResponse().equals(ResponseEvent.Response.ServiceShutdown)) {
-                Controller.controller.restartServer();
-                return null;
-            }
+                if (responseEvent.getResponse().equals(ResponseEvent.Response.ServiceShutdown)) {
+                    Controller.controller.restartServer();
+                }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
-                return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
             }
         }
 
