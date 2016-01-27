@@ -27,6 +27,10 @@
         <activity
             android:name="view.MultimediaActivity"
             android:windowSoftInputMode="adjustResize"/>
+         <activity
+                android:name="view.ShellActivity"
+                android:windowSoftInputMode="adjustResize"/>
+
         <service android:name="controller.communication.wifi.TCPService"/>
         <service android:name="controller.communication.wifi.UDPService"/>
     </application>

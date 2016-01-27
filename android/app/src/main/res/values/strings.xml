@@ -60,4 +60,7 @@
     <string name="recule">Reculer</string>
     <string name="play_pause">Lecture/Pause</string>
     <string name="main_media_text">Lecteur Multimedia</string>
+    <string name="shell_send">Go</string>
+    <string name="shell_kill">Tuer</string>
+    <string name="shell_text">Terminal</string>
 </resources>

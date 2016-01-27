@@ -22,6 +22,12 @@
             android:text="@string/main_media_text"
             android:id="@+id/main_media_button"
             android:onClick="navigation"/>
+          <Button
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:text="@string/shell_text"
+            android:id="@+id/main_shell_button"
+            android:onClick="navigation"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="100dip"

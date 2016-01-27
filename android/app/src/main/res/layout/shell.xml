@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
+    style="@style/VerticalLinearLayout"
+    android:weightSum="1">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.95">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/shell_view"
+            android:background="?attr/border"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/HorizontalLinearLayout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="0.05"
+        android:weightSum="1">
+        <EditText
+
+            android:id="@+id/edit_command"
+            android:background="?attr/middle"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.95"
+            />
+        <Button
+            android:id="@+id/basic_keyboard_button"
+            style="@style/WrapContent"
+            android:text="@string/shell_send"
+            android:onClick="sendCommand"
+            android:layout_height="match_parent"
+            android:layout_weight="0.05"
+            />
+    </LinearLayout>
+</LinearLayout>

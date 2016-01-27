@@ -6,6 +6,7 @@ import java.io.IOException;
 import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.ActionException;
 import controller.communication.events.CommandEvent;
+import controller.communication.events.CommandKillEvent;
 import controller.communication.events.DiapoEvent;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.KeyboardEvent;
@@ -66,6 +67,11 @@ public class Controller {
             CommandEvent commandEvent = (CommandEvent) event;
             ShellModule.getInstance().execute(commandEvent.getCommand());
             return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
+        }
+
+
+        if (event.getClass().equals(CommandKillEvent.class)) {
+            ShellModule.getInstance().killCurrentProcess();
         }
 
         if (event.getClass().equals(KeyboardEvent.class)) {
@@ -266,6 +272,7 @@ public class Controller {
     }
 
     public void send(EventWrapper eventWrapper, SendFinished callback) throws NoTcpServerException {
+        System.out.println(eventWrapper.getTypeOfEvent().cast(eventWrapper.getRemoteEvent()).toString());
         if (tcpServer != null)
             tcpServer.send(eventWrapper, callback);
         else
@@ -282,6 +289,11 @@ public class Controller {
             udpServer.close();
         if (tcpServer != null)
             tcpServer.close();
+        try {
+            ShellModule.getInstance().closeInputThread();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
     }
 
     public void lancerServers() {

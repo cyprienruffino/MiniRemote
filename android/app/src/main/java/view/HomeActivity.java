@@ -134,6 +134,9 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 v = new Intent(HomeActivity.this, MultimediaActivity.class);
                 startActivity(v);
                 break;
+            case R.id.main_shell_button:
+                v = new Intent(HomeActivity.this, ShellActivity.class);
+                startActivity(v);
         }
     }
 
