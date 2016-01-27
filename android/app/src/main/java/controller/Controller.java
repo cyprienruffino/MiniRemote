@@ -38,6 +38,7 @@ public class Controller {
         EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
         System.out.println(event);
+
         if (event.getClass().equals(RuntimeOutputEvent.class)){
             RuntimeOutputEvent runtimeOutputEvent=(RuntimeOutputEvent)event;
             if(ShellActivity.isRunning){

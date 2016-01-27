@@ -1,6 +1,12 @@
 package controller.communication.wifi;
 
-import java.awt.AWTException;
+import controller.communication.callbackInterface.ClientConnected;
+import controller.communication.callbackInterface.SendFinished;
+import controller.communication.events.ActionException;
+import controller.communication.events.EventWrapper;
+import main.Controller;
+
+import java.awt.*;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,12 +14,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
-import controller.communication.callbackInterface.ClientConnected;
-import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.ActionException;
-import controller.communication.events.EventWrapper;
-import main.Controller;
 
 /**
  * Created by Valentin on 23/01/2016.
@@ -85,7 +85,6 @@ public class TCPServer {
 
     public class ClientProcess implements Runnable {
         private Socket client;
-        private ObjectInputStream inputStream;
         private ClientConnected coCallback;
 
         public ClientProcess(Socket client, ClientConnected coCallback) {
@@ -99,7 +98,7 @@ public class TCPServer {
                 outputStream = new ObjectOutputStream(client.getOutputStream());
                 outputStream.flush();
                 System.out.println("OutputStream OK");
-                inputStream = new ObjectInputStream(client.getInputStream());
+                ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
                 System.out.println("InputStream OK");
                 coCallback.onConnection(null);
                 while (!client.isClosed()) {

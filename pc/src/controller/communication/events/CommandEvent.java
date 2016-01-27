@@ -13,4 +13,11 @@ public class CommandEvent extends RemoteEvent {
     public String getCommand() {
         return command;
     }
+
+    @Override
+    public String toString() {
+        return "CommandEvent{" +
+                "command='" + command + '\'' +
+                '}';
+    }
 }

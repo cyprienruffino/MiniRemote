@@ -112,12 +112,14 @@ public class TCPService extends SurService {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.flush();
                 ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                running = true;
                 while (running) {
                     Object o;
                     try {
                         o = inputStream.readObject();
                         Controller.execute((EventWrapper) o);
                     } catch (EOFException e) {
+                        System.out.println("EOFException");
                         running = false;
                         Controller.onClientDisconnection();
                     } catch (ClassNotFoundException e) {

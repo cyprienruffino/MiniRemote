@@ -1,5 +1,6 @@
 package view;
 
+import controller.communication.events.ResponseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -7,12 +8,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
@@ -88,6 +84,10 @@ public class MainView {
 
         imageView.fitWidthProperty().bind(primaryStage.widthProperty());
         imageView.fitHeightProperty().bind(primaryStage.heightProperty());
+
+        Button b = new Button("Test");
+        b.setOnAction(event -> Controller.getInstance().send(new ResponseEvent(ResponseEvent.Response.Ok)));
+        connecte.getChildren().addAll(b);
 
         setEnAttente();
     }

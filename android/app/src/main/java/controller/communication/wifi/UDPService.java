@@ -101,7 +101,6 @@ public class UDPService extends SurService {
                     socketConnect.close();
                 } catch (IOException e) {
                     errorInterface.onError("Erreur de connexion avec le serveur");
-                    e.printStackTrace();
                 }
 
 

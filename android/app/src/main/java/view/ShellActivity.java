@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.events.CommandEvent;
@@ -20,9 +19,9 @@ import orleans.info.fr.remotecontrol.R;
  * Created by Valentin on 21/01/2016.
  */
 public class ShellActivity extends Activity implements ErrorInterface {
-    private TCPService tcpService;
     public static boolean isRunning=false;
     public static ShellActivity instance=null;
+    private TCPService tcpService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +67,12 @@ public class ShellActivity extends Activity implements ErrorInterface {
 
     public void writeToTerminal(String text){
         TextView textView= (TextView) findViewById(R.id.shell_view);
-        String newText= (String) textView.getText();
-        newText.concat('\n'+text);
-        textView.setText(newText);
+        String newText= ((String) textView.getText()).concat(System.getProperty("line.separator")+" "+text);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(newText);
+            }
+        });
     }
 }
