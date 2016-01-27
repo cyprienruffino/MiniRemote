@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Optional;
+
 import controller.communication.events.ResponseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -35,7 +37,20 @@ public class MainView {
         menuFile=new Menu("Options");
         menuBar.getMenus().add(menuFile);
         MenuItem add = new MenuItem("Changer Port");
-        add.setOnAction(t -> System.out.println("Hello!")); //TODO Ajouter le changement de port
+        add.setOnAction(t -> {
+                    TextInputDialog dialog = new TextInputDialog(""+Controller.getInstance().getPort());
+                    dialog.setTitle("Changement de port");
+                    dialog.setContentText("Port : ");
+                    Optional<String> result = dialog.showAndWait();
+                    if(result.isPresent())
+                        try {
+                            int port=Integer.parseInt(result.get());
+                            Controller.getInstance().setPort(port);
+                        }catch(NumberFormatException e){
+                            e.printStackTrace();
+                        }
+        }
+        ); //TODO Ajouter le changement de port
         MenuItem disonnect = new MenuItem("Déconnecter");
         disonnect.setOnAction(t -> {
             Controller.getInstance().restartAfterSend();
