@@ -22,6 +22,7 @@ public class TCPServer {
     private ServerSocket serverSocket;
     private Socket client;
     private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     public TCPServer(int port, ClientConnected coCallback) {
         try {
@@ -48,10 +49,14 @@ public class TCPServer {
 
     public void close() {
         try {
-            if (serverSocket != null)
-                serverSocket.close();
+            if (outputStream!=null)
+                outputStream.close();
+            if (inputStream!=null)
+                inputStream.close();
             if (client != null)
                 client.close();
+            if (serverSocket != null)
+                serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -69,15 +74,17 @@ public class TCPServer {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    outputStream.writeObject(e);
-                    outputStream.flush();
-                    if (callback != null)
-                        callback.onSendFinished();
-                } catch (SocketException e) {
-                    e.printStackTrace();
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                if(!client.isClosed()) {
+                    try {
+                        outputStream.writeObject(e);
+                        outputStream.flush();
+                        if (callback != null)
+                            callback.onSendFinished();
+                    } catch (SocketException e) {
+                        e.printStackTrace();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         }, "OutputStream").start();
@@ -98,7 +105,7 @@ public class TCPServer {
                 outputStream = new ObjectOutputStream(client.getOutputStream());
                 outputStream.flush();
                 System.out.println("OutputStream OK");
-                ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
+                inputStream = new ObjectInputStream(client.getInputStream());
                 System.out.println("InputStream OK");
                 coCallback.onConnection(null);
                 while (!client.isClosed()) {
@@ -107,8 +114,6 @@ public class TCPServer {
                         Controller.handleControl(resp);
                     } catch (EOFException e) {
                         Controller.getInstance().restartServer();
-                    } catch (SocketException e) {
-                        //TODO check si c'est normal
                     } catch (ClassNotFoundException | InterruptedException | ActionException | AWTException | IOException e) {
                         e.printStackTrace();
                     }
