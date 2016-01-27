@@ -46,15 +46,14 @@ public class MainView {
                         try {
                             int port=Integer.parseInt(result.get());
                             Controller.getInstance().setPort(port);
+                            Controller.getInstance().restartAfterSend();
                         }catch(NumberFormatException e){
                             e.printStackTrace();
                         }
         }
-        ); //TODO Ajouter le changement de port
+        );
         MenuItem disonnect = new MenuItem("Déconnecter");
-        disonnect.setOnAction(t -> {
-            Controller.getInstance().restartAfterSend();
-        });
+        disonnect.setOnAction(t -> Controller.getInstance().restartAfterSend());
         MenuItem about = new MenuItem("A Propos");
         about.setOnAction(t -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
