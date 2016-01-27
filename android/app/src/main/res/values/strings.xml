@@ -68,4 +68,5 @@
     <string name="valider">Valider</string>
     <string name="port_label">Cela va redémarrer les communications en cours !</string>
     <string name="port_needed">Besoin d\'un numéro de port</string>
+    <string name="shell_send">Go</string>
 </resources>

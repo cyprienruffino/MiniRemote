@@ -4,7 +4,9 @@ import controller.communication.callbackInterface.ClientDisconnected;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
+import controller.communication.events.RuntimeOutputEvent;
 import controller.communication.wifi.TCPService;
+import view.ShellActivity;
 
 /**
  * Created by whiteshad on 25/11/15.
@@ -36,6 +38,12 @@ public class Controller {
         EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
         System.out.println(event);
+        if (event.getClass().equals(RuntimeOutputEvent.class)){
+            RuntimeOutputEvent runtimeOutputEvent=(RuntimeOutputEvent)event;
+            if(ShellActivity.isRunning){
+                ShellActivity.instance.writeToTerminal(runtimeOutputEvent.getOutput());
+            }
+        }
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok)) {
