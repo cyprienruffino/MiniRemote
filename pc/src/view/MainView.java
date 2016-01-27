@@ -33,28 +33,29 @@ public class MainView {
 
     public MainView(EventHandler<WindowEvent> closeEvent) {
 
-        menuBar = new MenuBar();
-        menuFile = new Menu("Options");
+        menuBar=new MenuBar();
+        menuFile=new Menu("Options");
         menuBar.getMenus().add(menuFile);
         MenuItem add = new MenuItem("Changer Port");
         add.setOnAction(t -> {
-                    TextInputDialog dialog = new TextInputDialog("" + Controller.getInstance().getPort());
+                    TextInputDialog dialog = new TextInputDialog(""+Controller.getInstance().getPort());
                     dialog.setTitle("Changement de port");
                     dialog.setContentText("Port : ");
                     Optional<String> result = dialog.showAndWait();
-                    if (result.isPresent()) {
+                    if(result.isPresent()) {
                         try {
                             int port = Integer.parseInt(result.get());
                             Controller.getInstance().setPort(port);
-                            Controller.getInstance().restartAfterSend();
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
                     }
-                }
+        }
         );
         MenuItem disonnect = new MenuItem("Déconnecter");
-        disonnect.setOnAction(t -> Controller.getInstance().restartAfterSend());
+        disonnect.setOnAction(t -> {
+            Controller.getInstance().restartAfterSend();
+        });
         MenuItem about = new MenuItem("A Propos");
         about.setOnAction(t -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -64,7 +65,7 @@ public class MainView {
             alert.showAndWait();
         });
 
-        menuFile.getItems().addAll(add, disonnect, about);
+        menuFile.getItems().addAll(add,disonnect,about);
 
         enAttente = new VBox();
         enAttente.setPrefSize(400, 400);
