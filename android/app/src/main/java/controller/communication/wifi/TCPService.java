@@ -20,6 +20,7 @@ public class TCPService extends SurService {
     private boolean running = false;
     private Socket socket;
     private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
 
     public void send(EventWrapper e) {
         privateSend(e, null, null);
@@ -81,6 +82,16 @@ public class TCPService extends SurService {
 
     public void stop() {
         running = false;
+        try {
+        if(outputStream!=null)
+            outputStream.close();
+        if (inputStream!=null)
+            inputStream.close();
+        if (socket!=null)
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void startServer(int port, InetAddress address) {
@@ -111,7 +122,7 @@ public class TCPService extends SurService {
             try {
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.flush();
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+                inputStream = new ObjectInputStream(socket.getInputStream());
                 running = true;
                 while (running) {
                     Object o;
@@ -133,4 +144,7 @@ public class TCPService extends SurService {
 
         }
     }
+
+
+    
 }
