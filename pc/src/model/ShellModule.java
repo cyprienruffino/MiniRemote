@@ -79,6 +79,9 @@ public class ShellModule {
         runChecker.interrupt();
     }
 
+    /**
+     * Close running ProcessInputReader
+     */
     public void closeInputThread(){
         stop=true;
     }
