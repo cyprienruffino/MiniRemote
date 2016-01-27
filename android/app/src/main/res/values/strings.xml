@@ -47,7 +47,7 @@
     <string name="diapo_demarrer_page_courante">Démarrer à la page courante</string>
     <string name="main_diapo_text">Diaporama</string>
     <string name="diapo_text_null">Besoin d\'un numéro de page</string>
-    <string name="crd">Application réalisé par :\nCorentin Colomier\nValentin Jubert\nCyprien Ruffino\nNicolas
+    <string name="crd">Application réalisée par :\nCorentin Colomier\nValentin Jubert\nCyprien Ruffino\nNicolas
         Serrette
     </string>
     <string name="credit">Crédits</string>
@@ -69,4 +69,5 @@
     <string name="port_label">Cela va redémarrer les communications en cours !</string>
     <string name="port_needed">Besoin d\'un numéro de port</string>
     <string name="shell_send">Go</string>
+    <string name="shell_text">Terminal</string>
 </resources>

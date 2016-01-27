@@ -1,16 +1,33 @@
 package main;
 
+import java.awt.AWTException;
+import java.io.IOException;
+
 import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.*;
+import controller.communication.events.ActionException;
+import controller.communication.events.CommandEvent;
+import controller.communication.events.DiapoEvent;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.KeyboardEvent;
+import controller.communication.events.MediaEvent;
+import controller.communication.events.MouseClickEvent;
+import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.ProjectorEvent;
+import controller.communication.events.RemoteEvent;
+import controller.communication.events.ResolutionEvent;
+import controller.communication.events.ResponseEvent;
+import controller.communication.events.ScrollMouseEvent;
 import controller.communication.wifi.TCPServer;
 import controller.communication.wifi.UDPServer;
 import controller.communication.wifi.exception.NoTcpServerException;
 import javafx.application.Platform;
-import model.*;
+import model.CursorModule;
+import model.DiapoModule;
+import model.KeyboardModule;
+import model.MediaModule;
+import model.ProjectorModule;
+import model.ShellModule;
 import view.MainView;
-
-import java.awt.*;
-import java.io.IOException;
 
 /**
  * Created by cyprien on 05/11/15.
@@ -256,6 +273,18 @@ public class Controller {
     public void restartServer() {
         disconnect();
         new Thread(new LanceurRunnable(), "LanceurThread").start();
+    }
+
+    public void restartAfterSend(){
+        try {
+            send(new EventWrapper(new ResponseEvent(ResponseEvent.Response.ServerShutdown)), () -> {
+                restartServer();
+                mainView.setEnAttente();
+            });
+        } catch (NoTcpServerException e) {
+            restartServer();
+            mainView.setEnAttente();
+        }
     }
 
     public void disconnect() {
