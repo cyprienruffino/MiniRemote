@@ -46,6 +46,7 @@ public class MainView {
                         try {
                             int port = Integer.parseInt(result.get());
                             Controller.getInstance().setPort(port);
+                            Controller.getInstance().restartAfterSend();
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
