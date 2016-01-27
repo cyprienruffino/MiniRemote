@@ -84,7 +84,7 @@ public class ShellModule {
             while(!stop) {
                 try {
                     while ((output=stream.readLine())!=null) {
-                        System.out.println(output);
+                        //System.out.println(output);
                         runtimeOutputEvent=new RuntimeOutputEvent(output);
                         Controller.getInstance().send(new EventWrapper(runtimeOutputEvent));
                         System.out.println(runtimeOutputEvent);
