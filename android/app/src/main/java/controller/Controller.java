@@ -2,6 +2,7 @@ package controller;
 
 import controller.communication.callbackInterface.ClientDisconnected;
 import controller.communication.events.EventWrapper;
+import controller.communication.events.ProjectorReturnEvent;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
 import controller.communication.events.RuntimeOutputEvent;
@@ -58,7 +59,22 @@ public class Controller {
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
             }
         }
+        if(event.getClass().equals(ProjectorReturnEvent.class)){
+            ProjectorReturnEvent rep=(ProjectorReturnEvent)event;
+            switch (rep.getAction()){
+                case ProjectorReturnEvent.ERROR_HELLO:
+                    break;
+                case ProjectorReturnEvent.ERROR_TIMEOUT:
+                    break;
+                case ProjectorReturnEvent.PROJECTOR_NAME:
+                    break;
+                case ProjectorReturnEvent.PROJECTOR_SOURCE:
+                    break;
+            }
+        }
     }
+
+
 
 
     public static int getPort() {
@@ -68,4 +84,6 @@ public class Controller {
     public static void setPort(Integer port) {
         Controller.port = port;
     }
+
+
 }

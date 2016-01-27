@@ -150,21 +150,25 @@ public class Controller {
             ProjectorEvent projectorEvent = (ProjectorEvent) event;
             switch (projectorEvent.getAction()) {
                 case ProjectorEvent.POWER_ON:
-                    ProjectorModule.getInstance().sendPowerOn();
+                    ProjectorModule.getInstance(controller).sendPowerOn();
                     break;
                 case ProjectorEvent.POWER_OFF:
-                    ProjectorModule.getInstance().sendPowerOff();
+                    ProjectorModule.getInstance(controller).sendPowerOff();
                     break;
                 case ProjectorEvent.SET_SOURCE_PC:
-                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_PC);
+                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_PC);
                     break;
                 case ProjectorModule.SET_SOURCE_HDMI:
-                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_HDMI);
+                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_HDMI);
                     break;
                 case ProjectorModule.SET_SOURCE_VIDEO:
-                    ProjectorModule.getInstance().sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
+                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
                     break;
             }
+        }
+        if (event.getClass().equals(ProjectorReturnEvent.class)) {
+            ProjectorReturnEvent projectorEvent = (ProjectorReturnEvent) event;
+            controller.send(event);
         }
         if (event.getClass().equals(DiapoEvent.class)) {
             DiapoEvent diapoEvent = (DiapoEvent) event;

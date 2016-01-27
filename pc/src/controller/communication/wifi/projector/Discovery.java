@@ -1,8 +1,12 @@
 package controller.communication.wifi.projector;
 
+import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+
+import controller.communication.events.ProjectorReturnEvent;
+import controller.communication.events.RemoteEvent;
 
 /**
  * Created by whiteshad on 23/12/15.
@@ -15,13 +19,15 @@ public class Discovery implements Runnable {
     private static final int EPSON_VP_PORT_TCP = 3629;
     private DatagramSocket socket;
     private String ipServer;
-    private String vpName;
+    private RemoteEvent result;
+
+
 
     public Discovery() {
 
         try {
             socket = new DatagramSocket(EPSON_VP_PORT_TCP);
-        } catch (SocketException e) {
+        } catch (SocketException e){
             e.printStackTrace();
         }
     }
@@ -76,8 +82,8 @@ public class Discovery implements Runnable {
         return null;
     }
 
-    private DatagramPacket sendBroadcast() throws Exception {
-
+    private DatagramPacket sendBroadcast(){
+    try {
         socket.setBroadcast(true);
         DatagramPacket packet = helloPacket();
         socket.send(packet);
@@ -89,8 +95,13 @@ public class Discovery implements Runnable {
         socket.receive(rec);
         while (rec.getAddress().getHostAddress().contains(myAdress))
             socket.receive(rec);
-
         return rec;
+    }catch (SocketTimeoutException e) {
+        result=new ProjectorReturnEvent(ProjectorReturnEvent.ERROR_TIMEOUT,null);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return null;
     }
 
     private String getServerIp() {
@@ -112,16 +123,16 @@ public class Discovery implements Runnable {
     public void analyseReponse(byte[] rec) {
         switch (rec[14]) {
             case 0x20://ok
-                vpName = new String(rec, 17, 16);
+                result = new ProjectorReturnEvent(ProjectorReturnEvent.PROJECTOR_NAME,new String(rec, 17, 16));
                 break;
             default://ko
-                vpName = null;
+                result = new ProjectorReturnEvent(ProjectorReturnEvent.ERROR_HELLO,null);;
                 break;
         }
     }
 
-    public String getVpName() {
-        return vpName;
+    public RemoteEvent getResult() {
+        return result;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package model;
 
+import controller.communication.events.ActionException;
 import controller.communication.wifi.projector.Discovery;
+import main.Controller;
 
+import java.awt.AWTException;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,15 +24,19 @@ public class ProjectorModule {
     public static final String SET_SOURCE_VIDEO = "41";
     private static ProjectorModule instance;
     private ProjectorTCPServer server;
+    private static Controller controller;
 
-    private ProjectorModule() throws IOException, InterruptedException {
+    private ProjectorModule(Controller c) throws IOException, InterruptedException {
+        controller=c;
         server = new ProjectorTCPServer();
         server.startServer();
     }
 
-    public static ProjectorModule getInstance() throws IOException, InterruptedException {
-        if (instance == null)
-            instance = new ProjectorModule();
+    public static ProjectorModule getInstance(Controller c) throws IOException, InterruptedException {
+        if (instance == null) {
+            instance = new ProjectorModule(c);
+            controller = c;
+        }
         return instance;
     }
 
@@ -85,12 +92,23 @@ public class ProjectorModule {
             return closed;
         }
 
-        public void startServer() throws IOException, InterruptedException {
+        public void startServer() throws IOException, InterruptedException{
 
             Discovery discovery = new Discovery();
             Thread thread = new Thread(discovery);
             thread.start();
             thread.join();
+            try {
+                controller.handleControl(discovery.getResult());
+            } catch (AWTException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ActionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             String IP = discovery.getIpServer();
 
             socket = new Socket(IP, EPSON_VP_PORT);
