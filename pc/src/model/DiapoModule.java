@@ -8,21 +8,20 @@ import java.awt.event.KeyEvent;
  */
 public class DiapoModule {
     private static DiapoModule instance;
-
-    public static DiapoModule getInstance() {
-        if (instance == null)
-            instance = new DiapoModule();
-        return instance;
-    }
-
     private Robot robot;
 
-    public DiapoModule() {
+    private DiapoModule() {
         try {
             this.robot = new Robot();
         } catch (AWTException e) {
             System.err.println("Impossible de créer DiapoModule");
         }
+    }
+
+    public static DiapoModule getInstance() {
+        if (instance == null)
+            instance = new DiapoModule();
+        return instance;
     }
 
     public void go_to(int numPage) {

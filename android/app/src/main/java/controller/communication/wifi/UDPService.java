@@ -1,6 +1,7 @@
 package controller.communication.wifi;
 
 import android.content.Context;
+import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.callbackInterface.NetworkDiscovery;
 
@@ -12,14 +13,15 @@ import java.net.*;
  * Created by Valentin on 23/01/2016.
  */
 public class UDPService extends SurService {
-    public static final int port = 1337;
     public static final int timeout = 10000;
+    public int port;
     private boolean serverFound = false;
     private DatagramSocket socket;
     private DatagramSocket socketConnect;
     private NetworkDiscovery cb;
 
     public void startServer(Context context, NetworkDiscovery callback, ErrorInterface errorCallback) {
+        port = Controller.getPort();
         cb = callback;
         new Thread(new Runnable() {
             @Override
@@ -47,18 +49,19 @@ public class UDPService extends SurService {
                                 if (!serverFound) {
                                     onNoServerFound();
                                 }
+                            } catch (SocketException e) {
                             } catch (IOException e) {
                                 errorCallback.onError("Erreur inconnu");
                             }
                         }
                     }, "UDPServerResponseThread").start();
                 } catch (SocketException e) {
-                    errorCallback.onError("Erreur inconnu");
+                    errorCallback.onError("Erreur inconnu 3");
                     e.printStackTrace();
                 } catch (UnknownHostException e) {
                     errorCallback.onError("Can't have BroadcastAddress");
                 } catch (IOException e) {
-                    errorCallback.onError("Erreur inconnu");
+                    errorCallback.onError("Erreur inconnu 2");
                     e.printStackTrace();
                 }
             }

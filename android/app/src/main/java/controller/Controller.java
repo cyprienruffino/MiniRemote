@@ -1,19 +1,19 @@
 package controller;
 
-import android.util.Log;
-
+import controller.communication.callbackInterface.ClientDisconnected;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
-import controller.communication.events.RuntimeOutputEvent;
 import controller.communication.wifi.TCPService;
-import view.ShellActivity;
 
 /**
  * Created by whiteshad on 25/11/15.
  */
 public class Controller {
     public static boolean isServiceStarted = false;
+    public static ClientDisconnected callback;
+    private static TCPService tcpService = null;
+    private static int port = 1337;
 
     public static TCPService getTcpService() {
         return tcpService;
@@ -23,35 +23,40 @@ public class Controller {
         Controller.tcpService = tcpService;
     }
 
-    private static TCPService tcpService = null;
+    public static void setClientDisconnected(ClientDisconnected clientDisconnected) {
+        callback = clientDisconnected;
+    }
 
-    public static EventWrapper execute(EventWrapper recv) {
+    public static void onClientDisconnection() {
+        if (callback != null)
+            callback.onDisconnection();
+    }
+
+    public static void execute(EventWrapper recv) {
         EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
-
-        if (event.getClass().equals(RuntimeOutputEvent.class)){
-            if(ShellActivity.isRunning){
-                RuntimeOutputEvent runtimeOutputEvent=(RuntimeOutputEvent)event;
-                ShellActivity.instance.writeToTerminal(runtimeOutputEvent.getOutput());
-            }
-        }
-
+        System.out.println(event);
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
-            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok))
-                return null;
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok)) {
+
+            }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.ServerShutdown)) {
-                tcpService.stop();
-                return null;
+                if (callback != null) {
+                    callback.onDisconnection();
+                }
             }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
-                return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Ok));
             }
         }
-
-        Log.d("DEBUG",event.toString());
-        return new EventWrapper(new ResponseEvent(ResponseEvent.Response.Failure));
     }
 
 
+    public static int getPort() {
+        return port;
+    }
+
+    public static void setPort(Integer port) {
+        Controller.port = port;
+    }
 }

@@ -33,6 +33,9 @@
     <string name="source_title">Connexion</string>
     <string name="titre_theme">Choix du theme</string>
     <string name="lightTheme">Light Theme</string>
+    <string name="egg_leet">8!3(\)\/3(\)3</string>
+    <string name="egg_pi">C\'est π !</string>
+    <string name="egg_or">C\'est le nombre d\'or !</string>
     <string name="darkTheme">Dark Theme</string>
     <string name="diapo_aller_a">Aller à la page :</string>
     <string name="diapo_go">Go !</string>
@@ -60,7 +63,9 @@
     <string name="recule">Reculer</string>
     <string name="play_pause">Lecture/Pause</string>
     <string name="main_media_text">Lecteur Multimedia</string>
-    <string name="shell_send">Go</string>
-    <string name="shell_kill">Tuer</string>
-    <string name="shell_text">Terminal</string>
+    <string name="theme">Thème</string>
+    <string name="port">Changer port</string>
+    <string name="valider">Valider</string>
+    <string name="port_label">Cela va redémarrer les communications en cours !</string>
+    <string name="port_needed">Besoin d\'un numéro de port</string>
 </resources>

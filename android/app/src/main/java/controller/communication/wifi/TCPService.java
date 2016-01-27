@@ -1,6 +1,7 @@
 package controller.communication.wifi;
 
 import android.os.AsyncTask;
+import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.EventWrapper;
@@ -48,7 +49,7 @@ public class TCPService extends SurService {
                             outputStream.flush();
                         } catch (IOException e) {
                             if (errorInterface != null)
-                                errorInterface.onError("Erreur inconu");
+                                errorInterface.onError("Erreur inconu 1");
                             e.printStackTrace();
                         }
                     }
@@ -115,10 +116,10 @@ public class TCPService extends SurService {
                     Object o;
                     try {
                         o = inputStream.readObject();
-                        System.out.println(o);
+                        Controller.execute((EventWrapper) o);
                     } catch (EOFException e) {
-                        System.out.println("EOFException");
                         running = false;
+                        Controller.onClientDisconnection();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
