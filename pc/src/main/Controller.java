@@ -34,6 +34,7 @@ public class Controller {
                 Platform.exit();
             }
         });
+        mainView.setEnAttente();
         Controller.controller = this;
         new Thread(new LanceurRunnable(), "LanceurThread").start();
     }

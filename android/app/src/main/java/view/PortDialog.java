@@ -18,8 +18,8 @@ public class PortDialog extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final EditText editText=new EditText(getActivity().getApplicationContext());
-        editText.setText(Controller.getPort()+"");
+        final EditText editText = new EditText(getActivity().getApplicationContext());
+        editText.setText(Controller.getPort() + "");
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -31,21 +31,27 @@ public class PortDialog extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             int port = Integer.valueOf(editText.getText().toString());
-                            if(port == 1337)
+                            if (port == 1337)
                                 getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getActivity().getString(R.string.egg_leet)));
                             if (port == 31415)
                                 getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getActivity().getString(R.string.egg_pi)));
-                           if (port == 16180)
+                            if (port == 16180)
                                 getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getActivity().getString(R.string.egg_or)));
                             Controller.setPort(port);
                             dismiss();
-                            ((HomeActivity)getActivity()).restartCom();
+                            ((HomeActivity) getActivity()).restartCom();
                         } catch (NumberFormatException e) {
                             getActivity().runOnUiThread(new ToastRunnable(getActivity().getApplicationContext(), getString(R.string.port_needed)));
                         }
                     }
                 })
-                .setNegativeButton("Annuler", null);
+                .setNegativeButton(R.string.annuler, null)
+                .setNeutralButton(R.string.defaut, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Controller.setDefaultPort();
+                    }
+                });
         return builder.create();
     }
 }

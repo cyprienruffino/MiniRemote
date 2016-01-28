@@ -1,7 +1,5 @@
 package view;
 
-import java.util.Optional;
-
 import controller.communication.events.ResponseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -19,6 +17,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import main.Controller;
 
+import java.util.Optional;
+
 /**
  * Created by Valentin on 23/12/2015.
  */
@@ -33,8 +33,8 @@ public class MainView {
 
     public MainView(EventHandler<WindowEvent> closeEvent) {
 
-        menuBar=new MenuBar();
-        menuFile=new Menu("Options");
+        menuBar = new MenuBar();
+        menuFile = new Menu("Options");
         menuBar.getMenus().add(menuFile);
         MenuItem add = new MenuItem("Changer Port");
         add.setOnAction(t -> {
@@ -66,7 +66,7 @@ public class MainView {
             alert.showAndWait();
         });
 
-        menuFile.getItems().addAll(add,disonnect,about);
+        menuFile.getItems().addAll(add, disonnect, about);
 
         enAttente = new VBox();
         enAttente.setPrefSize(400, 400);
@@ -86,7 +86,6 @@ public class MainView {
         coLabel.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         VBox.setVgrow(imageView, Priority.ALWAYS);
         coLabel.setAlignment(Pos.CENTER);
-
 
         primaryStage = new Stage();
         primaryStage.setTitle("Remote Control");

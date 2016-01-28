@@ -1,11 +1,7 @@
 package controller;
 
 import controller.communication.callbackInterface.ClientDisconnected;
-import controller.communication.events.EventWrapper;
-import controller.communication.events.ProjectorReturnEvent;
-import controller.communication.events.RemoteEvent;
-import controller.communication.events.ResponseEvent;
-import controller.communication.events.RuntimeOutputEvent;
+import controller.communication.events.*;
 import controller.communication.wifi.TCPService;
 import view.ShellActivity;
 
@@ -13,6 +9,7 @@ import view.ShellActivity;
  * Created by whiteshad on 25/11/15.
  */
 public class Controller {
+    private static final int DEFAULT_PORT = 1337;
     public static boolean isServiceStarted = false;
     public static ClientDisconnected callback;
     private static TCPService tcpService = null;
@@ -86,4 +83,7 @@ public class Controller {
     }
 
 
+    public static void setDefaultPort() {
+        port = DEFAULT_PORT;
+    }
 }

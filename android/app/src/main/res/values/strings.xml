@@ -70,4 +70,6 @@
     <string name="port_needed">Besoin d\'un numéro de port</string>
     <string name="shell_send">Go</string>
     <string name="shell_text">Terminal</string>
+    <string name="annuler">Annuler</string>
+    <string name="defaut">Défaut</string>
 </resources>
