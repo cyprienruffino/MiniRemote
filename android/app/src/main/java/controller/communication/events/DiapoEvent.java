@@ -15,7 +15,7 @@ public class DiapoEvent extends RemoteEvent {
 
     public DiapoEvent(int num, int id) {
         type = DiapoEventType.Goto;
-        this.numPage = numPage;
+        this.numPage = num;
         soft = id;
     }
 
