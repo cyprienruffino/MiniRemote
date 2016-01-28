@@ -1,7 +1,10 @@
 package controller;
 
 import controller.communication.callbackInterface.ClientDisconnected;
-import controller.communication.events.*;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.RemoteEvent;
+import controller.communication.events.ResponseEvent;
+import controller.communication.events.RuntimeOutputEvent;
 import controller.communication.wifi.TCPService;
 import view.ShellActivity;
 
@@ -37,42 +40,21 @@ public class Controller {
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
         System.out.println(event);
 
-        if (event.getClass().equals(RuntimeOutputEvent.class)){
-            RuntimeOutputEvent runtimeOutputEvent=(RuntimeOutputEvent)event;
-            if(ShellActivity.isRunning){
+        if (event.getClass().equals(RuntimeOutputEvent.class)) {
+            RuntimeOutputEvent runtimeOutputEvent = (RuntimeOutputEvent) event;
+            if (ShellActivity.isRunning) {
                 ShellActivity.instance.writeToTerminal(runtimeOutputEvent.getOutput());
             }
         }
         if (event.getClass().equals(ResponseEvent.class)) {
             ResponseEvent responseEvent = (ResponseEvent) event;
-            if (responseEvent.getResponse().equals(ResponseEvent.Response.Ok)) {
-
-            }
             if (responseEvent.getResponse().equals(ResponseEvent.Response.ServerShutdown)) {
                 if (callback != null) {
                     callback.onDisconnection();
                 }
             }
-            if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
-            }
-        }
-        if(event.getClass().equals(ProjectorReturnEvent.class)){
-            ProjectorReturnEvent rep=(ProjectorReturnEvent)event;
-            switch (rep.getAction()){
-                case ProjectorReturnEvent.ERROR_HELLO:
-                    break;
-                case ProjectorReturnEvent.ERROR_TIMEOUT:
-                    break;
-                case ProjectorReturnEvent.PROJECTOR_NAME:
-                    break;
-                case ProjectorReturnEvent.PROJECTOR_SOURCE:
-                    break;
-            }
         }
     }
-
-
-
 
     public static int getPort() {
         return port;

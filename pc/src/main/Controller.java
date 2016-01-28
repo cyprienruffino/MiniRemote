@@ -146,31 +146,6 @@ public class Controller {
             ResolutionEvent resolutionEvent = (ResolutionEvent) event;
             CursorModule.getInstance().setDeviceSize(resolutionEvent.getHeight(), resolutionEvent.getWidth());
         }
-
-        if (event.getClass().equals(ProjectorEvent.class)) {
-            ProjectorEvent projectorEvent = (ProjectorEvent) event;
-            switch (projectorEvent.getAction()) {
-                case ProjectorEvent.POWER_ON:
-                    ProjectorModule.getInstance(controller).sendPowerOn();
-                    break;
-                case ProjectorEvent.POWER_OFF:
-                    ProjectorModule.getInstance(controller).sendPowerOff();
-                    break;
-                case ProjectorEvent.SET_SOURCE_PC:
-                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_PC);
-                    break;
-                case ProjectorModule.SET_SOURCE_HDMI:
-                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_HDMI);
-                    break;
-                case ProjectorModule.SET_SOURCE_VIDEO:
-                    ProjectorModule.getInstance(controller).sendSetSource(ProjectorModule.SET_SOURCE_VIDEO);
-                    break;
-            }
-        }
-        if (event.getClass().equals(ProjectorReturnEvent.class)) {
-            ProjectorReturnEvent projectorEvent = (ProjectorReturnEvent) event;
-            controller.send(event);
-        }
         if (event.getClass().equals(DiapoEvent.class)) {
             DiapoEvent diapoEvent = (DiapoEvent) event;
             DiapoModule module = DiapoModule.getInstance();

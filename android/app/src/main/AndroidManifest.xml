@@ -20,7 +20,6 @@
         <activity
                 android:name="view.BasicActivity"
                 android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="view.ProjoActivity"/>
         <activity
                 android:name="view.DiapoActivity"
                 android:windowSoftInputMode="adjustResize"/>
