@@ -12,6 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by Valentin on 23/01/2016.
@@ -130,14 +131,14 @@ public class TCPService extends SurService {
                         o = inputStream.readObject();
                         Controller.execute((EventWrapper) o);
                     } catch (EOFException e) {
-                        System.out.println("EOFException");
                         running = false;
                         Controller.onClientDisconnection();
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
                 }
-
+            } catch (SocketException e){
+                Controller.onClientDisconnection();
             } catch (IOException e) {
                 e.printStackTrace();
             }

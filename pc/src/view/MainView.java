@@ -72,7 +72,7 @@ public class MainView {
         ProgressIndicator progressIndicator = new ProgressIndicator();
         Label label = new Label("En attente d'un client");
         label.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        enAttente.getChildren().addAll(menuBar, /* progressIndicator, */ label);
+        enAttente.getChildren().addAll(menuBar, progressIndicator, label);
         VBox.setVgrow(progressIndicator, Priority.ALWAYS);
         label.setAlignment(Pos.CENTER);
 
