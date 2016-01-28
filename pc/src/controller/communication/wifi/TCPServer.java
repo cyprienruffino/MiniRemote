@@ -55,11 +55,12 @@ public class TCPServer {
             if (inputStream!=null)
                 inputStream.close();
             if (client != null)
+
                 client.close();
             if (serverSocket != null)
                 serverSocket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
     }
 
