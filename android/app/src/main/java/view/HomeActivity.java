@@ -141,23 +141,23 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
     }
 
     @Override
-    public void onNetworkFound(InetAddress address, int port) {
+    public synchronized void onNetworkFound(InetAddress address, int port) {
         DialogFragment dialog = (DialogFragment) getFragmentManager().findFragmentByTag(WAITING_SCREEN);
         try {
             dialog.dismiss();
         } catch (NullPointerException e) {
         }
-        DialogFragment serverDialog = (DialogFragment) getFragmentManager().findFragmentByTag(SERVER_SCREEN);
+        ServerDialog serverDialog = (ServerDialog) getFragmentManager().findFragmentByTag(SERVER_SCREEN);
         if (serverDialog == null) {
             serverDialog = new ServerDialog();
             Bundle b = new Bundle();
-            b.putIntArray(ServerDialog.portTag, new int[]{port});
+            b.putIntArray(ServerDialog.portTag, new int[]{port, 1});
             b.putStringArray(ServerDialog.nameTag, new String[]{address.getHostName()});
             b.putStringArray(ServerDialog.adressTag, new String[]{address.getHostAddress()});
             serverDialog.setArguments(b);
             serverDialog.show(getFragmentManager(), SERVER_SCREEN);
         } else {
-            //todo update actual dialog (***)
+            serverDialog.refresh(address, port);
         }
     }
 

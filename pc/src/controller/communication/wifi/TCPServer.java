@@ -1,6 +1,12 @@
 package controller.communication.wifi;
 
-import java.awt.AWTException;
+import controller.communication.callbackInterface.ClientConnected;
+import controller.communication.callbackInterface.SendFinished;
+import controller.communication.events.ActionException;
+import controller.communication.events.EventWrapper;
+import main.Controller;
+
+import java.awt.*;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,12 +14,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
-
-import controller.communication.callbackInterface.ClientConnected;
-import controller.communication.callbackInterface.SendFinished;
-import controller.communication.events.ActionException;
-import controller.communication.events.EventWrapper;
-import main.Controller;
 
 /**
  * Created by Valentin on 23/01/2016.
@@ -50,12 +50,11 @@ public class TCPServer {
 
     public void close() {
         try {
-            if (outputStream!=null)
+            if (outputStream != null)
                 outputStream.close();
-            if (inputStream!=null)
+            if (inputStream != null)
                 inputStream.close();
             if (client != null)
-
                 client.close();
             if (serverSocket != null)
                 serverSocket.close();
@@ -76,7 +75,7 @@ public class TCPServer {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(!client.isClosed()) {
+                if (!client.isClosed()) {
                     try {
                         outputStream.writeObject(e);
                         outputStream.flush();
@@ -114,6 +113,7 @@ public class TCPServer {
                     try {
                         Object resp = inputStream.readObject();
                         Controller.handleControl(resp);
+                    } catch (SocketException e) {
                     } catch (EOFException e) {
                         Controller.getInstance().restartServer();
                     } catch (ClassNotFoundException | InterruptedException | ActionException | AWTException | IOException e) {

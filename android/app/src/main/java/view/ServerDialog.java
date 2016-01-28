@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import java.net.InetAddress;
+
 /**
  * Created by Valentin on 24/01/2016.
  */
@@ -53,5 +55,38 @@ public class ServerDialog extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public void refresh(InetAddress address, int port) {
+        int length = this.adress.length + 1;
+        String[] a = new String[length];
+        int[] p = new int[length];
+        String[] n = new String[length];
+        //name
+        for (int i = 0; i < name.length; i++) {
+            n[i] = name[i];
+        }
+        n[length - 1] = address.getHostName();
+        //address
+        for (int i = 0; i < adress.length; i++) {
+            a[i] = adress[i];
+        }
+        a[length - 1] = address.getHostAddress();
+        //port
+        for (int i = 0; i < this.port.length; i++) {
+            p[i] = this.port[i];
+        }
+        p[length - 1] = port;
+
+        //on remet les param et on update
+        Bundle b = new Bundle();
+        b.putIntArray(ServerDialog.portTag, p);
+        b.putStringArray(ServerDialog.nameTag, n);
+        b.putStringArray(ServerDialog.adressTag, a);
+        ServerDialog serverDialog = new ServerDialog();
+        serverDialog.setArguments(b);
+        serverDialog.show(getFragmentManager(), HomeActivity.SERVER_SCREEN);
+        dismiss();
+
     }
 }
