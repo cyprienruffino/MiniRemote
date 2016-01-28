@@ -24,40 +24,91 @@ public class DiapoModule {
         return instance;
     }
 
-    public void go_to(int numPage) {
-        char[] charArray = String.valueOf(numPage).toCharArray();
-        for (char aCharArray : charArray) {
-            robot.keyPress(KeyEvent.VK_SHIFT);
-            hitKey(KeyEvent.getExtendedKeyCodeForChar(aCharArray));
-            robot.keyRelease(KeyEvent.VK_SHIFT);
+    public void go_to(int soft, int numPage) throws NotFunctionnalException {
+        switch (soft) {
+            case 0:
+                //Evince
+                throw new NotFunctionnalException();
+            case 1:
+                //LibreOffice
+                char[] charArray = String.valueOf(numPage).toCharArray();
+                for (char aCharArray : charArray) {
+                    robot.keyPress(KeyEvent.VK_SHIFT);
+                    hitKey(KeyEvent.getExtendedKeyCodeForChar(aCharArray));
+                    robot.keyRelease(KeyEvent.VK_SHIFT);
+                }
+                hitKey(KeyEvent.VK_ENTER);
+                break;
         }
-        hitKey(KeyEvent.VK_ENTER);
     }
 
-    public void last() {
-        hitKey(KeyEvent.VK_END);
+    public void last(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_END);
+                break;
+            case 1:
+                hitKey(KeyEvent.VK_END);
+                break;
+        }
     }
 
-    public void next() {
-        hitKey(KeyEvent.VK_RIGHT);
+    public void next(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_RIGHT);
+                break;
+            case 1:
+                hitKey(KeyEvent.VK_RIGHT);
+                break;
+        }
     }
 
-    public void origin() {
-        hitKey(KeyEvent.VK_HOME);
+    public void origin(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_HOME);
+                break;
+            case 1:
+                hitKey(KeyEvent.VK_HOME);
+                break;
+        }
     }
 
-    public void prec() {
-        hitKey(KeyEvent.VK_LEFT);
+    public void prec(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_LEFT);
+                break;
+            case 1:
+                hitKey(KeyEvent.VK_LEFT);
+                break;
+        }
     }
 
-    public void start() {
-        hitKey(KeyEvent.VK_F5);
+    public void start(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_F5);
+                hitKey(KeyEvent.VK_HOME);
+                break;
+            case 1:
+                hitKey(KeyEvent.VK_F5);
+                break;
+        }
     }
 
-    public void startHere() {
-        robot.keyPress(KeyEvent.VK_SHIFT);
-        hitKey(KeyEvent.VK_F5);
-        robot.keyRelease(KeyEvent.VK_SHIFT);
+    public void startHere(int soft) {
+        switch (soft) {
+            case 0:
+                hitKey(KeyEvent.VK_F5);
+                break;
+            case 1:
+                robot.keyPress(KeyEvent.VK_SHIFT);
+                hitKey(KeyEvent.VK_F5);
+                robot.keyRelease(KeyEvent.VK_SHIFT);
+                break;
+        }
     }
 
     private void hitKey(int keycode) {

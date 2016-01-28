@@ -127,7 +127,7 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
                 startActivity(v);
                 break;
             case R.id.main_diapo_button:
-                v = new Intent(HomeActivity.this, DiapoActivity.class);
+                v = new Intent(HomeActivity.this, SoftwareActivity.class);
                 startActivity(v);
                 break;
              case R.id.main_media_button:

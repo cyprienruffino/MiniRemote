@@ -151,25 +151,29 @@ public class Controller {
             DiapoModule module = DiapoModule.getInstance();
             switch (diapoEvent.getType()) {
                 case Goto:
-                    module.go_to(diapoEvent.getNumPage());
+                    try {
+                        module.go_to(diapoEvent.getSoft(), diapoEvent.getNumPage());
+                    } catch (NotFunctionnalException e) {
+                        Controller.getInstance().send(new ResponseEvent(ResponseEvent.Response.Failure));
+                    }
                     break;
                 case Last:
-                    module.last();
+                    module.last(diapoEvent.getSoft());
                     break;
                 case Next:
-                    module.next();
+                    module.next(diapoEvent.getSoft());
                     break;
                 case Origin:
-                    module.origin();
+                    module.origin(diapoEvent.getSoft());
                     break;
                 case Prec:
-                    module.prec();
+                    module.prec(diapoEvent.getSoft());
                     break;
                 case Start:
-                    module.start();
+                    module.start(diapoEvent.getSoft());
                     break;
                 case StartHere:
-                    module.startHere();
+                    module.startHere(diapoEvent.getSoft());
                     break;
             }
         }

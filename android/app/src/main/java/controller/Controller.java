@@ -1,12 +1,14 @@
 package controller;
 
 import controller.communication.callbackInterface.ClientDisconnected;
+import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
 import controller.communication.events.RuntimeOutputEvent;
 import controller.communication.wifi.TCPService;
 import view.ShellActivity;
+import view.SoftwareActivity;
 
 /**
  * Created by whiteshad on 25/11/15.
@@ -17,6 +19,16 @@ public class Controller {
     public static ClientDisconnected callback;
     private static TCPService tcpService = null;
     private static int port = 1337;
+    private static SoftwareActivity.Diapo software;
+    private static ErrorInterface errorInterface;
+
+    public static ErrorInterface getErrorInterface() {
+        return errorInterface;
+    }
+
+    public static void setErrorInterface(ErrorInterface errorInterface) {
+        Controller.errorInterface = errorInterface;
+    }
 
     public static TCPService getTcpService() {
         return tcpService;
@@ -35,7 +47,7 @@ public class Controller {
             callback.onDisconnection();
     }
 
-    public static void execute(EventWrapper recv) {
+    public static void execute(EventWrapper recv) throws FailureException {
         EventWrapper wrapper = recv;
         RemoteEvent event = wrapper.getTypeOfEvent().cast(wrapper.getRemoteEvent());
         System.out.println(event);
@@ -53,6 +65,9 @@ public class Controller {
                     callback.onDisconnection();
                 }
             }
+            if (responseEvent.getResponse().equals(ResponseEvent.Response.Failure)) {
+                throw new FailureException();
+            }
         }
     }
 
@@ -67,5 +82,13 @@ public class Controller {
 
     public static void setDefaultPort() {
         port = DEFAULT_PORT;
+    }
+
+    public static void setDiapoSoft(SoftwareActivity.Diapo soft) {
+        software = soft;
+    }
+
+    public static SoftwareActivity.Diapo getSoftware() {
+        return software;
     }
 }

@@ -72,4 +72,6 @@
     <string name="shell_text">Terminal</string>
     <string name="annuler">Annuler</string>
     <string name="defaut">Défaut</string>
+    <string name="libre_office">LibreOffice</string>
+    <string name="evince">Evince</string>
 </resources>

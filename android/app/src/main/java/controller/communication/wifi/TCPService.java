@@ -2,6 +2,7 @@ package controller.communication.wifi;
 
 import android.os.AsyncTask;
 import controller.Controller;
+import controller.FailureException;
 import controller.communication.callbackInterface.ErrorInterface;
 import controller.communication.callbackInterface.SendFinished;
 import controller.communication.events.EventWrapper;
@@ -84,12 +85,12 @@ public class TCPService extends SurService {
     public void stop() {
         running = false;
         try {
-        if(outputStream!=null)
-            outputStream.close();
-        if (inputStream!=null)
-            inputStream.close();
-        if (socket!=null)
-            socket.close();
+            if (outputStream != null)
+                outputStream.close();
+            if (inputStream != null)
+                inputStream.close();
+            if (socket != null)
+                socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,6 +131,12 @@ public class TCPService extends SurService {
                     try {
                         o = inputStream.readObject();
                         Controller.execute((EventWrapper) o);
+                    } catch (FailureException e) {
+                        try {
+                            Controller.getErrorInterface().onError("Failure");
+                        } catch (NullPointerException e2) {
+
+                        }
                     } catch (EOFException e) {
                         running = false;
                         Controller.onClientDisconnection();
@@ -137,7 +144,7 @@ public class TCPService extends SurService {
                         e.printStackTrace();
                     }
                 }
-            } catch (SocketException e){
+            } catch (SocketException e) {
                 Controller.onClientDisconnection();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -147,5 +154,4 @@ public class TCPService extends SurService {
     }
 
 
-    
 }

@@ -5,15 +5,18 @@ package controller.communication.events;
  */
 public class DiapoEvent extends RemoteEvent {
     private DiapoEventType type;
+    private int soft;
     private int numPage;
 
-    public DiapoEvent(int numPage) {
-        type = DiapoEventType.Goto;
-        this.numPage = numPage;
+    public DiapoEvent(DiapoEventType type, int soft) {
+        this.type = type;
+        this.soft = soft;
     }
 
-    public DiapoEvent(DiapoEventType type) {
-        this.type = type;
+    public DiapoEvent(int num, int id) {
+        type = DiapoEventType.Goto;
+        this.numPage = numPage;
+        soft = id;
     }
 
     public DiapoEventType getType() {
@@ -24,10 +27,15 @@ public class DiapoEvent extends RemoteEvent {
         return numPage;
     }
 
+    public int getSoft() {
+        return soft;
+    }
+
     @Override
     public String toString() {
         return "DiapoEvent{" +
                 "type=" + type +
+                ", soft=" + soft +
                 ", numPage=" + numPage +
                 '}';
     }

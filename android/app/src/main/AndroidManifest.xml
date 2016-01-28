@@ -24,6 +24,8 @@
                 android:name="view.DiapoActivity"
                 android:windowSoftInputMode="adjustResize"/>
         <activity
+                android:name="view.SoftwareActivity"/>
+        <activity
             android:name="view.MultimediaActivity"
             android:windowSoftInputMode="adjustResize"/>
          <activity
