@@ -22,6 +22,7 @@ import orleans.info.fr.remotecontrol.R;
 public class DiapoActivity extends Activity implements ErrorInterface {
 
     private TCPService tcpService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,12 +35,12 @@ public class DiapoActivity extends Activity implements ErrorInterface {
 
     public void go_to(View view) {
         EditText editText = (EditText) findViewById(R.id.numpagediapo);
-        Editable text = editText.getText();// ZOB
-        if (!text.equals("")) {
+        Editable text = editText.getText();
+        try {
             int num = Integer.parseInt(text.toString());
             editText.setText("");
             send(new DiapoEvent(num));
-        } else {
+        } catch (NumberFormatException e) {
             runOnUiThread(new ToastRunnable(getApplicationContext(), getString(R.string.diapo_text_null)));
         }
     }
