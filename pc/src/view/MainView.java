@@ -1,6 +1,5 @@
 package view;
 
-import controller.communication.events.ResponseEvent;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -100,10 +99,6 @@ public class MainView {
 
         imageView.fitWidthProperty().bind(primaryStage.widthProperty());
         imageView.fitHeightProperty().bind(primaryStage.heightProperty());
-
-        Button b = new Button("Test");
-        b.setOnAction(event -> Controller.getInstance().send(new ResponseEvent(ResponseEvent.Response.Ok)));
-        connecte.getChildren().addAll(b);
 
         setEnAttente();
     }

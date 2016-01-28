@@ -33,11 +33,6 @@ public class ServiceDialog extends DialogFragment {
                                 Intent i = new Intent(act.getApplicationContext(), UDPService.class);
                                 act.bindService(i, act.getUdpServiceConnection(), Context.BIND_AUTO_CREATE);
                                 break;
-                            /*case 1:
-                                //TODO quand bluetooth sera implem
-                                //Bluetooth
-
-                                break;*/
                         }
                     }
                 });
