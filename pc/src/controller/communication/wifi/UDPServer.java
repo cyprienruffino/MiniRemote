@@ -40,7 +40,6 @@ public class UDPServer {
                                 callback.onClientConnection(packet.getPort(), packet.getAddress());
                             }
                         } catch (SocketException e) {
-                            e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
