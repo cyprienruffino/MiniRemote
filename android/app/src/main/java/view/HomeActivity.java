@@ -202,6 +202,11 @@ public class HomeActivity extends Activity implements ServiceAttached, NetworkDi
     }
 
     public void unbindTcpService() {
+        try {
+            Controller.getTcpService().stop();
+        } catch (NullPointerException e) {
+
+        }
         Controller.isServiceStarted = false;
         Controller.setTcpService(null);
         try {
