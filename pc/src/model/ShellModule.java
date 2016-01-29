@@ -46,6 +46,8 @@ public class ShellModule {
      * @throws IOException
      */
     public void execute(String command) throws IOException {
+        if(command==null ||command.equals(""))
+            return;
         if (!running) {
             try {
                 currentProcess = Runtime.getRuntime().exec(command);
