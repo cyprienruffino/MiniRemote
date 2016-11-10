@@ -10,7 +10,7 @@ A simple remote control application for Android
 
 # Legal notes
 ## Licence
-MiniRemote is under GPL licence, for more details, please see the [licence file](https://github.com/Moi4167/MiniRemote/blob/master/LICENCE)
+MiniRemote is under GPL3 licence, for more details, please see the [licence file](https://github.com/Moi4167/MiniRemote/blob/master/LICENCE)
 
 ## Usage
 The developping team is not in responsible of any illegal activities done with MiniRemote
