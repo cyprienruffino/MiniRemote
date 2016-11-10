@@ -1,0 +1,6 @@
+{
+  "name": "MiniRemote",
+  "tagline": "Mini Remote Control application for Android",
+  "body": "# MiniRemote\r\nA simple remote control application for Android\r\n\r\n# Features \r\n\r\n* Touchpad and keyboard emulator\r\n* Media player keys remote\r\n* Slideshow keys remote\r\n\r\n\r\n# Legal notes\r\n## Licence\r\nMiniRemote is under GPL3 licence, for more details, please see the [licence file](https://github.com/Moi4167/MiniRemote/blob/master/LICENCE)\r\n\r\n## Usage\r\nThe developping team is not in responsible of any illegal activities done with MiniRemote\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
