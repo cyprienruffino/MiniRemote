@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/diapolayout"
     style="@style/VerticalLinearLayout"
-    android:gravity="bottom"
-    android:id="@+id/diapolayout">
+    android:gravity="bottom">
     <View android:layout_width="0dip" android:layout_height="0dip"
           android:focusable="true"
           android:focusableInTouchMode="true"
@@ -14,21 +14,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:textSize="20sp"
+            android:gravity="center"
                 android:text="@string/diapo_aller_a"
-                android:gravity="center"/>
+            android:textSize="@dimen/TextSize" />
         <EditText
+            android:id="@+id/numpagediapo"
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:inputType="number"
-                android:id="@+id/numpagediapo"/>
+            android:inputType="number" />
         <Button
                 android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/diapo_go"
                 android:onClick="go_to"
+            android:text="@string/diapo_go"
         />
     </LinearLayout>
     <LinearLayout style="@style/HorizontalLinearLayout"
@@ -36,36 +36,36 @@
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/precedent"
-                android:onClick="prec"/>
+            android:onClick="prec"
+            android:text="@string/precedent" />
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/demarrer"
-                android:onClick="start"/>
+            android:onClick="start"
+            android:text="@string/demarrer" />
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/suivant"
-                android:onClick="next"/>
+            android:onClick="next"
+            android:text="@string/suivant" />
     </LinearLayout>
     <LinearLayout style="@style/HorizontalLinearLayout"
                   android:layout_height="wrap_content">
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/debut"
-                android:onClick="origin"/>
+            android:onClick="origin"
+            android:text="@string/debut" />
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/diapo_demarrer_page_courante"
-                android:onClick="startHere"/>
+            android:onClick="startHere"
+            android:text="@string/diapo_demarrer_page_courante" />
         <Button android:layout_width="match_parent"
                 android:layout_height="100dip"
                 android:layout_weight="1"
-                android:text="@string/fin"
-                android:onClick="last"/>
+            android:onClick="last"
+            android:text="@string/fin" />
     </LinearLayout>
 
 </LinearLayout>

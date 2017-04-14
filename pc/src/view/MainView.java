@@ -1,5 +1,7 @@
 package view;
 
+import java.util.Optional;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -7,7 +9,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Priority;
@@ -16,12 +24,12 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import main.Controller;
 
-import java.util.Optional;
-
 /**
  * Created by Valentin on 23/12/2015.
  */
 public class MainView {
+
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private Stage primaryStage;
     private VBox enAttente;
     private VBox connecte;
@@ -61,7 +69,7 @@ public class MainView {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("A propos");
             alert.setHeaderText(null);
-            alert.setContentText("Application réalisée par :\nCorentin Colomier\nValentin Jubert\nCyprien Ruffino\nNicolas Serrette");
+            alert.setContentText("Application réalisée par :" + LINE_SEPARATOR + "Corentin Colomier" + LINE_SEPARATOR + "Valentin Jubert" + LINE_SEPARATOR + "Cyprien Ruffino" + LINE_SEPARATOR + "Nicolas Serrette");
             alert.showAndWait();
         });
 
