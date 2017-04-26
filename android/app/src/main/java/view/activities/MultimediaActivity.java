@@ -1,4 +1,4 @@
-package view;
+package view.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import controller.communication.events.MediaEvent;
 import controller.communication.events.RemoteEvent;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
+import view.ToastRunnable;
 
 
 /**

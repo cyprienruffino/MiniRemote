@@ -1,9 +1,10 @@
-package view;
+package view.activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+
 import controller.Controller;
 import orleans.info.fr.remotecontrol.R;
 

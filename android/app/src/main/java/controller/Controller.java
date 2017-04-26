@@ -7,8 +7,8 @@ import controller.communication.events.RemoteEvent;
 import controller.communication.events.ResponseEvent;
 import controller.communication.events.RuntimeOutputEvent;
 import controller.communication.wifi.TCPService;
-import view.ShellActivity;
-import view.SoftwareActivity;
+import view.activities.ShellActivity;
+import view.activities.SoftwareActivity;
 
 /**
  * Created by whiteshad on 25/11/15.

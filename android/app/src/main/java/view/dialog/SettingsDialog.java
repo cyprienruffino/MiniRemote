@@ -1,39 +1,39 @@
-package view;
+package view.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import controller.communication.wifi.UDPService;
+
 import orleans.info.fr.remotecontrol.R;
 
 /**
- * Created by Valentin on 02/12/2015.
+ * Created by Valentin on 26/01/2016.
  */
-public class ServiceDialog extends DialogFragment {
-
-
+public class SettingsDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        String[] tab = {getString(R.string.wifi)};
+
+        String[] tab = {getString(R.string.theme), getString(R.string.port)};
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.servicedialog_title)
+
+        builder.setTitle(R.string.settings)
                 .setItems(tab, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        DialogFragment d;
                         switch (which) {
                             case 0:
-                                //Wifi
-                                HomeActivity act = (HomeActivity) getActivity();
-                                act.unbindTcpService();
-                                act.unbindUdpService();
-                                Intent i = new Intent(act.getApplicationContext(), UDPService.class);
-                                act.bindService(i, act.getUdpServiceConnection(), Context.BIND_AUTO_CREATE);
+                                d = new ChangeThemeDialog();
+                                d.show(getFragmentManager(), "changeThemeDialog");
+                                break;
+                            case 1:
+                                d = new PortDialog();
+                                d.show(getFragmentManager(), "portDiaog");
                                 break;
                         }
+                        dismiss();
                     }
                 });
         return builder.create();

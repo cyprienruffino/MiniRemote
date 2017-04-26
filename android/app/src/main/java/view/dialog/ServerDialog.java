@@ -1,4 +1,4 @@
-package view;
+package view.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +7,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import java.net.InetAddress;
+
+import view.ToastRunnable;
+import view.activities.HomeActivity;
 
 /**
  * Created by Valentin on 24/01/2016.

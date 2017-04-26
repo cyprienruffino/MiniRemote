@@ -1,4 +1,4 @@
-package view;
+package view.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -13,17 +13,27 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import controller.Controller;
-import controller.communication.callbackInterface.*;
+import controller.communication.callbackInterface.ClientDisconnected;
+import controller.communication.callbackInterface.ErrorInterface;
+import controller.communication.callbackInterface.NetworkDiscovery;
+import controller.communication.callbackInterface.SendFinished;
+import controller.communication.callbackInterface.ServiceAttached;
 import controller.communication.events.EventWrapper;
 import controller.communication.events.ResponseEvent;
 import controller.communication.wifi.SurService;
 import controller.communication.wifi.TCPService;
 import controller.communication.wifi.UDPService;
 import orleans.info.fr.remotecontrol.R;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import view.ToastRunnable;
+import view.dialog.AboutDialog;
+import view.dialog.ServerDialog;
+import view.dialog.ServiceDialog;
+import view.dialog.SettingsDialog;
 
 public class HomeActivity extends Activity implements ServiceAttached, NetworkDiscovery, ErrorInterface {
     public static final String WAITING_SCREEN = "waiting_screen";

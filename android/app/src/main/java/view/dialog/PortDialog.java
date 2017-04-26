@@ -1,4 +1,4 @@
-package view;
+package view.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,8 +8,11 @@ import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+
 import controller.Controller;
 import orleans.info.fr.remotecontrol.R;
+import view.ToastRunnable;
+import view.activities.HomeActivity;
 
 /**
  * Created by Valentin on 26/01/2016.

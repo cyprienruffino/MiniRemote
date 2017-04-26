@@ -1,4 +1,4 @@
-package view;
+package view.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,11 +8,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
 import controller.Controller;
 import controller.communication.callbackInterface.ErrorInterface;
-import controller.communication.events.*;
+import controller.communication.events.EventWrapper;
+import controller.communication.events.KeyboardEvent;
+import controller.communication.events.MouseClickEvent;
+import controller.communication.events.MoveMouseEvent;
+import controller.communication.events.RemoteEvent;
+import controller.communication.events.ResolutionEvent;
 import controller.communication.wifi.TCPService;
 import orleans.info.fr.remotecontrol.R;
+import view.ToastRunnable;
 
 /**
  * Created by Valentin on 02/11/2015.

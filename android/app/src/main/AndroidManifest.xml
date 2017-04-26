@@ -13,7 +13,7 @@
         android:label="@string/app_name"
             android:theme="@style/AppTheme_NoActionBar">
         <activity
-                android:name="view.HomeActivity"
+            android:name="view.activities.HomeActivity"
                 android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,18 +21,17 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="view.BasicActivity"
+            android:name="view.activities.BasicActivity"
                 android:windowSoftInputMode="adjustResize"/>
         <activity
-                android:name="view.DiapoActivity"
+            android:name="view.activities.DiapoActivity"
                 android:windowSoftInputMode="adjustResize"/>
+        <activity android:name="view.activities.SoftwareActivity" />
         <activity
-                android:name="view.SoftwareActivity"/>
-        <activity
-            android:name="view.MultimediaActivity"
+            android:name="view.activities.MultimediaActivity"
             android:windowSoftInputMode="adjustResize"/>
          <activity
-                android:name="view.ShellActivity"
+             android:name="view.activities.ShellActivity"
                 android:windowSoftInputMode="adjustResize"/>
 
         <service android:name="controller.communication.wifi.TCPService"/>
