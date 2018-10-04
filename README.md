@@ -1,6 +1,10 @@
 # MiniRemote
 A simple remote control application for Android
 
+The Linux server can be found at :
+
+https://github.com/cyprienruffino/MiniRemote_server
+
 # Features 
 
 * Touchpad and keyboard emulator
