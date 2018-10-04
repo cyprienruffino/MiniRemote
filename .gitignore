@@ -3,7 +3,7 @@ out
 .idea
 gradle
 gradlew
-gradle.bat
+gradlew.bat
 *.iml
 .gradle
 /local.properties
